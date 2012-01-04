@@ -1,3 +1,7 @@
 [submodule "lib/LBDatabase"]
 	path = lib/LBDatabase
-	url = git@github.com:lbproductions/LBDatabase.git
+	url = git@github.com:Kampfgnom/LBDatabase.git
+[submodule "lib/LBGui"]
+	path = lib/LBGui
+	url = git@github.com:Kampfgnom/LBGui.git
+
