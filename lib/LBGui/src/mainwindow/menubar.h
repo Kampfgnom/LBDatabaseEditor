@@ -16,6 +16,8 @@ public:
 
     void addAction(const QString &path, Action *action);
 
+    void addSeparator(const QString &path);
+
     void addMenu(const QString &path, QMenu *menu);
     void addMenu(QMenu *menu);
 

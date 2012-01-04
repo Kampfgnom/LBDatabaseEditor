@@ -33,6 +33,8 @@ public:
     SidebarChildCategorie* addChildCategorie(int parentIndex, const QString& title);
     SidebarChildCategorie* addChildCategorie(int parentIndex, int childIndex, const QString &title);
 
+    void removeCategorie(SidebarChildCategorie *categorie);
+
     void clearCategorie(int parentIndex);
 
     void setSelectedCategorie(int parent, int child);

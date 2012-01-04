@@ -3,10 +3,7 @@
 #include <LBDatabase/LBDatabase.h>
 #include <LBGui/LBGui.h>
 
-#include "database/company.h"
-
-#include <QFile>
-#include <QDebug>
+#include "databaseeditor.h"
 
 int main(int argc, char *argv[])
 {

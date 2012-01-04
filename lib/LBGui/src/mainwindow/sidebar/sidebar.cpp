@@ -108,6 +108,12 @@ SidebarChildCategorie *Sidebar::addChildCategorie(int parentIndex, int childInde
     return item;
 }
 
+void Sidebar::removeCategorie(SidebarChildCategorie *categorie)
+{
+    QStandardItem *parentItem = categorie->QStandardItem::parent();
+    parentItem->removeRow(categorie->row());
+}
+
 void Sidebar::clearCategorie(int parentIndex)
 {
     SidebarParentCategorie* item = static_cast<SidebarParentCategorie*>(m_categoriesModel->invisibleRootItem()->child(parentIndex));

@@ -45,6 +45,11 @@ void MenuBar::addAction(const QString &path, Action *action)
     menuForPath(path)->addAction(action);
 }
 
+void MenuBar::addSeparator(const QString &path)
+{
+    menuForPath(path)->addSeparator();
+}
+
 void MenuBar::addMenu(const QString &path, QMenu *menu)
 {
     menuForPath(path)->addMenu(menu);
@@ -89,9 +94,10 @@ QMenu *MenuBar::menuForPath(const QString &path)
         return m_menus.value(path);
     }
 
+    QMenu *newMenu = 0;
     int i = path.lastIndexOf('/');
     if(i == -1) {
-        QMenu *newMenu = new QMenu(path, this);
+        newMenu = new QMenu(path, this);
         QMenuBar::addMenu(newMenu);
         m_menus.insert(path, newMenu);
         return newMenu;
@@ -102,7 +108,7 @@ QMenu *MenuBar::menuForPath(const QString &path)
     QString name = path;
     name.remove(0, i+1);
     QMenu *parentMenu = menuForPath(p);
-    QMenu *newMenu = new QMenu(name, parentMenu);
+    newMenu = new QMenu(name, parentMenu);
     parentMenu->addMenu(newMenu);
     m_menus.insert(path, newMenu);
     return newMenu;

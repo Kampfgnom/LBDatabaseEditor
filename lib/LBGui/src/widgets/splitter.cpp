@@ -92,6 +92,7 @@ void SplitterHandle::paintEvent(QPaintEvent *event)
             return;
         }
     }
+    QSplitterHandle::paintEvent(event);
 }
 
 QSize SplitterHandle::sizeHint() const

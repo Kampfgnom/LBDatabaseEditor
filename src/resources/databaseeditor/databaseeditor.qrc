@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/databaseeditor">
+        <file alias="database">database.png</file>
+        <file alias="table">table.png</file>
+    </qresource>
+</RCC>

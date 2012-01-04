@@ -10,6 +10,8 @@
 #include <QItemSelectionRange>
 #include <QAction>
 #include <QMenu>
+#include <QDebug>
+#include <QFile>
 
 namespace LBGui {
 
