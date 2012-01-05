@@ -10,15 +10,15 @@ class Table;
 
 namespace LBGui {
 
-class ColumnEditLinePrivate;
-class ColumnEditLine : public QWidget
+class EditColumnWidgetPrivate;
+class EditColumnWidget : public QWidget
 {
     Q_OBJECT
 
 public:
-    explicit ColumnEditLine(LBDatabase::Column *column, QWidget *parent = 0);
-    explicit ColumnEditLine(QWidget *parent = 0);
-    ~ColumnEditLine();
+    explicit EditColumnWidget(LBDatabase::Column *column, QWidget *parent = 0);
+    explicit EditColumnWidget(QWidget *parent = 0);
+    ~EditColumnWidget();
 
     void setColumn(LBDatabase::Column *column);
     void setTable(LBDatabase::Table *table);
@@ -41,8 +41,8 @@ Q_SIGNALS:
 private:
     void setValid(bool valid);
 
-    ColumnEditLinePrivate * const d_ptr;
-    Q_DECLARE_PRIVATE(ColumnEditLine)
+    EditColumnWidgetPrivate * const d_ptr;
+    Q_DECLARE_PRIVATE(EditColumnWidget)
 };
 
 } // namespace LBGui

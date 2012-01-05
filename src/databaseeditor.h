@@ -6,6 +6,8 @@
 namespace LBDatabase {
 class Database;
 class Table;
+class Storage;
+class Context;
 }
 
 namespace LBGui {
@@ -17,6 +19,8 @@ class RecentFilesManager;
 class ToolBar;
 class DatabaseWidget;
 class TableWidget;
+class StorageWidget;
+class ContextWidget;
 
 class DatabaseEditor : public MainWindow
 {
@@ -34,6 +38,9 @@ public:
 
     void showDatabase(LBDatabase::Database *database);
     void showTable(LBDatabase::Table *table);
+
+    void showStorage(LBDatabase::Storage *storage);
+    void showContext(LBDatabase::Context *context);
 
     void closeEvent(QCloseEvent *event);
 
@@ -55,6 +62,9 @@ private:
 
     DatabaseWidget *m_databaseWidget;
     TableWidget *m_tableWidget;
+
+    StorageWidget *m_storageWidget;
+    ContextWidget *m_contextWidget;
 };
 
 } //namespace LBGui

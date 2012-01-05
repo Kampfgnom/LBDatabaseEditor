@@ -17,9 +17,9 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     connect(controller, SIGNAL(currentTableChanged(::LBDatabase::Table*)), this, SLOT(updateActions()));
 
     m_openDatabaseAction = new Action(this);
-    m_openDatabaseAction->setText(tr("&Open database"));
+    m_openDatabaseAction->setText(tr("&Open..."));
     m_openDatabaseAction->setShortcut(QKeySequence::Open);
-    connect(m_openDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(openDatabase()));
+    connect(m_openDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(openFile()));
 
     m_closeDatabaseAction = new Action(this);
     m_closeDatabaseAction->setText(tr("C&lose database"));

@@ -1,6 +1,6 @@
 #include "edittabledialog.h"
 
-#include "columneditline.h"
+#include "editcolumnwidget.h"
 
 #include <LBDatabase/LBDatabase.h>
 
@@ -23,7 +23,7 @@ class EditTableDialogPrivate {
     LBDatabase::Table *table;
     QLineEdit* lineEditName;
     EditTableDialog * q_ptr;
-    QList<ColumnEditLine *> columnEditLines;
+    QList<EditColumnWidget *> columnEditLines;
     QFormLayout *formLayout;
     QDialogButtonBox *buttonBox;
 
@@ -71,7 +71,7 @@ void EditTableDialogPrivate::save()
 {
     Q_Q(EditTableDialog);
 
-    foreach(ColumnEditLine *columnEditLine, columnEditLines) {
+    foreach(EditColumnWidget *columnEditLine, columnEditLines) {
         columnEditLine->saveChanges();
     }
 
@@ -122,7 +122,7 @@ void EditTableDialog::setTable(LBDatabase::Table *table)
         d->lineEditName->setText(table->name());
 
         foreach(LBDatabase::Column *column, table->columns()) {
-            ColumnEditLine *columnEditLine = addColumn();
+            EditColumnWidget *columnEditLine = addColumn();
             columnEditLine->setColumn(column);
         }
     }
@@ -136,10 +136,10 @@ void EditTableDialog::save()
     d->save();
 }
 
-ColumnEditLine *EditTableDialog::addColumn()
+EditColumnWidget *EditTableDialog::addColumn()
 {
     Q_D(EditTableDialog);
-    ColumnEditLine *columnEditLine = new ColumnEditLine(this);
+    EditColumnWidget *columnEditLine = new EditColumnWidget(this);
     columnEditLine->setTable(d->table);
     connect(columnEditLine, SIGNAL(validChanged(bool)), d->buttonBox->button(QDialogButtonBox::Save), SLOT(setEnabled(bool)));
     connect(columnEditLine, SIGNAL(removed()), this, SLOT(removeColumn()));
@@ -151,7 +151,7 @@ ColumnEditLine *EditTableDialog::addColumn()
 void EditTableDialog::removeColumn()
 {
     Q_D(EditTableDialog);
-    ColumnEditLine *columnEditLine = static_cast<ColumnEditLine *>(sender());
+    EditColumnWidget *columnEditLine = static_cast<EditColumnWidget *>(sender());
     d->formLayout->removeWidget(columnEditLine);
     columnEditLine->setVisible(false);
     d->columnEditLines.removeAll(columnEditLine);

@@ -17,6 +17,7 @@ DatabaseEditorSidebar::DatabaseEditorSidebar(DatabaseEditor *mainWindow) :
     m_databaseCategories(QHash<LBDatabase::Database*, SidebarChildCategorie*>())
 {
     addParentCategorie("Databases");
+    addParentCategorie("Entity Storages");
     connect(m_treeView,SIGNAL(categorieChanged(::LBGui::SidebarChildCategorie*)),this, SLOT(onCategorieChanged(::LBGui::SidebarChildCategorie*)));
 }
 
@@ -46,6 +47,27 @@ void DatabaseEditorSidebar::setSelectedDatabase(LBDatabase::Database *database)
     SidebarChildCategorie *cat = m_databaseCategories.value(database);
 
     m_treeView->setSelectedIndex(0, cat->index().row());
+}
+
+SidebarChildCategorie *DatabaseEditorSidebar::addEntityStorageCategorie(LBDatabase::Storage *storage)
+{
+    SidebarChildCategorie *cat = addChildCategorie(1, storage->name());
+    cat->setData(QVariant::fromValue<LBDatabase::Storage*>(storage), SidebarChildCategorie::CustomDataRole);
+    cat->setIcon(QIcon(":/databaseeditor/database"));
+    m_storageCategories.insert(storage, cat);
+
+    int index = cat->index().row();
+    foreach(LBDatabase::Context *context, storage->contexts()) {
+        SidebarChildCategorie *contextCat = addChildCategorie(1,index, context->name());
+        contextCat->setData(QVariant::fromValue<LBDatabase::Context*>(context), SidebarChildCategorie::CustomDataRole);
+        contextCat->setIcon(QIcon(":/databaseeditor/table"));
+    }
+
+//    connect(storage->database(), SIGNAL(dirtyChanged(bool)), this, SLOT(onDirtyStateChanged(bool)));
+
+    m_treeView->setSelectedIndex(1, cat->index().row());
+    expandAll();
+    return cat;
 }
 
 LBDatabase::Database *DatabaseEditorSidebar::selectedDatabase() const
@@ -86,10 +108,20 @@ void DatabaseEditorSidebar::addTableCategorie(LBDatabase::Table *table)
 void DatabaseEditorSidebar::onCategorieChanged(SidebarChildCategorie *cat)
 {
     if(cat->level() == 1) {
-        emit databaseSelected(cat->data(SidebarChildCategorie::CustomDataRole).value<LBDatabase::Database *>());
+        if(cat->index().parent().row() == 0) {
+            emit databaseSelected(cat->data(SidebarChildCategorie::CustomDataRole).value<LBDatabase::Database *>());
+        }
+        else {
+            emit storageSelected(cat->data(SidebarChildCategorie::CustomDataRole).value<LBDatabase::Storage *>());
+        }
     }
     else {
-        emit tableSelected(cat->data(SidebarChildCategorie::CustomDataRole).value<LBDatabase::Table *>());
+        if(cat->index().parent().parent().row() == 0) {
+            emit tableSelected(cat->data(SidebarChildCategorie::CustomDataRole).value<LBDatabase::Table *>());
+        }
+        else {
+            emit contextSelected(cat->data(SidebarChildCategorie::CustomDataRole).value<LBDatabase::Context *>());
+        }
     }
 }
 

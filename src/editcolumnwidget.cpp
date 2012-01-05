@@ -1,4 +1,4 @@
-#include "columneditline.h"
+#include "editcolumnwidget.h"
 
 #include <LBDatabase/LBDatabase.h>
 
@@ -11,8 +11,8 @@
 
 namespace LBGui {
 
-class ColumnEditLinePrivate {
-    ColumnEditLinePrivate() :
+class EditColumnWidgetPrivate {
+    EditColumnWidgetPrivate() :
         column(0),
         table(0),
         valid(true),
@@ -21,8 +21,8 @@ class ColumnEditLinePrivate {
 
     void init();
 
-    ColumnEditLine * q_ptr;
-    Q_DECLARE_PUBLIC(ColumnEditLine)
+    EditColumnWidget * q_ptr;
+    Q_DECLARE_PUBLIC(EditColumnWidget)
 
     LBDatabase::Column *column;
     LBDatabase::Table *table;
@@ -35,9 +35,9 @@ class ColumnEditLinePrivate {
     bool markedForDeletion;
 };
 
-void ColumnEditLinePrivate::init()
+void EditColumnWidgetPrivate::init()
 {
-    Q_Q(ColumnEditLine);
+    Q_Q(EditColumnWidget);
 
     QRegExp rx("^[A-Za-z].*");
     QValidator *validator = new QRegExpValidator(rx, q);
@@ -70,35 +70,35 @@ void ColumnEditLinePrivate::init()
     q->setLayout(layout);
 }
 
-ColumnEditLine::ColumnEditLine(QWidget *parent) :
+EditColumnWidget::EditColumnWidget(QWidget *parent) :
     QWidget(parent),
-    d_ptr(new ColumnEditLinePrivate)
+    d_ptr(new EditColumnWidgetPrivate)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     d->q_ptr = this;
     d->init();
     setColumn(0);
 }
 
-ColumnEditLine::ColumnEditLine(LBDatabase::Column *column, QWidget *parent) :
+EditColumnWidget::EditColumnWidget(LBDatabase::Column *column, QWidget *parent) :
     QWidget(parent),
-    d_ptr(new ColumnEditLinePrivate)
+    d_ptr(new EditColumnWidgetPrivate)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     d->q_ptr = this;
     d->init();
     setColumn(column);
 }
 
-ColumnEditLine::~ColumnEditLine()
+EditColumnWidget::~EditColumnWidget()
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     delete d;
 }
 
-void ColumnEditLine::setColumn(LBDatabase::Column *column)
+void EditColumnWidget::setColumn(LBDatabase::Column *column)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     if(column == d->column)
         return;
 
@@ -125,51 +125,51 @@ void ColumnEditLine::setColumn(LBDatabase::Column *column)
     checkValues();
 }
 
-void ColumnEditLine::setTable(LBDatabase::Table *table)
+void EditColumnWidget::setTable(LBDatabase::Table *table)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     if(table == d->table)
         return;
 
     d->table = table;
 }
 
-QString ColumnEditLine::columnName() const
+QString EditColumnWidget::columnName() const
 {
-    Q_D(const ColumnEditLine);
+    Q_D(const EditColumnWidget);
     return d->lineEditName->text();
 }
 
-int ColumnEditLine::columnType() const
+int EditColumnWidget::columnType() const
 {
-    Q_D(const ColumnEditLine);
+    Q_D(const EditColumnWidget);
     return d->comboBoxType->currentIndex();
 }
 
-bool ColumnEditLine::markedForDeletion() const
+bool EditColumnWidget::markedForDeletion() const
 {
-    Q_D(const ColumnEditLine);
+    Q_D(const EditColumnWidget);
     return d->markedForDeletion;
 }
 
-void ColumnEditLine::setMessage(const QString &message)
+void EditColumnWidget::setMessage(const QString &message)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     if(message == d->warningLabel->text())
         return;
 
     d->warningLabel->setText(message);
 }
 
-bool ColumnEditLine::isValid() const
+bool EditColumnWidget::isValid() const
 {
-    Q_D(const ColumnEditLine);
+    Q_D(const EditColumnWidget);
     return d->valid;
 }
 
-void ColumnEditLine::saveChanges()
+void EditColumnWidget::saveChanges()
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
 
     if(!d->column && d->table && !columnName().isEmpty()) {
         setColumn(d->table->addColumn(columnName(), LBDatabase::Column::typeToName(static_cast<LBDatabase::Column::Type>(columnType()))));
@@ -187,9 +187,9 @@ void ColumnEditLine::saveChanges()
     }
 }
 
-void ColumnEditLine::markForDeletion(bool marked)
+void EditColumnWidget::markForDeletion(bool marked)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     if(marked == d->markedForDeletion)
         return;
 
@@ -198,9 +198,9 @@ void ColumnEditLine::markForDeletion(bool marked)
     d->markedForDeletion = marked;
 }
 
-void ColumnEditLine::checkValues()
+void EditColumnWidget::checkValues()
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     if(
         (d->column && d->column->name() != d->lineEditName->text() &&
          d->column->table()->columnNames().contains(d->lineEditName->text(), Qt::CaseInsensitive))
@@ -231,9 +231,9 @@ void ColumnEditLine::checkValues()
     }
 }
 
-void ColumnEditLine::setValid(bool valid)
+void EditColumnWidget::setValid(bool valid)
 {
-    Q_D(ColumnEditLine);
+    Q_D(EditColumnWidget);
     if(valid == d->valid)
         return;
     d->valid = valid;

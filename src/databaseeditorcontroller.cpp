@@ -12,6 +12,8 @@
 #include <QFileInfo>
 #include <QMessageBox>
 
+#include <QDebug>
+
 namespace LBGui {
 
 DatabaseEditorController::DatabaseEditorController(DatabaseEditor *databaseEditor) :
@@ -19,10 +21,14 @@ DatabaseEditorController::DatabaseEditorController(DatabaseEditor *databaseEdito
     m_databaseEditor(databaseEditor),
     m_currentDatabase(0),
     m_currentTable(0),
+    m_currentStorage(0),
+    m_currentContext(0),
     m_databases(QList<LBDatabase::Database *>())
 {
     connect(m_databaseEditor->dbeSidebar(), SIGNAL(databaseSelected(::LBDatabase::Database*)), this, SLOT(showDatabase(::LBDatabase::Database*)));
     connect(m_databaseEditor->dbeSidebar(), SIGNAL(tableSelected(::LBDatabase::Table*)), this, SLOT(showTable(::LBDatabase::Table*)));
+    connect(m_databaseEditor->dbeSidebar(), SIGNAL(storageSelected(::LBDatabase::Storage*)), this, SLOT(showStorage(::LBDatabase::Storage*)));
+    connect(m_databaseEditor->dbeSidebar(), SIGNAL(contextSelected(::LBDatabase::Context*)), this, SLOT(showContext(::LBDatabase::Context*)));
     connect(this, SIGNAL(currentDatabaseChanged(::LBDatabase::Database*)), m_databaseEditor, SLOT(reflectCurrentDatabaseDirtyState()));
 }
 
@@ -62,7 +68,7 @@ bool DatabaseEditorController::close()
         else if(ret == QMessageBox::Save) {
             foreach(LBDatabase::Database *database, m_databases) {
                 if(database->isDirty()) {
-                    m_autosaveFiles.value(database)->save();
+                    m_autosaveFilesDatabase.value(database)->save();
                 }
             }
             return true;
@@ -71,17 +77,69 @@ bool DatabaseEditorController::close()
     return true;
 }
 
-void DatabaseEditorController::openDatabase()
+void DatabaseEditorController::openFile()
 {
-    openDatabase(getOpenFileName(tr("Open Database"), tr("Database Files(*.db)")));
+    openFile(getOpenFileName(tr("Open File"), tr("Entity Storage (*.lbstorage);;Database Files (*.db);;All Files (*.*)")));
 }
 
-void DatabaseEditorController::openDatabase(const QString &fileName)
+void DatabaseEditorController::openFile(const QString &fileName)
 {
     if(fileName.isNull() || fileName.isEmpty()) {
         return;
     }
 
+    if(fileName.endsWith(".lbstorage")) {
+        openEntityStorage(fileName);
+    }
+    else {
+        openDatabase(fileName);
+    }
+}
+
+void printAttributes(LBDatabase::EntityType *type, QString depth = QString("+-")) {
+    QString attributes = "  "+depth+" (";
+    foreach(LBDatabase::Attribute* attribute, type->attributes()) {
+        attributes += attribute->name() + " ";
+    }
+    qDebug() << depth +"Attributes: "+attributes+")";
+    QString aggattributes = "  "+depth+" (";
+    foreach(LBDatabase::Attribute* attribute, type->aggregatedAttributes()) {
+        aggattributes += attribute->name() + " ";
+    }
+    qDebug() << depth +"Aggregated Attributes:"+aggattributes+")";
+}
+
+void printChildren(LBDatabase::EntityType *type, QString depth = QString("+-")) {
+    foreach(LBDatabase::EntityType* child, type->childEntityTypes()) {
+        qDebug() << depth+child->name();
+        printAttributes(child, depth);
+        printChildren(child, "  "+depth);
+    }
+}
+
+void DatabaseEditorController::openEntityStorage(const QString &fileName)
+{
+    AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
+    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+    if(m_storages.contains(storage)) {
+//        m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
+//        showDatabase(database);
+        return;
+    }
+
+    storage->open();
+    openDatabase(fileName);
+
+    //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
+//    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));
+    m_storages.append(storage);
+    m_databaseEditor->dbeSidebar()->addEntityStorageCategorie(storage);
+//    m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
+//    showDatabase(database);
+}
+
+void DatabaseEditorController::openDatabase(const QString &fileName)
+{
     AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
     LBDatabase::Database *database = LBDatabase::Database::instance(autosaveFile->copyFileName());
     if(m_databases.contains(database)) {
@@ -95,7 +153,7 @@ void DatabaseEditorController::openDatabase(const QString &fileName)
     connect(database,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));
     m_databases.append(database);
     m_databaseEditor->recentFilesManager()->addFile(fileName);
-    m_autosaveFiles.insert(database, autosaveFile);
+    m_autosaveFilesDatabase.insert(database, autosaveFile);
     m_databaseEditor->dbeSidebar()->addDatabaseCategorie(database);
     m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
     showDatabase(database);
@@ -115,7 +173,7 @@ void DatabaseEditorController::closeDatabase()
 void DatabaseEditorController::saveDatabase()
 {
     if(m_currentDatabase) {
-        m_autosaveFiles.value(m_currentDatabase)->save();
+        m_autosaveFilesDatabase.value(m_currentDatabase)->save();
         m_currentDatabase->setDirty(false);
     }
 }
@@ -151,6 +209,8 @@ void DatabaseEditorController::showTable(LBDatabase::Table *table)
     m_databaseEditor->showTable(table);
     setCurrentDatabase(table->database());
     setCurrentTable(table);
+    setCurrentStorage(0);
+    setCurrentContext(0);
 }
 
 void DatabaseEditorController::showDatabase(LBDatabase::Database *database)
@@ -158,6 +218,26 @@ void DatabaseEditorController::showDatabase(LBDatabase::Database *database)
     m_databaseEditor->showDatabase(database);
     setCurrentTable(0);
     setCurrentDatabase(database);
+    setCurrentStorage(0);
+    setCurrentContext(0);
+}
+
+void DatabaseEditorController::showStorage(LBDatabase::Storage *storage)
+{
+    m_databaseEditor->showStorage(storage);
+    setCurrentTable(0);
+    setCurrentDatabase(0);
+    setCurrentStorage(storage);
+    setCurrentContext(0);
+}
+
+void DatabaseEditorController::showContext(LBDatabase::Context *context)
+{
+    m_databaseEditor->showContext(context);
+    setCurrentTable(0);
+    setCurrentDatabase(0);
+    setCurrentStorage(context->storage());
+    setCurrentContext(context);
 }
 
 void DatabaseEditorController::setCurrentDatabase(LBDatabase::Database *database)
@@ -174,6 +254,22 @@ void DatabaseEditorController::setCurrentTable(LBDatabase::Table *table)
         return;
     m_currentTable = table;
     emit currentTableChanged(table);
+}
+
+void DatabaseEditorController::setCurrentStorage(LBDatabase::Storage *storage)
+{
+    if(storage == m_currentStorage)
+        return;
+    m_currentStorage = storage;
+    emit currentStorageChanged(storage);
+}
+
+void DatabaseEditorController::setCurrentContext(LBDatabase::Context *context)
+{
+    if(context == m_currentContext)
+        return;
+    m_currentContext = context;
+    emit currentContextChanged(context);
 }
 
 } // namespace LBGui

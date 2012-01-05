@@ -3,16 +3,13 @@
 
 #include <LBGui/LBGui.h>
 
-#include <QSortFilterProxyModel>
-
 namespace LBDatabase {
 class Table;
 }
 
 namespace LBGui {
 
-class AttributesTable;
-class TreeView;
+class TableView;
 
 class TableWidget : public TabWidget
 {
@@ -22,17 +19,9 @@ public:
     
     void setTable(LBDatabase::Table *table);
 
-private slots:
-    void editSelectedAttribute();
-    void addAttribute();
-    void removeAttribute();
-
 private:
     LBDatabase::Table *m_table;
-    AttributesTable *m_attributesTable;
-    TreeView *m_plainContentsTreeView;
-    QSortFilterProxyModel *m_attributesSortProxyModel;
-    QSortFilterProxyModel *m_tableSortProxyModel;
+    TableView *m_plainContentsTableView;
 };
 
 } // namespace LBGui

@@ -5,6 +5,8 @@
 #include "databaseeditorsidebar.h"
 #include "databasewidget.h"
 #include "tablewidget.h"
+#include "storagewidget.h"
+#include "contextwidget.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -35,18 +37,22 @@ DatabaseEditor::DatabaseEditor(QWidget *parent) :
     m_toolBar = new ToolBar(this);
     m_databaseWidget = new DatabaseWidget();
     m_tableWidget = new TableWidget();
+    m_storageWidget = new StorageWidget();
+    m_contextWidget = new ContextWidget();
 
     BackgroundWidget *w = new BackgroundWidget(m_centralViewStackedWidget);
     w->setStyle(BackgroundWidget::Gray);
     m_centralViewStackedWidget->addWidget(w);
     m_centralViewStackedWidget->addWidget(m_databaseWidget);
     m_centralViewStackedWidget->addWidget(m_tableWidget);
+    m_centralViewStackedWidget->addWidget(m_storageWidget);
+    m_centralViewStackedWidget->addWidget(m_contextWidget);
     m_centralViewStackedWidget->setCurrentWidget(w);
 
     // Recent files
     m_recentFiles->setSettingsName(m_settingsName+QLatin1String("/RecentFiles"));
     m_recentFiles->populateFromSettings();
-    connect(m_recentFiles, SIGNAL(fileTriggered(QString)), m_controller, SLOT(openDatabase(QString)));
+    connect(m_recentFiles, SIGNAL(fileTriggered(QString)), m_controller, SLOT(openFile(QString)));
 
     // MenuBar
     createMenuBar();
@@ -93,6 +99,18 @@ void DatabaseEditor::showTable(LBDatabase::Table *table)
 {
     m_tableWidget->setTable(table);
     m_centralViewStackedWidget->setCurrentWidget(m_tableWidget);
+}
+
+void DatabaseEditor::showStorage(LBDatabase::Storage *storage)
+{
+    m_storageWidget->setStorage(storage);
+    m_centralViewStackedWidget->setCurrentWidget(m_storageWidget);
+}
+
+void DatabaseEditor::showContext(LBDatabase::Context *context)
+{
+    m_contextWidget->setContext(context);
+    m_centralViewStackedWidget->setCurrentWidget(m_contextWidget);
 }
 
 void DatabaseEditor::closeEvent(QCloseEvent *event)

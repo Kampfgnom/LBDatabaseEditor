@@ -1,23 +1,17 @@
-#include "tablewidget.h"
+#include "contextwidget.h"
 
-#include "tableview.h"
+#include "contextview.h"
 
-#include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
 
-#include <QScrollArea>
 #include <QVBoxLayout>
-#include <QLineEdit>
-#include <QLabel>
-#include <QPushButton>
-#include <QFileInfo>
-#include <QStandardItemModel>
+#include <QScrollArea>
 
 namespace LBGui {
 
-TableWidget::TableWidget(QWidget *parent) :
+ContextWidget::ContextWidget(QWidget *parent) :
     TabWidget(parent),
-    m_table(0)
+    m_context(0)
 {
 #ifdef Q_WS_MAC
     setStyle(TabWidget::ItunesWhite);
@@ -69,16 +63,16 @@ TableWidget::TableWidget(QWidget *parent) :
     QVBoxLayout *plainContentsLayout = new QVBoxLayout();
     plainContentsLayout->setContentsMargins(0,0,0,0);
     plainContentsWidget->setLayout(plainContentsLayout);
-    m_plainContentsTableView = new TableView(plainContentsWidget);
-    plainContentsLayout->addWidget(m_plainContentsTableView);
+    m_plainContentsContextView = new ContextView(plainContentsWidget);
+    plainContentsLayout->addWidget(m_plainContentsContextView);
     addTab(plainContentsWidget,tr("Plain view"));
 }
 
-void TableWidget::setTable(LBDatabase::Table *table)
+void ContextWidget::setContext(LBDatabase::Context *context)
 {
-    m_table = table;
-    setWindowTitle(table->name()+ QString::fromUtf8(" \u2013 ")+QFileInfo(table->database()->fileName()).fileName());
-    m_plainContentsTableView->setTable(table);
+    m_context = context;
+    setWindowTitle(context->name()+ QString::fromUtf8(" \u2013 ")+context->storage()->name());
+    m_plainContentsContextView->setContext(context);
 }
 
 } // namespace LBGui

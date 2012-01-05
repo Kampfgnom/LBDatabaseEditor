@@ -13,7 +13,11 @@ SOURCES += main.cpp\
     databaseeditoractions.cpp \
     databaseeditor.cpp \
     createtabledialog.cpp \
-    columneditline.cpp
+    editcolumnwidget.cpp \
+    tableview.cpp \
+    storagewidget.cpp \
+    contextwidget.cpp \
+    contextview.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -24,7 +28,11 @@ HEADERS  += \
     databaseeditoractions.h \
     databaseeditor.h \
     createtabledialog.h \
-    columneditline.h
+    editcolumnwidget.h \
+    tableview.h \
+    storagewidget.h \
+    contextwidget.h \
+    contextview.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include
