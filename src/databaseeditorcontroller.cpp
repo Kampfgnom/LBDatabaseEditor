@@ -96,27 +96,6 @@ void DatabaseEditorController::openFile(const QString &fileName)
     }
 }
 
-void printAttributes(LBDatabase::EntityType *type, QString depth = QString("+-")) {
-    QString attributes = "  "+depth+" (";
-    foreach(LBDatabase::Attribute* attribute, type->attributes()) {
-        attributes += attribute->name() + " ";
-    }
-    qDebug() << depth +"Attributes: "+attributes+")";
-    QString aggattributes = "  "+depth+" (";
-    foreach(LBDatabase::Attribute* attribute, type->aggregatedAttributes()) {
-        aggattributes += attribute->name() + " ";
-    }
-    qDebug() << depth +"Aggregated Attributes:"+aggattributes+")";
-}
-
-void printChildren(LBDatabase::EntityType *type, QString depth = QString("+-")) {
-    foreach(LBDatabase::EntityType* child, type->childEntityTypes()) {
-        qDebug() << depth+child->name();
-        printAttributes(child, depth);
-        printChildren(child, "  "+depth);
-    }
-}
-
 void DatabaseEditorController::openEntityStorage(const QString &fileName)
 {
     AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
