@@ -33,6 +33,8 @@ public:
 
     RecentFilesManager *recentFilesManager() const;
 
+    TableWidget *tableWidget() const;
+
     DatabaseEditorController *controller() const;
     DatabaseEditorActions *actions() const;
 

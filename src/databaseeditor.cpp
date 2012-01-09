@@ -85,6 +85,11 @@ DatabaseEditorActions *DatabaseEditor::actions() const
     return m_actions;
 }
 
+TableWidget *DatabaseEditor::tableWidget() const
+{
+    return m_tableWidget;
+}
+
 void DatabaseEditor::showDatabase(LBDatabase::Database *database)
 {
     if(!database) {
@@ -148,6 +153,7 @@ void DatabaseEditor::createMenuBar()
     m_menuBar->addAction(tr("Table"), m_actions->createTableAction());
     m_menuBar->addAction(tr("Table"), m_actions->editTableAction());
     m_menuBar->addAction(tr("Table"), m_actions->insertRowAction());
+    m_menuBar->addAction(tr("Table"), m_actions->deleteRowAction());
 
     m_menuBar->addMenu(m_menuBar->windowMenu());
     m_menuBar->addMenu(m_menuBar->helpMenu());
@@ -159,6 +165,7 @@ void DatabaseEditor::createToolBar()
     m_toolBar->addAction(m_actions->createTableAction());
     m_toolBar->addAction(m_actions->editTableAction());
     m_toolBar->addAction(m_actions->insertRowAction());
+    m_toolBar->addAction(m_actions->deleteRowAction());
     addToolBar(m_toolBar);
     setUnifiedTitleAndToolBarOnMac(true);
 }

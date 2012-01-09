@@ -38,6 +38,11 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_insertRowAction->setEnabled(false);
     connect(m_insertRowAction, SIGNAL(triggered()), m_controller, SLOT(appendRow()));
 
+    m_deleteRowAction = new Action(this);
+    m_deleteRowAction->setText(tr("&Delete Row..."));
+    m_deleteRowAction->setEnabled(false);
+    connect(m_deleteRowAction, SIGNAL(triggered()), m_controller, SLOT(deleteRow()));
+
     m_createTableAction = new Action(this);
     m_createTableAction->setText(tr("&Create Table..."));
     m_createTableAction->setEnabled(false);
@@ -69,6 +74,11 @@ Action *DatabaseEditorActions::insertRowAction() const
     return m_insertRowAction;
 }
 
+Action *DatabaseEditorActions::deleteRowAction() const
+{
+    return m_deleteRowAction;
+}
+
 Action *DatabaseEditorActions::createTableAction() const
 {
     return m_createTableAction;
@@ -86,6 +96,7 @@ void DatabaseEditorActions::updateActions()
     m_createTableAction->setEnabled(m_controller->currentDatabase() != 0);
     m_insertRowAction->setEnabled(m_controller->currentTable() != 0);
     m_editTableAction->setEnabled(m_controller->currentTable() != 0);
+    m_deleteRowAction->setEnabled(m_controller->currentTable() != 0);
 
     QString closeText = tr("Close Database");
     if(m_controller->currentDatabase()) {

@@ -81,4 +81,9 @@ void TableWidget::setTable(LBDatabase::Table *table)
     m_plainContentsTableView->setTable(table);
 }
 
+TableView *TableWidget::tableView() const
+{
+    return m_plainContentsTableView;
+}
+
 } // namespace LBGui

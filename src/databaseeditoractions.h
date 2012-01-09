@@ -18,6 +18,7 @@ public:
     Action *closeDatabaseAction() const;
     Action *saveDatabaseAction() const;
     Action *insertRowAction() const;
+    Action *deleteRowAction() const;
     Action *createTableAction() const;
     Action *editTableAction() const;
 
@@ -32,6 +33,7 @@ private:
     Action *m_saveDatabaseAction;
     Action *m_createTableAction;
     Action *m_insertRowAction;
+    Action *m_deleteRowAction;
     Action *m_editTableAction;
     
 };

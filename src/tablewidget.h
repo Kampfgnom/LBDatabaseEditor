@@ -19,6 +19,8 @@ public:
     
     void setTable(LBDatabase::Table *table);
 
+    TableView *tableView() const;
+
 private:
     LBDatabase::Table *m_table;
     TableView *m_plainContentsTableView;

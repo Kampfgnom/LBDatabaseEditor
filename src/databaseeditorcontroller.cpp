@@ -5,6 +5,8 @@
 #include "databaseeditoractions.h"
 #include "createtabledialog.h"
 #include "edittabledialog.h"
+#include "tablewidget.h"
+#include "tableview.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -161,6 +163,14 @@ void DatabaseEditorController::appendRow()
 {
     if(m_currentTable) {
         m_currentTable->appendRow();
+    }
+}
+
+void DatabaseEditorController::deleteRow()
+{
+    if(m_currentTable) {
+        int id = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow()->id();
+        m_currentTable->deleteRow(id);
     }
 }
 

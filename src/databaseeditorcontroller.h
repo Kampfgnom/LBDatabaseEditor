@@ -39,6 +39,7 @@ public slots:
     void saveDatabase();
 
     void appendRow();
+    void deleteRow();
 
     void createTable();
     void editTable();
