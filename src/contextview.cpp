@@ -85,7 +85,7 @@ LBDatabase::Entity *ContextView::firstSelectedEntity() const
         return 0;
 
     QModelIndex index = d->contextSortProxyModel->mapToSource(list.first());
-    return d->context->entityAt(index.row());
+    return d->context->entities().at(index.row());
 }
 
 QList<LBDatabase::Entity *> ContextView::selectedEntities() const
@@ -99,7 +99,7 @@ QList<LBDatabase::Entity *> ContextView::selectedEntities() const
 
     foreach(QModelIndex i, selectionModel()->selectedRows()) {
         QModelIndex index = d->contextSortProxyModel->mapToSource(i);
-        entitys.append(d->context->entityAt(index.row()));
+        entitys.append(d->context->entities().at(index.row()));
     }
 
     return entitys;
