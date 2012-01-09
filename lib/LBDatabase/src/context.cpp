@@ -95,7 +95,7 @@ EntityType *ContextPrivate::addEntityType(const QString &name, EntityType *paren
     entityTypeRow->setData(EntityType::ParentEntityTypeIdColumn, QVariant(parentEntityType->id()));
     entityTypeRow->setData(EntityType::ContextColumn, QVariant(row->id()));
 
-    EntityType *type = new EntityType(row, storage);
+    EntityType *type = new EntityType(entityTypeRow, storage);
     type->setParentEntityType(parentEntityType);
     parentEntityType->addChildEntityType(type);
     storage->insertEntityType(type);
@@ -133,7 +133,7 @@ void ContextPrivate::createBaseEntityType(const QString &name)
     entityTypeRow->setData(EntityType::ParentEntityTypeIdColumn, QVariant());
     entityTypeRow->setData(EntityType::ContextColumn, QVariant(row->id()));
 
-    baseEntityType = new EntityType(row, storage);
+    baseEntityType = new EntityType(entityTypeRow, storage);
     storage->insertEntityType(baseEntityType);
 }
 
