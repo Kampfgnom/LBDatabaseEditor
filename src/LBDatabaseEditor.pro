@@ -19,7 +19,8 @@ SOURCES += main.cpp\
     contextwidget.cpp \
     contextview.cpp \
     addentitytypedialog.cpp \
-    entitytypecombobox.cpp
+    entitytypecombobox.cpp \
+    createcontextdialog.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -36,7 +37,8 @@ HEADERS  += \
     contextwidget.h \
     contextview.h \
     addentitytypedialog.h \
-    entitytypecombobox.h
+    entitytypecombobox.h \
+    createcontextdialog.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include
@@ -48,10 +50,14 @@ PRE_TARGETDEPS += $$PWD/../lib/LBGui/lib/liblbgui.a
 
 FORMS += \
     createtabledialog.ui \
-    addentitytypedialog.ui
+    addentitytypedialog.ui \
+    createcontextdialog.ui
 
 RESOURCES += \
     resources/databaseeditor/databaseeditor.qrc
+
+
+
 
 
 

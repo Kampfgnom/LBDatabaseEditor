@@ -119,7 +119,7 @@ void DatabaseEditorActions::updateActions()
     m_editTableAction->setEnabled(m_controller->currentTable() != 0);
     m_deleteRowAction->setEnabled(m_controller->currentTable() != 0);
 
-    m_createContextAction->setEnabled(m_controller->currentContext() != 0);
+    m_createContextAction->setEnabled(m_controller->currentStorage() != 0);
     m_addEntityTypeAction->setEnabled(m_controller->currentContext() != 0);
 
     QString closeText = tr("Close Database");

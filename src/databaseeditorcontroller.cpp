@@ -8,6 +8,7 @@
 #include "tablewidget.h"
 #include "tableview.h"
 #include "addentitytypedialog.h"
+#include "createcontextdialog.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -48,6 +49,11 @@ LBDatabase::Table *DatabaseEditorController::currentTable() const
 LBDatabase::Context *DatabaseEditorController::currentContext() const
 {
     return m_currentContext;
+}
+
+LBDatabase::Storage *DatabaseEditorController::currentStorage() const
+{
+    return m_currentStorage;
 }
 
 bool DatabaseEditorController::close()
@@ -269,7 +275,12 @@ void DatabaseEditorController::setCurrentContext(LBDatabase::Context *context)
 
 void DatabaseEditorController::createContext()
 {
-
+    if(m_currentStorage){
+        CreateContextDialog *d = new CreateContextDialog(m_databaseEditor);
+        if(d->exec() == QDialog::Accepted) {
+            m_currentStorage->addContext(d->contextName(),d->baseEntityTypeName());
+        }
+    }
 }
 
 void DatabaseEditorController::addEntityType()

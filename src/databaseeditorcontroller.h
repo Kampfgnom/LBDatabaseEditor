@@ -27,6 +27,7 @@ public:
     LBDatabase::Database *currentDatabase() const;
     LBDatabase::Table *currentTable() const;
     LBDatabase::Context *currentContext() const;
+    LBDatabase::Storage *currentStorage() const;
 
     bool close();
 
