@@ -2,4 +2,5 @@
 *.DS_Store*
 src/LBDatabase.pro.user
 LBDatabaseEditor.pro.user
+*.save
 
