@@ -6,4 +6,3 @@ SUBDIRS += \
     src/LBDatabaseEditor.pro
 
 CONFIG += ordered
-
