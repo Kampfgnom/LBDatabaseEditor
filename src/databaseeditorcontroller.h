@@ -26,6 +26,7 @@ public:
 
     LBDatabase::Database *currentDatabase() const;
     LBDatabase::Table *currentTable() const;
+    LBDatabase::Context *currentContext() const;
 
     bool close();
 
@@ -43,6 +44,9 @@ public slots:
 
     void createTable();
     void editTable();
+
+    void createContext();
+    void addEntityType();
 
     void showTable(::LBDatabase::Table *table);
     void showDatabase(::LBDatabase::Database *database);

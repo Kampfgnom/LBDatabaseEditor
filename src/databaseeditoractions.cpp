@@ -15,6 +15,7 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
 {
     connect(controller, SIGNAL(currentDatabaseChanged(::LBDatabase::Database*)), this, SLOT(updateActions()));
     connect(controller, SIGNAL(currentTableChanged(::LBDatabase::Table*)), this, SLOT(updateActions()));
+    connect(controller, SIGNAL(currentContextChanged(::LBDatabase::Context*)), this, SLOT(updateActions()));
 
     m_openDatabaseAction = new Action(this);
     m_openDatabaseAction->setText(tr("&Open..."));
@@ -52,6 +53,16 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_editTableAction->setText(tr("&Edit Table..."));
     m_editTableAction->setEnabled(false);
     connect(m_editTableAction, SIGNAL(triggered()), m_controller, SLOT(editTable()));
+
+    m_createContextAction = new Action(this);
+    m_createContextAction->setText(tr("&Create Context..."));
+    m_createContextAction->setEnabled(false);
+    connect(m_createContextAction, SIGNAL(triggered()), m_controller, SLOT(createContext()));
+
+    m_addEntityTypeAction = new Action(this);
+    m_addEntityTypeAction->setText(tr("&Add EntityType..."));
+    m_addEntityTypeAction->setEnabled(false);
+    connect(m_addEntityTypeAction, SIGNAL(triggered()), m_controller, SLOT(addEntityType()));
 }
 
 Action *DatabaseEditorActions::openDatabaseAction() const
@@ -89,6 +100,16 @@ Action *DatabaseEditorActions::editTableAction() const
     return m_editTableAction;
 }
 
+Action *DatabaseEditorActions::createContextAction() const
+{
+    return m_createContextAction;
+}
+
+Action *DatabaseEditorActions::addEntityTypeAction() const
+{
+    return m_addEntityTypeAction;
+}
+
 void DatabaseEditorActions::updateActions()
 {
     m_closeDatabaseAction->setEnabled(m_controller->currentDatabase() != 0);
@@ -97,6 +118,9 @@ void DatabaseEditorActions::updateActions()
     m_insertRowAction->setEnabled(m_controller->currentTable() != 0);
     m_editTableAction->setEnabled(m_controller->currentTable() != 0);
     m_deleteRowAction->setEnabled(m_controller->currentTable() != 0);
+
+    m_createContextAction->setEnabled(m_controller->currentContext() != 0);
+    m_addEntityTypeAction->setEnabled(m_controller->currentContext() != 0);
 
     QString closeText = tr("Close Database");
     if(m_controller->currentDatabase()) {

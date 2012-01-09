@@ -306,4 +306,10 @@ bool Storage::open()
     return d->open();
 }
 
+QList<EntityType *> Storage::entityTypes() const
+{
+    Q_D(const Storage);
+    return d->entityTypes.values();
+}
+
 } // namespace LBDatabase

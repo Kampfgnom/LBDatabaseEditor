@@ -32,6 +32,7 @@ public:
     QString fileName() const;
 
     QList<Context *> contexts() const;
+    QList<EntityType *> entityTypes() const;
 
     Context *addContext(const QString &name, const QString &baseEntityTypeName);
 

@@ -7,6 +7,7 @@
 #include "edittabledialog.h"
 #include "tablewidget.h"
 #include "tableview.h"
+#include "addentitytypedialog.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -42,6 +43,11 @@ LBDatabase::Database *DatabaseEditorController::currentDatabase() const
 LBDatabase::Table *DatabaseEditorController::currentTable() const
 {
     return m_currentTable;
+}
+
+LBDatabase::Context *DatabaseEditorController::currentContext() const
+{
+    return m_currentContext;
 }
 
 bool DatabaseEditorController::close()
@@ -259,6 +265,19 @@ void DatabaseEditorController::setCurrentContext(LBDatabase::Context *context)
         return;
     m_currentContext = context;
     emit currentContextChanged(context);
+}
+
+void DatabaseEditorController::createContext()
+{
+
+}
+
+void DatabaseEditorController::addEntityType()
+{
+    if(m_currentContext){
+        AddEntityTypeDialog *d = new AddEntityTypeDialog(m_currentContext);
+        d->exec();
+    }
 }
 
 } // namespace LBGui
