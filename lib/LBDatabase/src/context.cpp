@@ -19,7 +19,9 @@ namespace LBDatabase {
 /******************************************************************************
 ** ContextPrivate
 */
+//! \cond PRIVATE
 const QString Context::NameColumn("name");
+//! \endcond
 
 class ContextPrivate {
     ContextPrivate() : baseEntityType(0) {}
@@ -90,7 +92,7 @@ void ContextPrivate::loadEntities()
 
 EntityType *ContextPrivate::addEntityType(const QString &name, EntityType *parentEntityType)
 {
-    Row *entityTypeRow = storage->entitiesTable()->appendRow();
+    Row *entityTypeRow = storage->entityTypesTable()->appendRow();
     entityTypeRow->setData(EntityType::NameColumn, QVariant(name));
     entityTypeRow->setData(EntityType::ParentEntityTypeIdColumn, QVariant(parentEntityType->id()));
     entityTypeRow->setData(EntityType::ContextColumn, QVariant(row->id()));
@@ -128,7 +130,7 @@ Entity *ContextPrivate::insertEntity(EntityType *type)
 
 void ContextPrivate::createBaseEntityType(const QString &name)
 {
-    Row *entityTypeRow = storage->entitiesTable()->appendRow();
+    Row *entityTypeRow = storage->entityTypesTable()->appendRow();
     entityTypeRow->setData(EntityType::NameColumn, QVariant(name));
     entityTypeRow->setData(EntityType::ParentEntityTypeIdColumn, QVariant());
     entityTypeRow->setData(EntityType::ContextColumn, QVariant(row->id()));
@@ -160,6 +162,17 @@ void ContextPrivate::createBaseEntityType(const QString &name)
   model for any model-view based Qt class like QTreeView. This model is
   editable.
 
+  */
+/*!
+  \fn Context::nameChanged(QString name)
+
+  This signal is emitted when the name of this context changes.
+
+  */
+
+/*!
+  \var Context::d_ptr
+  \internal
   */
 
 /*!

@@ -87,7 +87,6 @@ bool DatabasePrivate::openSqlDatabase()
   \brief The Database class represents a low-level SQLite database.
 
   \defgroup lowlevel-database-classes Low-Level Database Classes
-  \ingroup lowlevel-database-classes
 
   It is the starting point for opening and working with a SQLite file. You can
   only instantiate one Database per file, which is created by and afterwards
@@ -118,6 +117,14 @@ bool DatabasePrivate::openSqlDatabase()
   happen when calling refreshConnection().
 
   \sa isOpen()
+  */
+
+/*!
+  \fn void Database::dirtyChanged()
+
+  This signal is emitted when something in the database is being edited. This
+  means everything from changing names or content or adding column, tables, rows
+  etc.
   */
 
 /*!
@@ -349,8 +356,7 @@ QStringList Database::tableNames() const
 }
 
 /*!
-  \property Database::fileName
-  \brief The file which the database works on.
+  Returns the file which the database works on.
   */
 QString Database::fileName() const
 {
