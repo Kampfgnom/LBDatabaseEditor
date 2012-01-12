@@ -16,6 +16,7 @@ public:
     
     // Database
     Action *openDatabaseAction() const;
+    Action *importDatabaseAction() const;
     Action *closeDatabaseAction() const;
     Action *saveDatabaseAction() const;
     Action *insertRowAction() const;
@@ -36,6 +37,7 @@ private:
 
     // Database
     Action *m_openDatabaseAction;
+    Action *m_importDatabaseAction;
     Action *m_closeDatabaseAction;
     Action *m_saveDatabaseAction;
     Action *m_createTableAction;

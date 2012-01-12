@@ -22,6 +22,10 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_openDatabaseAction->setShortcut(QKeySequence::Open);
     connect(m_openDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(openFile()));
 
+    m_importDatabaseAction = new Action(this);
+    m_importDatabaseAction->setText(tr("&Import database..."));
+    connect(m_importDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(importDatabase()));
+
     m_closeDatabaseAction = new Action(this);
     m_closeDatabaseAction->setText(tr("C&lose database"));
     m_closeDatabaseAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_W);
@@ -68,6 +72,11 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
 Action *DatabaseEditorActions::openDatabaseAction() const
 {
     return m_openDatabaseAction;
+}
+
+Action *DatabaseEditorActions::importDatabaseAction() const
+{
+    return m_importDatabaseAction;
 }
 
 Action *DatabaseEditorActions::closeDatabaseAction() const

@@ -49,6 +49,8 @@ class EntityTypePrivate {
     QList<Relation *> relations;
     QList<Entity *> entities;
 
+    QObject *controller;
+
     EntityType * q_ptr;
     Q_DECLARE_PUBLIC(EntityType)
 };
@@ -113,7 +115,7 @@ Attribute *EntityTypePrivate::addAttribute(const QString &name, Attribute::Type 
     Row *row = entitiesTable->appendRow();
     row->setData(Attribute::NameColumn, QVariant(name));
     row->setData(Attribute::DisplayNameColumn, QVariant(name));
-    row->setData(Attribute::EntityTypeIdColumn, QVariant(row->id()));
+    row->setData(Attribute::EntityTypeIdColumn, QVariant(this->row->id()));
     row->setData(Attribute::PrefetchStrategyColumn, QVariant(static_cast<int>(Attribute::PrefetchOnStartup)));
 
     Attribute *attribute = new Attribute(row, storage);

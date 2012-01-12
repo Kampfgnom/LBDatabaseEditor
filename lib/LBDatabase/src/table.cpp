@@ -100,6 +100,7 @@ Column *TablePrivate::addColumn(const QString &name, const QString &sqlType, con
 
     q->beginInsertColumns(QModelIndex(),columns.count(), columns.count());
     Column *column = new Column(columnField, q);
+    column->setIndex(columns.size());
     columns.append(column);
     columnsByName.insert(name, column);
     foreach(Row *row, rows) {

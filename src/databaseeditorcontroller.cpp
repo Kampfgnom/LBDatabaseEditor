@@ -96,6 +96,15 @@ void DatabaseEditorController::openFile()
     openFile(getOpenFileName(tr("Open File"), tr("Entity Storage (*.lbstorage);;Database Files (*.db);;All Files (*.*)")));
 }
 
+void DatabaseEditorController::importDatabase()
+{
+    QString databaseFileName = getOpenFileName(tr("Choose database"), tr("Database Files (*.db);;All Files (*.*)"));
+    QString storageFileName = getSaveFileName(tr("Enter storage file name"), tr("Entity Storage (*.lbstorage);;All Files (*.*)"));
+
+    LBDatabase::Storage::convertSqlliteDatabaseToStorage(databaseFileName, storageFileName);
+    openFile(storageFileName);
+}
+
 void DatabaseEditorController::openFile(const QString &fileName)
 {
     if(fileName.isNull() || fileName.isEmpty()) {

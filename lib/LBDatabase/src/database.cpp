@@ -180,8 +180,6 @@ Database::Database(const QString &fileName, QObject *parent) :
     QObject(parent),
     d_ptr(new DatabasePrivate)
 {
-    qDebug() << "Database::Database: Opening database file" << fileName;
-
     Q_D(Database);
     d->q_ptr = this;
     d->fileName = fileName;
@@ -192,8 +190,6 @@ Database::Database(const QString &fileName, QObject *parent) :
 */
 Database::~Database()
 {
-    Q_D(Database);
-    qDebug() << "Database::~Database: Closing database file" << d->fileName;
 }
 
 /*!
@@ -245,6 +241,7 @@ bool Database::open()
         d->open = d->openSqlDatabase();
     if(d->open && d->tables.isEmpty())
         d->createTableInstances();
+    setOpen(true);
     return d->open;
 }
 
@@ -259,6 +256,18 @@ bool Database::refreshConnection()
     setOpen(false);
     QSqlDatabase::removeDatabase(fileName());
     return open();
+}
+
+/*!
+  Closes the QSqlDatabase connection, sets open to false and emits closed().
+  */
+void Database::close()
+{
+    Q_D(Database);
+    if(!d->open)
+        return;
+    QSqlDatabase::removeDatabase(d->fileName);
+    setOpen(false);
 }
 
 /*!

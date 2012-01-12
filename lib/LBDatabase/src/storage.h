@@ -21,6 +21,8 @@ class Storage : public QObject
 public:
     static Storage *instance(const QString &fileName);
 
+    static void convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileName, const QString &storageFileName);
+
     ~Storage();
 
     bool open();

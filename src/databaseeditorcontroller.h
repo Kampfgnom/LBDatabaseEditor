@@ -33,6 +33,7 @@ public:
 
 public slots:
     void openFile();
+    void importDatabase();
     void openFile(const QString &fileName);
     void openDatabase(const QString &fileName);
     void openEntityStorage(const QString &fileName);

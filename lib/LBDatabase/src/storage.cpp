@@ -1,6 +1,7 @@
 #include "storage.h"
 
 #include "attribute.h"
+#include "column.h"
 #include "context.h"
 #include "database.h"
 #include "entity.h"
@@ -12,6 +13,7 @@
 
 #include <QFile>
 #include <QMutex>
+#include <QFileInfo>
 
 #include <QDebug>
 
@@ -206,6 +208,68 @@ Storage *Storage::instance(const QString &fileName)
     Storage* storage = new Storage(fileName, &guard);
     StoragePrivate::instances.insert(fileName, storage);
     return storage;
+}
+
+void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileName, const QString &storageFileName)
+{
+    QFile file(sqliteDatabaseFileName);
+    file.open(QFile::ReadOnly);
+    file.copy(storageFileName);
+    file.close();
+
+
+    Database *database = Database::instance(storageFileName);
+    database->open();
+    QList<Table *> tables = database->tables();
+
+    database->createTable(MetaDataTableName);
+    database->createTable(ContextsTableName);
+    database->createTable(EntitiesTableName);
+    database->createTable(AttributesTableName);
+    database->createTable(RelationsTableName);
+    Table *metaDataTable = database->table(MetaDataTableName);
+    Table *contextsTable = database->table(ContextsTableName);
+    Table *entityTypesTable = database->table(EntitiesTableName);
+    Table *attributesTable = database->table(AttributesTableName);
+    Table *relationsTable = database->table(RelationsTableName);
+
+    metaDataTable->addColumn(NameColumn,QLatin1String("TEXT"));
+    metaDataTable->appendRow();
+
+    contextsTable->addColumn(Context::NameColumn,QLatin1String("TEXT"));
+
+    entityTypesTable->addColumn(EntityType::ContextColumn,QLatin1String("INTERGER"));
+    entityTypesTable->addColumn(EntityType::NameColumn,QLatin1String("TEXT"));
+    entityTypesTable->addColumn(EntityType::ParentEntityTypeIdColumn,QLatin1String("INTERGER"));
+
+    attributesTable->addColumn(Attribute::NameColumn,QLatin1String("TEXT"));
+    attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
+    attributesTable->addColumn(Attribute::EntityTypeIdColumn,QLatin1String("INTERGER"));
+    attributesTable->addColumn(Attribute::PrefetchStrategyColumn,QLatin1String("INTERGER"));
+
+    relationsTable->addColumn(Relation::NameColumn,QLatin1String("TEXT"));
+    relationsTable->addColumn(Relation::DisplayNameLeftColumn,QLatin1String("TEXT"));
+    relationsTable->addColumn(Relation::DisplayNameRightColumn,QLatin1String("TEXT"));
+    relationsTable->addColumn(Relation::EntityTypeLeftColumn,QLatin1String("INTERGER"));
+    relationsTable->addColumn(Relation::EntityTypeRightColumn,QLatin1String("INTERGER"));
+    relationsTable->addColumn(Relation::CardinalityColumn,QLatin1String("INTERGER"));
+
+    Storage *storage = Storage::instance(storageFileName);
+    storage->open();
+    storage->setName(QFileInfo(storageFileName).fileName());
+
+    foreach(Table *table, tables) {
+        Context *context = storage->addContext(table->name(), table->name().remove(table->name().size() - 1, 1));
+        EntityType *base = context->baseEntityType();
+
+        table->addColumn(Entity::EntityTypeIdColumn, QLatin1String("INTEGER"), QVariant(base->id()));
+
+        foreach(Column *column, table->columns()) {
+            if(column->name().compare("ID", Qt::CaseInsensitive) != 0) {
+                base->addAttribute(column->name(),Attribute::Unkown);
+            }
+        }
+    }
 }
 
 /*!
