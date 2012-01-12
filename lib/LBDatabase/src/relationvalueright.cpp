@@ -35,10 +35,14 @@ void RelationValueRightPrivate::fetchValue()
     case Relation::OneToOne:
     case Relation::OneToMany:
         leftId = entity->row()->data(relation->name()).toInt();
-        leftEntity = relation->entityTypeLeft()->context()->entity(leftId);
-        otherEntities.append(leftEntity);
-        leftValue = qobject_cast<RelationValueLeft *>(leftEntity->propertyValue(relation));
-        leftValue->setRightValue(q);
+        if(leftId > 0) {
+            leftEntity = relation->entityTypeLeft()->context()->entity(leftId);
+            otherEntities.append(leftEntity);
+            leftValue = leftEntity->relationValueLeft(relation);
+            if(leftValue) {
+                leftValue->addRightValue(q);
+            }
+        }
         break;
     case Relation::ManyToMany:
         relation->initializeManyToManyRelation();

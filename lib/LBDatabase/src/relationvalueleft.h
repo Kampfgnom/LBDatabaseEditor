@@ -26,7 +26,7 @@ private:
     virtual bool setData(const QVariant &data);
 
     void fetchValue();
-    void setRightValue(RelationValueRight *right);
+    void addRightValue(RelationValueRight *right);
 
     Q_DECLARE_PRIVATE(RelationValueLeft)
     Q_DISABLE_COPY(RelationValueLeft)

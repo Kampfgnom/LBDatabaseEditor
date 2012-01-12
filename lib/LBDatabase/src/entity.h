@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include <QHash>
+
 namespace LBDatabase {
 
 class Attribute;
@@ -11,7 +13,10 @@ class Context;
 class EntityType;
 class Property;
 class PropertyValue;
+class Relation;
 class RelationValue;
+class RelationValueLeft;
+class RelationValueRight;
 class Row;
 class Storage;
 
@@ -41,6 +46,7 @@ private:
     friend class ContextPrivate;
     friend class RelationPrivate;
     friend class Context;
+    friend class RelationValueRightPrivate;
 
     explicit Entity(Row *row, Context *parent);
 
@@ -49,6 +55,9 @@ private:
 
     void addAttributeValue(AttributeValue *value);
     void addRelationValue(RelationValue *value);
+
+    RelationValueLeft *relationValueLeft(Relation *relation) const;
+    RelationValueRight *relationValueRight(Relation *relation) const;
 
     QScopedPointer<EntityPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Entity)

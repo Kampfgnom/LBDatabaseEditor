@@ -5,6 +5,7 @@
 #include "context.h"
 #include "entitytype.h"
 #include "relation.h"
+#include "relationvalueleft.h"
 #include "relationvalueright.h"
 #include "relationvalue.h"
 #include "row.h"
@@ -32,7 +33,7 @@ class EntityPrivate {
     Context *context;
     Row *row;
     EntityType *entityType;
-    QHash<Property *, PropertyValue *> propertyValues;
+    QMultiHash<Property *, PropertyValue *> propertyValues;
 
     QList<AttributeValue *> attributeValues;
     QList<RelationValue *> relationValues;
@@ -212,6 +213,47 @@ void Entity::addRelationValue(RelationValue *value)
     Q_D(Entity);
     d->propertyValues.insert(value->property(), value);
     d->relationValues.append(value);
+}
+
+RelationValueLeft *Entity::relationValueLeft(Relation *relation) const
+{
+    Q_D(const Entity);
+
+    QList<PropertyValue *> values = d->propertyValues.values(relation);
+    if(values.size() > 0)
+    {
+        RelationValueLeft *leftValue = qobject_cast<RelationValueLeft *>(values.at(0));
+        if(leftValue) {
+            return leftValue;
+        }
+        else if(values.size() > 1) {
+            leftValue = qobject_cast<RelationValueLeft *>(values.at(1));
+            if(leftValue) {
+                return leftValue;
+            }
+        }
+    }
+    return 0;
+}
+
+RelationValueRight *Entity::relationValueRight(Relation *relation) const
+{    Q_D(const Entity);
+
+     QList<PropertyValue *> values = d->propertyValues.values(relation);
+     if(values.size() > 0)
+     {
+         RelationValueRight *leftValue = qobject_cast<RelationValueRight *>(values.at(0));
+         if(leftValue) {
+             return leftValue;
+         }
+         else if(values.size() > 1) {
+             leftValue = qobject_cast<RelationValueRight *>(values.at(1));
+             if(leftValue) {
+                 return leftValue;
+             }
+         }
+     }
+     return 0;
 }
 
 } // namespace LBDatabase

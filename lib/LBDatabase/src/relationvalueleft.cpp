@@ -17,7 +17,7 @@ class RelationValueLeftPrivate : public RelationValuePrivate {
 
     void fetchValue();
 
-    RelationValueRight *rightValue;
+    QList<RelationValueRight *> rightValues;
 
     Q_DECLARE_PUBLIC(RelationValueLeft)
 };
@@ -98,11 +98,11 @@ void RelationValueLeft::fetchValue()
 
   Registers the right relation value with this left value.
   */
-void RelationValueLeft::setRightValue(RelationValueRight *right)
+void RelationValueLeft::addRightValue(RelationValueRight *right)
 {
     Q_D(RelationValueLeft);
-    d->rightValue = right;
-    d->otherEntities.append(right->entities());
+    d->rightValues.append(right);
+    d->otherEntities.append(right->entity());
 }
 
 } // namespace LBDatabase

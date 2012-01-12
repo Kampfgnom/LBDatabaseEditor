@@ -93,13 +93,14 @@ void RelationPrivate::initializeManyToManyRelation()
     foreach(Row *row, relationTable->rows()) {
         int leftId = row->data(entityTypeLeft->name()).toInt();
         int rightId = row->data(entityTypeRight->name()).toInt();
-        Entity *leftEntity = entityTypeLeft->context()->entity(leftId);
-        Entity *rightEntity = entityTypeRight->context()->entity(rightId);
-
-        RelationValuePrivate *leftValue = qobject_cast<RelationValue *>(leftEntity->propertyValue(q))->d_func();
-        RelationValuePrivate *rightValue = qobject_cast<RelationValue *>(rightEntity->propertyValue(q))->d_func();
-        leftValue->addOtherEntity(rightEntity);
-        rightValue->addOtherEntity(leftEntity);
+        if(leftId > 0 && rightId > 0) {
+            Entity *leftEntity = entityTypeLeft->context()->entity(leftId);
+            Entity *rightEntity = entityTypeRight->context()->entity(rightId);
+            RelationValuePrivate *leftValue = qobject_cast<RelationValue *>(leftEntity->propertyValue(q))->d_func();
+            RelationValuePrivate *rightValue = qobject_cast<RelationValue *>(rightEntity->propertyValue(q))->d_func();
+            leftValue->addOtherEntity(rightEntity);
+            rightValue->addOtherEntity(leftEntity);
+        }
     }
 }
 
