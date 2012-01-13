@@ -13,6 +13,7 @@ class EntityType;
 class Relation;
 class Row;
 class Storage;
+class Table;
 
 class ContextPrivate;
 class Context : public QAbstractTableModel
@@ -29,6 +30,7 @@ public:
     QString name() const;
 //    void setName(const QString &name);
     Storage *storage() const;
+    Table *table() const;
 
     EntityType *baseEntityType() const;
     QList<EntityType *> entityTypes() const;

@@ -1,7 +1,7 @@
 #ifndef LBDATABASE_TABLE_H
 #define LBDATABASE_TABLE_H
 
-#include <QAbstractTableModel>
+#include <QSqlTableModel>
 
 namespace LBDatabase {
 
@@ -10,7 +10,7 @@ class Database;
 class Row;
 
 class TablePrivate;
-class Table : public QAbstractTableModel
+class Table : public QSqlTableModel
 {
     Q_OBJECT
 
@@ -37,21 +37,6 @@ public:
 
     Row *appendRow();
     void deleteRow(int id);
-
-
-    QList<QVariant> select(const QString &column, bool distinct = false);
-
-
-    // QAbstractTableModel
-    QVariant data(const QModelIndex &index, int role) const;
-    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
-    int columnCount(const QModelIndex &parent) const;
-    int rowCount(const QModelIndex &parent) const;
-    bool setData(const QModelIndex &index, const QVariant &value, int role);
-    Qt::ItemFlags flags(const QModelIndex &index) const;
-
-private Q_SLOTS:
-    void onRowDataChanged(int column, QVariant data);
 
 protected:
     friend class DatabasePrivate;

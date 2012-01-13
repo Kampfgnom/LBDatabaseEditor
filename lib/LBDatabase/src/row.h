@@ -6,6 +6,7 @@
 #include <QVariant>
 
 class QSqlQuery;
+class QSqlRecord;
 
 namespace LBDatabase {
 
@@ -24,15 +25,12 @@ public:
     void setData(int column, const QVariant &data);
     void setData(const QString &column, const QVariant &data);
 
-Q_SIGNALS:
-    void dataChanged(int column, QVariant data);
+    Table *table() const;
 
 private:
     friend class TablePrivate;
-    void addColumn(const QString &name, const QVariant &value);
-    void removeColumn(int column);
 
-    explicit Row(const QSqlQuery &query, Table *table);
+    explicit Row(int index, int id, Table *table);
 
     QScopedPointer<RowPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Row)

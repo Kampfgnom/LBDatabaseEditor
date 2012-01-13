@@ -34,13 +34,18 @@ void RelationValueRightPrivate::fetchValue()
     switch(relation->cardinality()) {
     case Relation::OneToOne:
     case Relation::OneToMany:
-        leftId = entity->row()->data(relation->name()).toInt();
+        leftId = entity->row()->data(relation->rightColumnIndex()).toInt();
         if(leftId > 0) {
             leftEntity = relation->entityTypeLeft()->context()->entity(leftId);
-            otherEntities.append(leftEntity);
-            leftValue = leftEntity->relationValueLeft(relation);
-            if(leftValue) {
-                leftValue->addRightValue(q);
+            if(leftEntity) {
+                otherEntities.append(leftEntity);
+                leftValue = leftEntity->relationValueLeft(relation);
+                if(leftValue) {
+                    leftValue->addRightValue(q);
+                }
+            }
+            else {
+                qWarning() << "Relation incorrect: No such entity" << leftId << "in context" << relation->entityTypeLeft()->context()->name();
             }
         }
         break;

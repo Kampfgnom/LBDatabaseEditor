@@ -1,11 +1,13 @@
 #include "attribute.h"
 
 #include "attributevalue.h"
+#include "column.h"
 #include "context.h"
 #include "entity.h"
 #include "entitytype.h"
 #include "row.h"
 #include "storage.h"
+#include "table.h"
 
 namespace LBDatabase {
 
@@ -25,6 +27,8 @@ class AttributePrivate {
     QString displayName;
     EntityType *entityType;
 
+    int columnIndex;
+
     Attribute::PrefetchStrategy prefetchStrategy;
 
     Attribute * q_ptr;
@@ -39,6 +43,7 @@ void AttributePrivate::init()
     prefetchStrategy = static_cast<Attribute::PrefetchStrategy>(row->data(Attribute::PrefetchStrategyColumn).toInt());
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
+    columnIndex = entityType->context()->table()->column(name)->index();
     entityType->addAttribute(q);
     entityType->context()->addAttribute(q);
 }
@@ -189,6 +194,15 @@ void Attribute::setDisplayName(const QString &displayName, const Context *contex
     d->row->setData(Attribute::DisplayNameColumn, QVariant(displayName));
     d->displayName = displayName;
     emit displayNameChanged(displayName, d->entityType->context());
+}
+
+/*!
+  Return the internal index of the column of this attribute.
+  */
+int Attribute::columnIndex() const
+{
+    Q_D(const Attribute);
+    return d->columnIndex;
 }
 
 /*!

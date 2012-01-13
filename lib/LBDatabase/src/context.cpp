@@ -237,6 +237,15 @@ Storage *Context::storage() const
 }
 
 /*!
+  Returns the table, that contains the entities in this context.
+  */
+Table *Context::table() const
+{
+    Q_D(const Context);
+    return d->contextTable;
+}
+
+/*!
   Returns the EntityType, from which all types in the context are somehow
   derived.
   */
