@@ -10,7 +10,7 @@ class Column;
 
 namespace LBGui {
 
-class ColumnEditLine;
+class EditColumnWidget;
 
 class EditTableDialogPrivate;
 class EditTableDialog : public QDialog
@@ -26,7 +26,7 @@ public:
 
 private Q_SLOTS:
     void save();
-    ColumnEditLine *addColumn();
+    EditColumnWidget *addColumn();
     void removeColumn();
 
 private:

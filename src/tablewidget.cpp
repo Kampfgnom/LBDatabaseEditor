@@ -1,5 +1,7 @@
 #include "tablewidget.h"
 
+#include "tableview.h"
+
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
 
@@ -67,68 +69,21 @@ TableWidget::TableWidget(QWidget *parent) :
     QVBoxLayout *plainContentsLayout = new QVBoxLayout();
     plainContentsLayout->setContentsMargins(0,0,0,0);
     plainContentsWidget->setLayout(plainContentsLayout);
-    m_plainContentsTreeView = new TreeView(plainContentsWidget);
-    m_plainContentsTreeView->setSortingEnabled(true);
-    m_plainContentsTreeView->setUniformRowHeights(true);
-    m_plainContentsTreeView->setDoubleClickActions(TreeView::EditAttributeAction);
-    plainContentsLayout->addWidget(m_plainContentsTreeView);
+    m_plainContentsTableView = new TableView(plainContentsWidget);
+    plainContentsLayout->addWidget(m_plainContentsTableView);
     addTab(plainContentsWidget,tr("Plain view"));
-
-    m_tableSortProxyModel = new QSortFilterProxyModel(this);
-    m_plainContentsTreeView->setModel(m_tableSortProxyModel);
 }
 
 void TableWidget::setTable(LBDatabase::Table *table)
 {
     m_table = table;
     setWindowTitle(table->name()+ QString::fromUtf8(" \u2013 ")+QFileInfo(table->database()->fileName()).fileName());
-
-//    m_attributesTable->setTable(table);
-
-    m_tableSortProxyModel->setSourceModel(table);
-    for(int i = 0; i < m_plainContentsTreeView->model()->columnCount(); ++i) {
-        m_plainContentsTreeView->resizeColumnToContents(i);
-    }
+    m_plainContentsTableView->setTable(table);
 }
 
-void TableWidget::editSelectedAttribute()
+TableView *TableWidget::tableView() const
 {
-//    LBDatabase::AttributeMetaData *metaData = m_attributesTable->firstSelectedAttributeMetaData();
-//    if(metaData) {
-//        switch(metaData->type()) {
-//        DatabaseAttributeEditDialog *d;
-//        case LBDatabase::AttributeMetaData::DatabaseAttributeType:
-//            d = new DatabaseAttributeEditDialog(static_cast<LBDatabase::DatabaseAttributeMetaData *>(metaData),this);
-//            d->open();
-//            break;
-//        case LBDatabase::AttributeMetaData::UnknownType:
-//            break;
-//        default:
-//            break;
-//        }
-//    }
-}
-
-void TableWidget::addAttribute()
-{
-//    AddAttributeDialog *d = new AddAttributeDialog(m_table, this);
-//    d->open();
-}
-
-void TableWidget::removeAttribute()
-{
-//    LBDatabase::AttributeMetaData *metaData = m_attributesTable->firstSelectedAttributeMetaData();
-//    if(metaData) {
-//        switch(metaData->type()) {
-//        case LBDatabase::AttributeMetaData::DatabaseAttributeType:
-//            m_table->removeDatabaseAttribute(metaData->name());
-//            break;
-//        case LBDatabase::AttributeMetaData::UnknownType:
-//            break;
-//        default:
-//            break;
-//        }
-//    }
+    return m_plainContentsTableView;
 }
 
 } // namespace LBGui

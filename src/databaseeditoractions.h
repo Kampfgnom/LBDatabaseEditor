@@ -14,12 +14,20 @@ class DatabaseEditorActions : public QObject
 public:
     explicit DatabaseEditorActions(DatabaseEditorController *controller);
     
+    // Database
     Action *openDatabaseAction() const;
+    Action *importDatabaseAction() const;
     Action *closeDatabaseAction() const;
     Action *saveDatabaseAction() const;
     Action *insertRowAction() const;
+    Action *deleteRowAction() const;
     Action *createTableAction() const;
     Action *editTableAction() const;
+
+    //Entity
+
+    Action *createContextAction() const;
+    Action *addEntityTypeAction() const;
 
 public slots:
     void updateActions();
@@ -27,12 +35,19 @@ public slots:
 private:
     DatabaseEditorController *m_controller;
 
+    // Database
     Action *m_openDatabaseAction;
+    Action *m_importDatabaseAction;
     Action *m_closeDatabaseAction;
     Action *m_saveDatabaseAction;
     Action *m_createTableAction;
     Action *m_insertRowAction;
+    Action *m_deleteRowAction;
     Action *m_editTableAction;
+
+    //Entity
+    Action *m_createContextAction;
+    Action *m_addEntityTypeAction;
     
 };
 

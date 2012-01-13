@@ -15,11 +15,16 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
 {
     connect(controller, SIGNAL(currentDatabaseChanged(::LBDatabase::Database*)), this, SLOT(updateActions()));
     connect(controller, SIGNAL(currentTableChanged(::LBDatabase::Table*)), this, SLOT(updateActions()));
+    connect(controller, SIGNAL(currentContextChanged(::LBDatabase::Context*)), this, SLOT(updateActions()));
 
     m_openDatabaseAction = new Action(this);
-    m_openDatabaseAction->setText(tr("&Open database"));
+    m_openDatabaseAction->setText(tr("&Open..."));
     m_openDatabaseAction->setShortcut(QKeySequence::Open);
-    connect(m_openDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(openDatabase()));
+    connect(m_openDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(openFile()));
+
+    m_importDatabaseAction = new Action(this);
+    m_importDatabaseAction->setText(tr("&Import database..."));
+    connect(m_importDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(importDatabase()));
 
     m_closeDatabaseAction = new Action(this);
     m_closeDatabaseAction->setText(tr("C&lose database"));
@@ -38,6 +43,11 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_insertRowAction->setEnabled(false);
     connect(m_insertRowAction, SIGNAL(triggered()), m_controller, SLOT(appendRow()));
 
+    m_deleteRowAction = new Action(this);
+    m_deleteRowAction->setText(tr("&Delete Row..."));
+    m_deleteRowAction->setEnabled(false);
+    connect(m_deleteRowAction, SIGNAL(triggered()), m_controller, SLOT(deleteRow()));
+
     m_createTableAction = new Action(this);
     m_createTableAction->setText(tr("&Create Table..."));
     m_createTableAction->setEnabled(false);
@@ -47,11 +57,26 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_editTableAction->setText(tr("&Edit Table..."));
     m_editTableAction->setEnabled(false);
     connect(m_editTableAction, SIGNAL(triggered()), m_controller, SLOT(editTable()));
+
+    m_createContextAction = new Action(this);
+    m_createContextAction->setText(tr("&Create Context..."));
+    m_createContextAction->setEnabled(false);
+    connect(m_createContextAction, SIGNAL(triggered()), m_controller, SLOT(createContext()));
+
+    m_addEntityTypeAction = new Action(this);
+    m_addEntityTypeAction->setText(tr("&Add EntityType..."));
+    m_addEntityTypeAction->setEnabled(false);
+    connect(m_addEntityTypeAction, SIGNAL(triggered()), m_controller, SLOT(addEntityType()));
 }
 
 Action *DatabaseEditorActions::openDatabaseAction() const
 {
     return m_openDatabaseAction;
+}
+
+Action *DatabaseEditorActions::importDatabaseAction() const
+{
+    return m_importDatabaseAction;
 }
 
 Action *DatabaseEditorActions::closeDatabaseAction() const
@@ -69,6 +94,11 @@ Action *DatabaseEditorActions::insertRowAction() const
     return m_insertRowAction;
 }
 
+Action *DatabaseEditorActions::deleteRowAction() const
+{
+    return m_deleteRowAction;
+}
+
 Action *DatabaseEditorActions::createTableAction() const
 {
     return m_createTableAction;
@@ -79,6 +109,16 @@ Action *DatabaseEditorActions::editTableAction() const
     return m_editTableAction;
 }
 
+Action *DatabaseEditorActions::createContextAction() const
+{
+    return m_createContextAction;
+}
+
+Action *DatabaseEditorActions::addEntityTypeAction() const
+{
+    return m_addEntityTypeAction;
+}
+
 void DatabaseEditorActions::updateActions()
 {
     m_closeDatabaseAction->setEnabled(m_controller->currentDatabase() != 0);
@@ -86,6 +126,10 @@ void DatabaseEditorActions::updateActions()
     m_createTableAction->setEnabled(m_controller->currentDatabase() != 0);
     m_insertRowAction->setEnabled(m_controller->currentTable() != 0);
     m_editTableAction->setEnabled(m_controller->currentTable() != 0);
+    m_deleteRowAction->setEnabled(m_controller->currentTable() != 0);
+
+    m_createContextAction->setEnabled(m_controller->currentStorage() != 0);
+    m_addEntityTypeAction->setEnabled(m_controller->currentContext() != 0);
 
     QString closeText = tr("Close Database");
     if(m_controller->currentDatabase()) {
