@@ -19,27 +19,16 @@ private:
         table(0)
     {}
 
-    void initWith(const QSqlQuery &query, const QSqlRecord &record);
+    void init();
 
     friend class Row;
     int id;
+    int index;
     Table *table;
-    QList<QVariant> values;
 };
 
-void RowPrivate::initWith(const QSqlQuery &query, const QSqlRecord &record)
+void RowPrivate::init()
 {
-    int idIndex = record.indexOf(QLatin1String("id"));
-    Q_ASSERT_X(idIndex != -1, "RowPrivate::initWith", "The query has no field 'id'");
-
-    id = query.value(idIndex).toInt();
-    Q_ASSERT_X(id > 0, "RowPrivate::initWith", "The id of this row is not valid");
-
-    int count = record.count();
-    values.reserve(count);
-    for(int i = 0; i < count; ++i) {
-        values.append(query.value(i));
-    }
 }
 
 /******************************************************************************
@@ -83,13 +72,15 @@ void RowPrivate::initWith(const QSqlQuery &query, const QSqlRecord &record)
   Constructs a new row from the contents in the current record of \a query in
   the Table \a table.
   */
-Row::Row(const QSqlQuery &query, const QSqlRecord &record, Table *table) :
+Row::Row(int index, int id, Table *table) :
     QObject(table),
     d_ptr(new RowPrivate)
 {
     Q_D(Row);
     d->table = table;
-    d->initWith(query, record);
+    d->index = index;
+    d->id = id;
+    d->init();
 }
 
 /*!
@@ -115,7 +106,7 @@ int Row::id() const
 QVariant Row::data(int column) const
 {
     Q_D(const Row);
-    return d->values.at(column);
+    return d->table->data(d->table->index(d->index, column));
 }
 
 /*!
@@ -141,18 +132,8 @@ QVariant Row::data(const QString &column) const
 void Row::setData(int column, const QVariant &data)
 {
     Q_D(Row);
-    if(column >= d->values.size() || d->values.at(column) == data)
-        return;
-
-    d->values.replace(column, data);
-    QSqlQuery query(d->table->database()->sqlDatabase());
-    query.exec(QLatin1String("UPDATE ")+d->table->name()+
-               QLatin1String(" SET ")+d->table->column(column)->name()+QLatin1String(" = '")+data.toString()+
-               QLatin1String("' WHERE id = '")+QString::number(d->id)+QLatin1String("'"));
-    checkSqlError(query);
-    query.finish();
-    d->table->database()->setDirty(true);
-    emit dataChanged(column, data);
+    if(d->table->setData(d->table->index(d->index, column),data))
+        d->table->database()->setDirty(true);
 }
 
 /*!
@@ -178,33 +159,6 @@ Table *Row::table() const
 {
     Q_D(const Row);
     return d->table;
-}
-
-/*!
-  \internal
-
-  Adds a column to the row.
-
-  \sa Table::addColumn()
-  */
-void Row::addColumn(const QString &name, const QVariant &value)
-{
-    Q_UNUSED(name)
-    Q_D(Row);
-    d->values.append(value);
-}
-
-/*!
-  \internal
-
-  Removes a column from the row.
-
-  \sa Table::removeColumn()
-  */
-void Row::removeColumn(int column)
-{
-    Q_D(Row);
-    d->values.removeAt(column);
 }
 
 } // namespace LBDatabase

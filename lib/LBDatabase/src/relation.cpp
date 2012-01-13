@@ -1,6 +1,7 @@
 #include "relation.h"
 
 #include "attribute.h"
+#include "column.h"
 #include "context.h"
 #include "database.h"
 #include "entity.h"
@@ -49,6 +50,8 @@ class RelationPrivate {
 
     Table *relationTable;
 
+    int rightColumnIndex;
+
     Relation * q_ptr;
     Q_DECLARE_PUBLIC(Relation)
 };
@@ -73,6 +76,8 @@ void RelationPrivate::init()
     if(entityTypeRight) {
         entityTypeRight->addRelation(q);
         entityTypeRight->context()->addRelation(q);
+        if(cardinality == Relation::OneToOne || cardinality == Relation::OneToMany)
+            rightColumnIndex = entityTypeRight->context()->table()->column(name)->index();
     }
 }
 
@@ -281,6 +286,12 @@ void Relation::initializeManyToManyRelation()
 {
     Q_D(Relation);
     return d->initializeManyToManyRelation();
+}
+
+int Relation::rightColumnIndex() const
+{
+    Q_D(const Relation);
+    return d->rightColumnIndex;
 }
 
 } // namespace LBDatabase

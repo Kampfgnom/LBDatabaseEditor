@@ -27,15 +27,10 @@ public:
 
     Table *table() const;
 
-Q_SIGNALS:
-    void dataChanged(int column, QVariant data);
-
 private:
     friend class TablePrivate;
-    void addColumn(const QString &name, const QVariant &value);
-    void removeColumn(int column);
 
-    explicit Row(const QSqlQuery &query, const QSqlRecord &record, Table *table);
+    explicit Row(int index, int id, Table *table);
 
     QScopedPointer<RowPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Row)
