@@ -15,6 +15,7 @@
 
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QElapsedTimer>
 
 #include <QDebug>
 
@@ -129,7 +130,10 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
         return;
     }
 
+    QElapsedTimer timer;
+    timer.start();
     storage->open();
+    qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
@@ -190,8 +194,11 @@ void DatabaseEditorController::appendRow()
 void DatabaseEditorController::deleteRow()
 {
     if(m_currentTable) {
-        int id = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow()->id();
-        m_currentTable->deleteRow(id);
+        LBDatabase::Row *row = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow();
+        if(row) {
+            int id = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow()->id();
+            m_currentTable->deleteRow(id);
+        }
     }
 }
 

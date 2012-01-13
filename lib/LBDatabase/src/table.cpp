@@ -59,15 +59,17 @@ void TablePrivate::init()
     }
 
     QSqlQuery query(database->sqlDatabase());
+    query.setForwardOnly(true);
     query.exec(QLatin1String("SELECT * FROM ")+name);
+    QSqlRecord record = query.record();
     rows.reserve(query.size());
     rowsById.reserve(query.size());
-    int idIndex = query.record().indexOf(QLatin1String("id"));
+    int idIndex = record.indexOf(QLatin1String("id"));
     Q_ASSERT_X(idIndex != -1, "TablePrivate::init", "The table has no field 'id'");
     int id = 0;
     while(query.next()) {
         id = query.value(idIndex).toInt();
-        Row *row = new Row(query, q_ptr);
+        Row *row = new Row(query,record, q_ptr);
         QObject::connect(row, SIGNAL(dataChanged(int,QVariant)), q, SLOT(onRowDataChanged(int,QVariant)));
         rows.append(row);
         rowsById.insert(id, row);
@@ -205,7 +207,7 @@ Row *TablePrivate::appendRow()
     query.first();
     checkSqlError(query);
     Q_Q(Table);
-    Row *row = new Row(query, q);
+    Row *row = new Row(query,query.record(), q);
     query.finish();
     q->beginInsertRows(QModelIndex(),rows.size(), rows.size());
     rows.append(row);

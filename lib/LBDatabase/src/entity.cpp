@@ -46,7 +46,8 @@ void EntityPrivate::init()
 {
     Q_Q(Entity);
     storage = context->storage();
-    entityType = storage->entityType(row->data(Entity::EntityTypeIdColumn).toInt());
+    int id = row->data(Entity::EntityTypeIdColumn).toInt();
+    entityType = storage->entityType(id);
     entityType->addEntity(q);
 }
 

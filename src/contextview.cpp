@@ -61,11 +61,11 @@ void ContextView::setContext(LBDatabase::Context *context)
     if(d->context == context)
         return;
 
-    header()->setResizeMode(QHeaderView::ResizeToContents);
+//    header()->setResizeMode(QHeaderView::ResizeToContents);
     d->contextSortProxyModel->setSourceModel(context);
     d->context = context;
-    header()->setResizeMode(QHeaderView::Interactive);
-    resizeColumnToContents(d->contextSortProxyModel->columnCount() - 1);
+//    header()->setResizeMode(QHeaderView::Interactive);
+//    resizeColumnToContents(d->contextSortProxyModel->columnCount() - 1);
 }
 
 LBDatabase::Context *ContextView::context() const

@@ -1,9 +1,11 @@
 #include "attributevalue.h"
 
 #include "attribute.h"
+#include "column.h"
 #include "context.h"
 #include "entity.h"
 #include "row.h"
+#include "table.h"
 
 #include <QVariant>
 
@@ -21,8 +23,6 @@ class AttributeValuePrivate {
     Entity *entity;
     Attribute *attribute;
 
-    QVariant data;
-
     AttributeValue * q_ptr;
     Q_DECLARE_PUBLIC(AttributeValue)
 };
@@ -35,7 +35,7 @@ void AttributeValuePrivate::init()
 
 void AttributeValuePrivate::fetchValue()
 {
-    data = entity->row()->data(attribute->name());
+//    data = entity->row()->data(attribute->name());
 }
 
 /******************************************************************************
@@ -96,7 +96,7 @@ QVariant AttributeValue::data(int role) const
 {
     Q_UNUSED(role);
     Q_D(const AttributeValue);
-    return d->data;
+    return d->entity->row()->data(d->attribute->columnIndex());
 }
 
 /*!
@@ -111,7 +111,6 @@ bool AttributeValue::setData(const QVariant &data)
         return false;
 
     d->entity->row()->setData(d->attribute->name(), data);
-    d->data = data;
     emit dataChanged(data);
     return true;
 }

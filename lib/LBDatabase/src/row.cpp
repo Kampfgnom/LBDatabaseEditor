@@ -19,7 +19,7 @@ private:
         table(0)
     {}
 
-    void initWith(const QSqlQuery &query);
+    void initWith(const QSqlQuery &query, const QSqlRecord &record);
 
     friend class Row;
     int id;
@@ -27,16 +27,17 @@ private:
     QList<QVariant> values;
 };
 
-void RowPrivate::initWith(const QSqlQuery &query)
+void RowPrivate::initWith(const QSqlQuery &query, const QSqlRecord &record)
 {
-    int idIndex = query.record().indexOf(QLatin1String("id"));
+    int idIndex = record.indexOf(QLatin1String("id"));
     Q_ASSERT_X(idIndex != -1, "RowPrivate::initWith", "The query has no field 'id'");
 
     id = query.value(idIndex).toInt();
     Q_ASSERT_X(id > 0, "RowPrivate::initWith", "The id of this row is not valid");
 
-    values.reserve(query.record().count());
-    for(int i = 0; i < query.record().count(); ++i) {
+    int count = record.count();
+    values.reserve(count);
+    for(int i = 0; i < count; ++i) {
         values.append(query.value(i));
     }
 }
@@ -82,13 +83,13 @@ void RowPrivate::initWith(const QSqlQuery &query)
   Constructs a new row from the contents in the current record of \a query in
   the Table \a table.
   */
-Row::Row(const QSqlQuery &query, Table *table) :
+Row::Row(const QSqlQuery &query, const QSqlRecord &record, Table *table) :
     QObject(table),
     d_ptr(new RowPrivate)
 {
     Q_D(Row);
     d->table = table;
-    d->initWith(query);
+    d->initWith(query, record);
 }
 
 /*!
@@ -168,6 +169,15 @@ void Row::setData(const QString &column, const QVariant &data)
         return;
 
     setData(c->index(), data);
+}
+
+/*!
+  Returns the table of the row.
+  */
+Table *Row::table() const
+{
+    Q_D(const Row);
+    return d->table;
 }
 
 /*!
