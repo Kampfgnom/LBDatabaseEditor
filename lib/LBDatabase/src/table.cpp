@@ -197,10 +197,13 @@ Row *TablePrivate::appendRow()
 {
     Q_Q(Table);
     int index = q->rowCount();
-    if(!q->insertRow(index))
+
+    if(!q->insertRecord(-1,q->record()))
         return 0;
 
-    int id = q->record(index).value(QLatin1String("id")).toInt();
+    QSqlQuery query = q->query();
+    query.seek(index);
+    int id = query.lastInsertId().toInt();
     Row *row = new Row(index, id, q);
     rows.append(row);
     rowsById.insert(id, row);
