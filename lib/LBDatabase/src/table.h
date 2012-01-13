@@ -30,6 +30,8 @@ public:
     void removeColumn(const QString &name);
     void changeColumnName(const QString &name, const QString &newName);
 
+    QVariant headerData(int section, Qt::Orientation orientation, int role) const;
+    Qt::ItemFlags flags(const QModelIndex &index) const;
 
     Row *row(int id) const;
     Row *rowAt(int index) const;
