@@ -53,10 +53,6 @@ private:
     void addPropertyValue(Entity *entity);
     void fetchValues();
 
-    void initializeManyToManyRelation();
-
-    int rightColumnIndex() const;
-
     QScopedPointer<RelationPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Relation)
     Q_DISABLE_COPY(Relation)

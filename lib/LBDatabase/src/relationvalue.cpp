@@ -20,6 +20,10 @@ void RelationValuePrivate::init()
     QObject::connect(q, SIGNAL(dataChanged(QVariant)), entity->context(), SLOT(onPropertyValueDataChanged(QVariant)));
 }
 
+void RelationValuePrivate::fetchValue()
+{
+}
+
 void RelationValuePrivate::addOtherEntity(Entity *entity)
 {
     if(!otherEntities.contains(entity))
@@ -48,9 +52,9 @@ void RelationValuePrivate::addOtherEntity(Entity *entity)
 /*!
   Creates a RelationValue.
   */
-RelationValue::RelationValue(RelationValuePrivate &dd, Relation *relation, Entity *parent) :
+RelationValue::RelationValue(Relation *relation, Entity *parent) :
     PropertyValue(parent),
-    d_ptr(&dd)
+    d_ptr(new RelationValuePrivate)
 {
     Q_D(RelationValue);
     d->q_ptr = this;
@@ -85,6 +89,36 @@ QList<Entity *> RelationValue::entities() const
 }
 
 /*!
+  Does nothing.
+  */
+bool RelationValue::setData(const QVariant &data)
+{
+    Q_UNUSED(data);
+    return false;
+}
+
+/*!
+  Returns a QVariant, which represents the content of the relation in the given role.
+
+  Currently this method supports only the Qt::DisplayRole.
+  */
+QVariant RelationValue::data(int role) const
+{
+    Q_D(const RelationValue);
+    if(role == Qt::DisplayRole) {
+        if(d->otherEntities.isEmpty())
+            return QVariant();
+
+        if(d->otherEntities.size() == 1)
+            return d->otherEntities.at(0)->displayName();
+
+        return QVariant::fromValue<QString>(QString::number(d->otherEntities.size())+QLatin1String(" ")+d->otherEntities.at(0)->entityType()->name()+QLatin1String("s"));
+    }
+
+    return QVariant();
+}
+
+/*!
   Returns false
   */
 bool RelationValue::isEditable() const
@@ -108,6 +142,12 @@ void RelationValue::fetchValue()
 {
     Q_D(RelationValue);
     d->fetchValue();
+}
+
+void RelationValue::addOtherEntity(Entity *entity)
+{
+    Q_D(RelationValue);
+    d->addOtherEntity(entity);
 }
 
 } // namespace LBDatabase

@@ -23,8 +23,6 @@ HEADERS += \
     propertyvalue.h \
     relationvalue.h \
     relationvalue_p.h \
-    relationvalueright.h \
-    relationvalueleft.h \
     function.h \
     functionvalue.h
 
@@ -43,8 +41,6 @@ SOURCES += \
     property.cpp \
     propertyvalue.cpp \
     relationvalue.cpp \
-    relationvalueright.cpp \
-    relationvalueleft.cpp \
     function.cpp \
     functionvalue.cpp
 

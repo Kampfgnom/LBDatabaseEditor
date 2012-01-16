@@ -6,9 +6,8 @@
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "relationvalue.h"
 #include "relationvalue_p.h"
-#include "relationvalueleft.h"
-#include "relationvalueright.h"
 #include "row.h"
 #include "storage.h"
 #include "table.h"
@@ -30,13 +29,13 @@ class RelationPrivate {
     RelationPrivate() :
         entityTypeLeft(0), entityTypeRight(0),
         cardinality(Relation::OneToOne),
-        relationTable(0),
-        manyToManyRelationInitialized(false)
+        relationTable(0)
     {}
 
     void init();
     void addPropertyValueToEntities();
     void initializeManyToManyRelation();
+    void initializeOneToXRelation();
     void addPropertyValue(Entity *entity);
     void fetchValues();
 
@@ -51,10 +50,6 @@ class RelationPrivate {
     Relation::Cardinality cardinality;
 
     Table *relationTable;
-
-    int rightColumnIndex;
-
-    bool manyToManyRelationInitialized;
 
     Relation * q_ptr;
     Q_DECLARE_PUBLIC(Relation)
@@ -80,8 +75,6 @@ void RelationPrivate::init()
     if(entityTypeRight) {
         entityTypeRight->addRelation(q);
         entityTypeRight->context()->addRelation(q);
-        if(cardinality == Relation::OneToOne || cardinality == Relation::OneToMany)
-            rightColumnIndex = entityTypeRight->context()->table()->column(name)->index();
     }
 }
 
@@ -89,22 +82,19 @@ void RelationPrivate::addPropertyValueToEntities()
 {
     Q_Q(Relation);
     foreach(Entity *entity, entityTypeLeft->entities()) {
-        entity->addRelationValue(new RelationValueLeft(q, entity));
+        entity->addRelationValue(new RelationValue(q, entity));
     }
     foreach(Entity *entity, entityTypeRight->entities()) {
-        entity->addRelationValue(new RelationValueRight(q, entity));
+        entity->addRelationValue(new RelationValue(q, entity));
     }
 }
 
 void RelationPrivate::fetchValues()
 {
-    Q_Q(Relation);
     switch(cardinality) {
     case Relation::OneToOne:
     case Relation::OneToMany:
-        foreach(Entity *entity, entityTypeRight->entities()) {
-            entity->propertyValue(q)->fetchValue();
-        }
+        initializeOneToXRelation();
         break;
     case Relation::ManyToMany:
         initializeManyToManyRelation();
@@ -114,9 +104,6 @@ void RelationPrivate::fetchValues()
 
 void RelationPrivate::initializeManyToManyRelation()
 {
-    if(manyToManyRelationInitialized)
-        return;
-
     Q_Q(Relation);
     Column *c1 = relationTable->column(entityTypeLeft->name());
     int entityTypeLeftColumn = 0;
@@ -142,19 +129,35 @@ void RelationPrivate::initializeManyToManyRelation()
             }
         }
     }
+}
 
-    manyToManyRelationInitialized = true;
+void RelationPrivate::initializeOneToXRelation()
+{
+    Q_Q(Relation);
+
+    int rightColumnIndex = entityTypeRight->context()->table()->column(name)->index();
+
+    int leftId;
+    Entity *leftEntity;
+    RelationValuePrivate *leftValue;
+    RelationValuePrivate *rightValue;
+    foreach(Entity *rightEntity, entityTypeRight->entities()) {
+        leftId = rightEntity->row()->data(rightColumnIndex).toInt();
+        leftEntity = entityTypeLeft->context()->entity(leftId);
+
+        if(leftEntity) {
+            leftValue = static_cast<RelationValue *>(leftEntity->propertyValue(q))->d_func();
+            rightValue = static_cast<RelationValue *>(rightEntity->propertyValue(q))->d_func();
+            leftValue->addOtherEntity(rightEntity);
+            rightValue->addOtherEntity(leftEntity);
+        }
+    }
 }
 
 void RelationPrivate::addPropertyValue(Entity *entity)
 {
     Q_Q(Relation);
-    if(entity->entityType() == entityTypeLeft) {
-        entity->addRelationValue(new RelationValueLeft(q, entity));
-    }
-    else if(entity->entityType() == entityTypeLeft) {
-        entity->addRelationValue(new RelationValueRight(q, entity));
-    }
+    entity->addRelationValue(new RelationValue(q, entity));
 }
 
 //! \endcond
@@ -319,23 +322,6 @@ void Relation::fetchValues()
 {
     Q_D(Relation);
     return d->fetchValues();
-}
-
-/*!
-  \internal
-
-  Initializes the values of a N:M relation.
-  */
-void Relation::initializeManyToManyRelation()
-{
-    Q_D(Relation);
-    return d->initializeManyToManyRelation();
-}
-
-int Relation::rightColumnIndex() const
-{
-    Q_D(const Relation);
-    return d->rightColumnIndex;
 }
 
 } // namespace LBDatabase

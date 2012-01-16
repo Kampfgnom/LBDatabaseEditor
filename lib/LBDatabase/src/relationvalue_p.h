@@ -17,7 +17,7 @@ protected:
     RelationValuePrivate() {}
 
     virtual void init();
-    virtual void fetchValue() = 0;
+    virtual void fetchValue();
 
     void addOtherEntity(Entity *entity);
 

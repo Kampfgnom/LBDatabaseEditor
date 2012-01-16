@@ -6,8 +6,6 @@
 #include "entitytype.h"
 #include "functionvalue.h"
 #include "relation.h"
-#include "relationvalueleft.h"
-#include "relationvalueright.h"
 #include "relationvalue.h"
 #include "row.h"
 #include "storage.h"
@@ -223,47 +221,6 @@ void Entity::addFunctionValue(FunctionValue *value)
     Q_D(Entity);
     d->propertyValues.insert(value->property(), value);
     d->functionValues.append(value);
-}
-
-RelationValueLeft *Entity::relationValueLeft(Relation *relation) const
-{
-    Q_D(const Entity);
-
-    QList<PropertyValue *> values = d->propertyValues.values(relation);
-    if(values.size() > 0)
-    {
-        RelationValueLeft *leftValue = qobject_cast<RelationValueLeft *>(values.at(0));
-        if(leftValue) {
-            return leftValue;
-        }
-        else if(values.size() > 1) {
-            leftValue = qobject_cast<RelationValueLeft *>(values.at(1));
-            if(leftValue) {
-                return leftValue;
-            }
-        }
-    }
-    return 0;
-}
-
-RelationValueRight *Entity::relationValueRight(Relation *relation) const
-{    Q_D(const Entity);
-
-     QList<PropertyValue *> values = d->propertyValues.values(relation);
-     if(values.size() > 0)
-     {
-         RelationValueRight *leftValue = qobject_cast<RelationValueRight *>(values.at(0));
-         if(leftValue) {
-             return leftValue;
-         }
-         else if(values.size() > 1) {
-             leftValue = qobject_cast<RelationValueRight *>(values.at(1));
-             if(leftValue) {
-                 return leftValue;
-             }
-         }
-     }
-     return 0;
 }
 
 } // namespace LBDatabase
