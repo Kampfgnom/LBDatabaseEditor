@@ -5,6 +5,7 @@
 #include "context.h"
 #include "database.h"
 #include "entity.h"
+#include "function.h"
 #include "property.h"
 #include "propertyvalue.h"
 #include "relation.h"
@@ -48,6 +49,7 @@ class EntityTypePrivate {
     QList<Attribute *> attributes;
     QList<Relation *> relations;
     QList<Entity *> entities;
+    QList<Function *> functions;
 
     QObject *controller;
 
@@ -412,6 +414,13 @@ void EntityType::addRelation(Relation *relation)
     Q_D(EntityType);
     d->properties.append(relation);
     d->relations.append(relation);
+}
+
+void EntityType::addFunction(Function *function)
+{
+    Q_D(EntityType);
+    d->properties.append(function);
+    d->functions.append(function);
 }
 
 /*!

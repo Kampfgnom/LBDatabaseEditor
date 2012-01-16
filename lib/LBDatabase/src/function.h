@@ -12,10 +12,26 @@ class FunctionPrivate;
 class Function : public Property
 {
 public:
+    static const QString NameColumn;
+    static const QString DisplayNameColumn;
+    static const QString EntityTypeColumn;
+    static const QString KeyEntityTypeRightColumn;
+
     ~Function();
 
+    virtual int id() const;
+    virtual QString displayName(const Context *context = 0) const;
+    virtual void setDisplayName(const QString &displayName, const Context *context = 0);
+
 private:
+    friend class StoragePrivate;
+    friend class FunctionValue;
+
     explicit Function(Row *row, Storage *parent);
+
+    virtual void addPropertyValueToEntities();
+    virtual void addPropertyValue(Entity *entity);
+    void fetchValues();
 
     QScopedPointer<FunctionPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Function)

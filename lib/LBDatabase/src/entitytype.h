@@ -11,6 +11,7 @@ namespace LBDatabase {
 class Attribute;
 class Context;
 class Entity;
+class Function;
 class Property;
 class Row;
 class Storage;
@@ -57,6 +58,7 @@ private:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class EntityPrivate;
+    friend class FunctionPrivate;
 
     explicit EntityType(LBDatabase::Row *row, Storage *parent);
 
@@ -65,6 +67,7 @@ private:
     void setParentEntityType(EntityType *type);
     void addAttribute(Attribute *attribute);
     void addRelation(Relation *relation);
+    void addFunction(Function *function);
     void addInheritedProperties(EntityType *parent);
     void addEntity(Entity *entity);
 

@@ -5,6 +5,7 @@
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "function.h"
 #include "relation.h"
 #include "row.h"
 #include "storage.h"
@@ -343,6 +344,18 @@ void Context::addAttribute(Attribute *attribute)
     beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
     d->properties.append(attribute);
     connect(attribute, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
+    endInsertColumns();
+}
+
+void Context::addFunction(Function *function)
+{
+    Q_D(Context);
+    if(d->properties.contains(function))
+        return;
+
+    beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
+    d->properties.append(function);
+    connect(function, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
     endInsertColumns();
 }
 

@@ -49,6 +49,8 @@ private:
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
 
+    void fetchValues();
+
     QScopedPointer<AttributePrivate> d_ptr;
     Q_DECLARE_PRIVATE(Attribute)
     Q_DISABLE_COPY(Attribute)

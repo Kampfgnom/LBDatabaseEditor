@@ -6,6 +6,7 @@
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "function.h"
 #include "propertyvalue.h"
 #include "relation.h"
 #include "row.h"
@@ -28,6 +29,7 @@ const QString ContextsTableName("lbmeta_contexts");
 const QString EntitiesTableName("lbmeta_entitytypes");
 const QString AttributesTableName("lbmeta_attributes");
 const QString RelationsTableName("lbmeta_relations");
+const QString FunctionsTableName("lbmeta_functions");
 
 const QString NameColumn("name");
 }
@@ -46,6 +48,7 @@ class StoragePrivate {
     Table *entityTypesTable;
     Table *metaDataTable;
     Table *relationsTable;
+    Table *functionsTable;
 
     QString name;
     QString fileName;
@@ -55,6 +58,7 @@ class StoragePrivate {
     QHash<int, EntityType *> entityTypes;
     QHash<int, Attribute *> attributes;
     QHash<int, Relation *> relations;
+    QHash<int, Function *> functions;
     QList<Property *> properties;
 
     Storage * q_ptr;
@@ -103,13 +107,17 @@ bool StoragePrivate::open()
     if(!relationsTable)
         return false;
 
+    functionsTable = database->table(FunctionsTableName);
+    if(!functionsTable)
+        return false;
+
     Row *metaDataRow = metaDataTable->rowAt(0);
     name = metaDataRow->data(NameColumn).toString();
 
     contexts.reserve(contextsTable->rows().size());
     entityTypes.reserve(entityTypesTable->rows().size());
     attributes.reserve(attributesTable->rows().size());
-    properties.reserve(attributesTable->rows().size() + relationsTable->rows().size());
+    properties.reserve(attributesTable->rows().size() + relationsTable->rows().size() + functionsTable->rows().size());
 
     foreach(Row *row, contextsTable->rows()) {
         Context *context = new Context(row, q);
@@ -128,6 +136,10 @@ bool StoragePrivate::open()
         q->insertRelation(new Relation(row, q));
     }
 
+    foreach(Row *row, functionsTable->rows()) {
+        q->insertFunction(new Function(row, q));
+    }
+
     foreach(Context *context, contexts.values()) {
         context->initializeEntityHierarchy();
         context->loadEntities();
@@ -136,13 +148,8 @@ bool StoragePrivate::open()
     foreach(Property *property, properties) {
         property->addPropertyValueToEntities();
     }
-
-    foreach(Context *context, contexts.values()) {
-        foreach(Entity *entity, context->entities()) {
-            foreach(PropertyValue *value, entity->propertyValues()) {
-                value->fetchValue();
-            }
-        }
+    foreach(Property *property, properties) {
+        property->fetchValues();
     }
 
     return true;
@@ -425,6 +432,21 @@ void Storage::insertRelation(Relation *relation)
 
     d->relations.insert(relation->id(), relation);
     d->properties.append(relation);
+}
+
+/*!
+  \internal
+
+  Inserts the function \a function into the storage-global list of functions.
+  */
+void Storage::insertFunction(Function *function)
+{
+    Q_D(Storage);
+    if(d->functions.contains(function->id()))
+        return;
+
+    d->functions.insert(function->id(), function);
+    d->properties.append(function);
 }
 
 /*!

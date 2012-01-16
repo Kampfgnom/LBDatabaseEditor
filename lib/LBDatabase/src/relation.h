@@ -51,6 +51,7 @@ private:
 
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
+    void fetchValues();
 
     void initializeManyToManyRelation();
 

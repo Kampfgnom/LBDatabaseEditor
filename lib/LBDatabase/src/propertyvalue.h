@@ -27,10 +27,11 @@ public:
 Q_SIGNALS:
     void dataChanged(QVariant data);
 
-private:
+protected:
     friend class StoragePrivate;
     friend class ContextPrivate;
     friend class EntityTypePrivate;
+    friend class RelationPrivate;
 
     virtual void fetchValue() = 0;
 };

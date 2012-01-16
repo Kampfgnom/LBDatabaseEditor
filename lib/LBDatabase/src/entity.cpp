@@ -4,6 +4,7 @@
 #include "attributevalue.h"
 #include "context.h"
 #include "entitytype.h"
+#include "functionvalue.h"
 #include "relation.h"
 #include "relationvalueleft.h"
 #include "relationvalueright.h"
@@ -37,6 +38,7 @@ class EntityPrivate {
 
     QList<AttributeValue *> attributeValues;
     QList<RelationValue *> relationValues;
+    QList<FunctionValue *> functionValues;
 
     Entity * q_ptr;
     Q_DECLARE_PUBLIC(Entity)
@@ -214,6 +216,13 @@ void Entity::addRelationValue(RelationValue *value)
     Q_D(Entity);
     d->propertyValues.insert(value->property(), value);
     d->relationValues.append(value);
+}
+
+void Entity::addFunctionValue(FunctionValue *value)
+{
+    Q_D(Entity);
+    d->propertyValues.insert(value->property(), value);
+    d->functionValues.append(value);
 }
 
 RelationValueLeft *Entity::relationValueLeft(Relation *relation) const

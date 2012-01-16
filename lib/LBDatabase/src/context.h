@@ -10,6 +10,7 @@ namespace LBDatabase {
 class Attribute;
 class Entity;
 class EntityType;
+class Function;
 class Relation;
 class Row;
 class Storage;
@@ -61,12 +62,14 @@ private:
     friend class EntityTypePrivate;
     friend class AttributePrivate;
     friend class RelationPrivate;
+    friend class FunctionPrivate;
 
     explicit Context(Row *row, Storage *parent);
 
     void createBaseEntityType(const QString &name);
     void addEntityType(EntityType *type);
     void addAttribute(Attribute *attribute);
+    void addFunction(Function *function);
     void addRelation(Relation *relation);
 
     void initializeEntityHierarchy();

@@ -11,6 +11,7 @@ class Attribute;
 class AttributeValue;
 class Context;
 class EntityType;
+class FunctionValue;
 class Property;
 class PropertyValue;
 class Relation;
@@ -47,6 +48,7 @@ private:
     friend class RelationPrivate;
     friend class Context;
     friend class RelationValueRightPrivate;
+    friend class FunctionPrivate;
 
     explicit Entity(Row *row, Context *parent);
 
@@ -55,6 +57,7 @@ private:
 
     void addAttributeValue(AttributeValue *value);
     void addRelationValue(RelationValue *value);
+    void addFunctionValue(FunctionValue *value);
 
     RelationValueLeft *relationValueLeft(Relation *relation) const;
     RelationValueRight *relationValueRight(Relation *relation) const;

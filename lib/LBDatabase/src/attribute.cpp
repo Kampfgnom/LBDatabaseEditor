@@ -20,6 +20,7 @@ class AttributePrivate {
     void init();
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
+    void fetchValues();
 
     Row *row;
     Storage *storage;
@@ -59,6 +60,10 @@ void AttributePrivate::addPropertyValue(Entity *entity)
 {
     Q_Q(Attribute);
     entity->addAttributeValue(new AttributeValue(q, entity));
+}
+
+void AttributePrivate::fetchValues()
+{
 }
 
 /******************************************************************************
@@ -141,6 +146,12 @@ void Attribute::addPropertyValue(Entity *entity)
 {
     Q_D(Attribute);
     d->addPropertyValue(entity);
+}
+
+void Attribute::fetchValues()
+{
+    Q_D(Attribute);
+    d->fetchValues();
 }
 
 /*!

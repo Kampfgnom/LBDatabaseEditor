@@ -11,6 +11,7 @@ class Attribute;
 class Context;
 class Database;
 class EntityType;
+class Function;
 class Relation;
 class Table;
 
@@ -46,6 +47,7 @@ private:
     friend class EntityPrivate;
     friend class AttributePrivate;
     friend class RelationPrivate;
+    friend class FunctionPrivate;
 
     explicit Storage(const QString &fileName, QObject *parent = 0);
 
@@ -56,6 +58,7 @@ private:
     void insertEntityType(EntityType *type);
     void insertAttribute(Attribute *attribute);
     void insertRelation(Relation *relation);
+    void insertFunction(Function *function);
 
     Table *contextsTable() const;
     Table *entityTypesTable() const;

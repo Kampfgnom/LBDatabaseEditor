@@ -35,7 +35,6 @@ void AttributeValuePrivate::init()
 
 void AttributeValuePrivate::fetchValue()
 {
-//    data = entity->row()->data(attribute->name());
 }
 
 /******************************************************************************
