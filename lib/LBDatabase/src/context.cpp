@@ -37,6 +37,7 @@ class ContextPrivate {
     EntityType *addEntityType(const QString &name, EntityType *parentEntityType);
     Entity *insertEntity(EntityType *type);
 
+    Entity *createEntityInstance(Row *row);
 
     Row *row;
     Storage *storage;
@@ -47,6 +48,8 @@ class ContextPrivate {
     QList<Entity *> entities;
     QHash<int, Entity *> entitiesById;
     QList<Property *> properties;
+
+    QHash<QString, QMetaObject> entityMetaObjects;
 
     Context * q_ptr;
     Q_DECLARE_PUBLIC(Context)
@@ -78,14 +81,13 @@ void ContextPrivate::initializeEntityHierarchy()
 
 void ContextPrivate::loadEntities()
 {
-    Q_Q(Context);
     if(!contextTable)
         return;
 
     entities.reserve(contextTable->rows().size());
     entitiesById.reserve(contextTable->rows().size());
     foreach(Row *row, contextTable->rows()) {
-        Entity *entity = new Entity(row, q);
+        Entity *entity = createEntityInstance(row);
         entities.append(entity);
         entitiesById.insert(row->id(), entity);
     }
@@ -114,7 +116,7 @@ Entity *ContextPrivate::insertEntity(EntityType *type)
     row->setData(Entity::EntityTypeIdColumn, QVariant(type->id()));
 
     q->beginInsertRows(QModelIndex(), entities.size(), entities.size());
-    Entity *entity = new Entity(row, q);
+    Entity *entity =  createEntityInstance(row);
     entities.append(entity);
     entitiesById.insert(row->id(), entity);
 
@@ -138,6 +140,19 @@ void ContextPrivate::createBaseEntityType(const QString &name)
 
     baseEntityType = new EntityType(entityTypeRow, storage);
     storage->insertEntityType(baseEntityType);
+}
+
+Entity *ContextPrivate::createEntityInstance(Row *row)
+{
+    Q_Q(Context);
+    int typeId = row->data(Entity::EntityTypeIdColumn).toInt();
+    const QString entityTypeName = storage->entityType(typeId)->name();
+
+    if(!entityMetaObjects.contains(entityTypeName))
+        return new Entity(row, q);
+
+    QObject *object = entityMetaObjects.value(entityTypeName).newInstance(Q_ARG(::LBDatabase::Row*,row), Q_ARG(::LBDatabase::Context*, q));
+    return static_cast<Entity *>(object);
 }
 
 /******************************************************************************
@@ -539,6 +554,15 @@ Qt::ItemFlags Context::flags(const QModelIndex &index) const
     }
 
     return QAbstractItemModel::flags(index);
+}
+
+void Context::registerEntityType(const QString &entityName, QMetaObject metaObject)
+{
+    Q_D(Context);
+    if(d->entityMetaObjects.contains(entityName))
+        return;
+
+    d->entityMetaObjects.insert(entityName, metaObject);
 }
 
 } // namespace LBDatabase

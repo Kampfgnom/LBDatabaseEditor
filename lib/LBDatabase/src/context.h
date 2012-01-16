@@ -57,7 +57,7 @@ private Q_SLOTS:
     void onPropertyDisplayNameChanged(QString displayName, Context* context);
     void onPropertyValueDataChanged(QVariant data);
 
-private:
+protected:
     friend class StoragePrivate;
     friend class EntityTypePrivate;
     friend class AttributePrivate;
@@ -66,6 +66,10 @@ private:
 
     explicit Context(Row *row, Storage *parent);
 
+    template<class EntityClass>
+    void registerEntityType(const QString &entityTypeName);
+
+private:
     void createBaseEntityType(const QString &name);
     void addEntityType(EntityType *type);
     void addAttribute(Attribute *attribute);
@@ -75,10 +79,18 @@ private:
     void initializeEntityHierarchy();
     void loadEntities();
 
+    void registerEntityType(const QString &entityTypeName, QMetaObject metaObject);
+
     QScopedPointer<ContextPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Context)
     Q_DISABLE_COPY(Context)
 };
+
+template<class EntityClass>
+void Context::registerEntityType(const QString &entityTypeName)
+{
+    registerEntityType(entityTypeName, EntityClass::staticMetaObject);
+}
 
 } // namespace LBDatabase
 

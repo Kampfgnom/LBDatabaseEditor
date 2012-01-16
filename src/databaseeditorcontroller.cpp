@@ -10,6 +10,8 @@
 #include "addentitytypedialog.h"
 #include "createcontextdialog.h"
 
+#include "model/psstorage.h"
+
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
 
@@ -123,7 +125,11 @@ void DatabaseEditorController::openFile(const QString &fileName)
 void DatabaseEditorController::openEntityStorage(const QString &fileName)
 {
     AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
-    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+//    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+
+    static QObject guard;
+    PSStorage *storage = new PSStorage(autosaveFile->copyFileName(), &guard);
+
     if(m_storages.contains(storage)) {
 //        m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
 //        showDatabase(database);

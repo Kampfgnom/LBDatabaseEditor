@@ -4,3 +4,5 @@ src/LBDatabase.pro.user
 LBDatabaseEditor.pro.user
 *.save
 
+
+examples/projectstats.lbstorage.lbautosave

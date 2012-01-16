@@ -40,7 +40,7 @@ public:
 
     Row *row() const;
 
-private:
+protected:
     friend class AttributePrivate;
     friend class ContextPrivate;
     friend class RelationPrivate;

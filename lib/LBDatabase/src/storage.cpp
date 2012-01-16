@@ -43,6 +43,8 @@ class StoragePrivate {
     bool open();
     Context *addContext(const QString &name, const QString &baseEntityTypeName);
 
+    Context *createContextInstance(Row *row);
+
     Table *attributesTable;
     Table *contextsTable;
     Table *entityTypesTable;
@@ -60,6 +62,8 @@ class StoragePrivate {
     QHash<int, Relation *> relations;
     QHash<int, Function *> functions;
     QList<Property *> properties;
+
+    QHash<QString, QMetaObject> contextMetaObjects;
 
     Storage * q_ptr;
     Q_DECLARE_PUBLIC(Storage)
@@ -120,7 +124,7 @@ bool StoragePrivate::open()
     properties.reserve(attributesTable->rows().size() + relationsTable->rows().size() + functionsTable->rows().size());
 
     foreach(Row *row, contextsTable->rows()) {
-        Context *context = new Context(row, q);
+        Context *context = createContextInstance(row);
         contexts.insert(row->id(), context);
     }
 
@@ -157,17 +161,28 @@ bool StoragePrivate::open()
 
 Context *StoragePrivate::addContext(const QString &name, const QString &baseEntityTypeName)
 {
-    Q_Q(Storage);
     database->createTable(name);
     Row *row = contextsTable->appendRow();
     row->setData(Context::NameColumn, QVariant(name));
 
-    Context *context = new Context(row, q);
+    Context *context = createContextInstance(row);
     contexts.insert(row->id(), context);
 
     context->createBaseEntityType(baseEntityTypeName);
 
     return context;
+}
+
+Context *StoragePrivate::createContextInstance(Row *row)
+{
+    Q_Q(Storage);
+    const QString contextName = row->data(Context::NameColumn).toString();
+
+    if(!contextMetaObjects.contains(contextName))
+        return new Context(row, q);
+
+    QObject *object = contextMetaObjects.value(contextName).newInstance(Q_ARG(::LBDatabase::Row*,row), Q_ARG(::LBDatabase::Storage*, q));
+    return static_cast<Context *>(object);
 }
 
 /******************************************************************************
@@ -474,6 +489,15 @@ Table *Storage::attributesTable() const
 {
     Q_D(const Storage);
     return d->attributesTable;
+}
+
+void Storage::registerContextType(const QString &contextName, QMetaObject metaObject)
+{
+    Q_D(Storage);
+    if(d->contextMetaObjects.contains(contextName))
+        return;
+
+    d->contextMetaObjects.insert(contextName, metaObject);
 }
 
 /*!
