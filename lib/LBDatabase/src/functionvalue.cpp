@@ -1,7 +1,9 @@
 #include "functionvalue.h"
 
+#include "calculator.h"
 #include "context.h"
 #include "entity.h"
+#include "entitytype.h"
 #include "function.h"
 
 #define COMMA ,
@@ -16,11 +18,15 @@ class FunctionValuePrivate {
 
     void init();
     void fetchValue();
+    QHash<Entity *, QVariant> calculate();
+    QVariant calculate(Entity *key);
 
     Entity *entity;
     Function *function;
 
-    QHash<Entity *, QVariant> values;
+    mutable bool cached;
+
+    mutable QHash<Entity *, QVariant> values;
 
     FunctionValue * q_ptr;
     Q_DECLARE_PUBLIC(FunctionValue)
@@ -34,6 +40,20 @@ void FunctionValuePrivate::init()
 
 void FunctionValuePrivate::fetchValue()
 {
+}
+
+QVariant FunctionValuePrivate::calculate(Entity *key)
+{
+    Q_Q(FunctionValue);
+    Calculator *calculator = entity->entityType()->calculator();
+    return calculator->calculate(entity,q,key);
+}
+
+QHash<Entity *, QVariant> FunctionValuePrivate::calculate()
+{
+    Q_Q(FunctionValue);
+    Calculator *calculator = entity->entityType()->calculator();
+    return calculator->calculate(entity,q);
 }
 
 /******************************************************************************
@@ -82,10 +102,37 @@ Property *FunctionValue::property() const
     return d->function;
 }
 
+QVariant FunctionValue::value(Entity *entity) const
+{
+    Q_D(const FunctionValue);
+
+    if(d->function->isCalculated()) {
+        if(!d->function->cacheData()) {
+            return const_cast<FunctionValuePrivate*>(d)->calculate(entity);
+        }
+        if(!d->cached) {
+            d->values = const_cast<FunctionValuePrivate*>(d)->calculate();
+            d->cached = true;
+        }
+    }
+
+    return d->values.value(entity);
+}
+
 QVariant FunctionValue::data(int role) const
 {
     Q_D(const FunctionValue);
     Q_UNUSED(role);
+
+    if(d->function->isCalculated()) {
+        if(!d->function->cacheData()) {
+            return QVariant::fromValue<QHash<Entity *, QVariant> >(const_cast<FunctionValuePrivate*>(d)->calculate());
+        }
+        if(!d->cached) {
+            d->values = const_cast<FunctionValuePrivate*>(d)->calculate();
+            d->cached = true;
+        }
+    }
 
     if(role == Qt::DisplayRole) {
         if(d->values.isEmpty())

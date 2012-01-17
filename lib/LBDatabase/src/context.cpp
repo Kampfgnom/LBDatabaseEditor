@@ -155,7 +155,16 @@ Entity *ContextPrivate::createEntityInstance(Row *row)
 {
     Q_Q(Context);
     int typeId = row->data(Entity::EntityTypeIdColumn).toInt();
-    const QString entityTypeName = storage->entityType(typeId)->name();
+    EntityType *type = storage->entityType(typeId);
+    QString entityTypeName = type->name();
+
+    while(!entityMetaObjects.contains(entityTypeName)) {
+        type = type->parentEntityType();
+        if(!type)
+            break;
+
+        entityTypeName = type->name();
+    }
 
     if(!entityMetaObjects.contains(entityTypeName))
         return new Entity(row, q);

@@ -9,6 +9,8 @@
 #include <LBDatabase/attribute.h>
 #include <LBDatabase/calculator.h>
 #include <LBDatabase/context.h>
+#include <LBDatabase/function.h>
+#include <LBDatabase/functionvalue.h>
 #include <LBDatabase/entity.h>
 #include <LBDatabase/entitytype.h>
 #include <LBDatabase/relation.h>

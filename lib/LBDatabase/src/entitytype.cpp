@@ -91,10 +91,12 @@ void EntityTypePrivate::inheritProperties(EntityType *parent)
 
     QList<Relation *> newRelations = parent->relations();
     QList<Attribute *> newAttributes = parent->attributes();
+    QList<Function *> newFunctions = parent->functions();
 
-    properties.reserve(newAttributes.size() + newRelations.size());
+    properties.reserve(newAttributes.size() + newRelations.size() + newFunctions.size());
     attributes.reserve(newAttributes.size());
     relations.reserve(newRelations.size());
+    functions.reserve(newFunctions.size());
 
     foreach(Attribute *attribute, newAttributes) {
         properties.append(attribute);
@@ -104,9 +106,14 @@ void EntityTypePrivate::inheritProperties(EntityType *parent)
         properties.append(relation);
         propertiesByName.insert(relation->name(), relation);
     }
+    foreach(Function *function, newFunctions) {
+        properties.append(function);
+        propertiesByName.insert(function->name(), function);
+    }
 
     relations.append(newRelations);
     attributes.append(newAttributes);
+    functions.append(newFunctions);
 
     foreach(EntityType *type, childEntityTypes) {
         type->d_func()->inheritProperties(q);
@@ -365,6 +372,12 @@ QList<Relation *> EntityType::relations() const
 {
     Q_D(const EntityType);
     return d->relations;
+}
+
+QList<Function *> EntityType::functions() const
+{
+    Q_D(const EntityType);
+    return d->functions;
 }
 
 /*!

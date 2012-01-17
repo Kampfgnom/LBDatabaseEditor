@@ -204,6 +204,16 @@ Row *Entity::row() const
     return d->row;
 }
 
+RelationValue *Entity::relation(const QString &name) const
+{
+    return static_cast<LBDatabase::RelationValue *>(propertyValue(entityType()->property(name)));
+}
+
+FunctionValue *Entity::function(const QString &name) const
+{
+    return static_cast<LBDatabase::FunctionValue *>(propertyValue(entityType()->property(name)));
+}
+
 /*!
   \internal
   Adds the AttributeValue \a value to this entity. This is done when loading the storage.

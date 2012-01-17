@@ -5,6 +5,8 @@
 
 #include <QDateTime>
 
+class Player;
+
 class Game : public LBDatabase::Entity
 {
     Q_OBJECT
@@ -18,7 +20,12 @@ public:
     QString comment() const;
     Entity *site() const;
 
-    QString testAttribute() const;
+    QList<Player *> players() const;
+    QList<Player *> playersByPosition() const;
+
+protected:
+    mutable QList<Player *> m_players;
+    mutable QList<Player *> m_playersByPosition;
 };
 
 class GamesContext : public LBDatabase::Context

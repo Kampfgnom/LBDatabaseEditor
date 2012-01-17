@@ -25,7 +25,9 @@ SOURCES += main.cpp\
     model/psstorage.cpp \
     model/gamecalculator.cpp \
     model/livegame.cpp \
-    model/livegamecalculator.cpp
+    model/livegamecalculator.cpp \
+    model/player.cpp \
+    model/round.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -48,7 +50,9 @@ HEADERS  += \
     model/psstorage.h \
     model/gamecalculator.h \
     model/livegame.h \
-    model/livegamecalculator.h
+    model/livegamecalculator.h \
+    model/player.h \
+    model/round.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

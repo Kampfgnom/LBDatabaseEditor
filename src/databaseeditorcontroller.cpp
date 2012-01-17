@@ -10,7 +10,8 @@
 #include "addentitytypedialog.h"
 #include "createcontextdialog.h"
 
-#include "model/game.h"
+#include "model/livegame.h"
+#include "model/player.h"
 #include "model/psstorage.h"
 
 #include <LBGui/LBGui.h>
@@ -143,15 +144,11 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
 
-    qDebug() << storage->gamesContext()->entities().size();
+    LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
 
-    Game *game1 = storage->gamesContext()->game(1);
-    qDebug() << game1->name();
-    qDebug() << game1->comment();
-    qDebug() << game1->date();
-    qDebug() << game1->testAttribute();
-    if(game1->site())
-        qDebug() << game1->site()->value("strasse");
+    foreach(Player *player, game->playersByPosition()) {
+        qDebug() << player->value("name") << game->points(player);
+    }
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));

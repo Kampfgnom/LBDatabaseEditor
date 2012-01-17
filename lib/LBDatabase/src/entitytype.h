@@ -44,6 +44,7 @@ public:
     QList<Property *> properties() const;
     QList<Attribute *> attributes() const;
     QList<Relation *> relations() const;
+    QList<Function *> functions() const;
 
     Attribute *addAttribute(const QString &name, Attribute::Type type);
     Relation *addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality);

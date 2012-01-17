@@ -12,6 +12,8 @@
 #include "storage.h"
 #include "table.h"
 
+#include <QDebug>
+
 namespace LBDatabase {
 
 /******************************************************************************
@@ -24,6 +26,7 @@ const QString Relation::DisplayNameRightColumn("displaynameright");
 const QString Relation::EntityTypeLeftColumn("entitytypeleft");
 const QString Relation::EntityTypeRightColumn("entitytyperight");
 const QString Relation::CardinalityColumn("cardinality");
+const QString Relation::ColumnOrTableNameColumn("columnOrTableName");
 
 class RelationPrivate {
     RelationPrivate() :
@@ -43,6 +46,7 @@ class RelationPrivate {
     Storage *storage;
 
     QString name;
+    QString columnOrTableName;
     QString displayNameLeft;
     QString displayNameRight;
     EntityType *entityTypeLeft;
@@ -60,13 +64,14 @@ void RelationPrivate::init()
     Q_Q(Relation);
 
     name = row->data(Relation::NameColumn).toString();
+    columnOrTableName = row->data(Relation::ColumnOrTableNameColumn).toString();
     displayNameLeft = row->data(Relation::DisplayNameLeftColumn).toString();
     displayNameRight = row->data(Relation::DisplayNameRightColumn).toString();
     entityTypeLeft = storage->entityType(row->data(Relation::EntityTypeLeftColumn).toInt());
     entityTypeRight = storage->entityType(row->data(Relation::EntityTypeRightColumn).toInt());
     cardinality = static_cast<Relation::Cardinality>(row->data(Relation::CardinalityColumn).toInt());
 
-    relationTable = storage->database()->table(name);
+    relationTable = storage->database()->table(columnOrTableName);
 
     if(entityTypeLeft) {
         entityTypeLeft->addRelation(q);
@@ -106,16 +111,16 @@ void RelationPrivate::initializeManyToManyRelation()
 {
     Q_Q(Relation);
     Column *c1 = relationTable->column(entityTypeLeft->name());
-    int entityTypeLeftColumn = 0;
+    int entityTypeLeftColumn = -1;
     if(c1)
         entityTypeLeftColumn = c1->index();
 
     Column *c2 = relationTable->column(entityTypeRight->name());
-    int entityTypeRightColumn = 0;
+    int entityTypeRightColumn = -1;
     if(c2)
         entityTypeRightColumn = c2->index();
 
-    if(entityTypeLeftColumn > 0 && entityTypeRightColumn > 0) {
+    if(entityTypeLeftColumn >= 0 && entityTypeRightColumn >= 0) {
     foreach(Row *row, relationTable->rows()) {
             int leftId = row->data(entityTypeLeftColumn).toInt();
             int rightId = row->data(entityTypeRightColumn).toInt();
@@ -135,7 +140,7 @@ void RelationPrivate::initializeOneToXRelation()
 {
     Q_Q(Relation);
 
-    int rightColumnIndex = entityTypeRight->context()->table()->column(name)->index();
+    int rightColumnIndex = entityTypeRight->context()->table()->column(columnOrTableName)->index();
 
     int leftId;
     Entity *leftEntity;

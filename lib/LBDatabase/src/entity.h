@@ -41,6 +41,9 @@ public:
 
     Row *row() const;
 
+    RelationValue *relation(const QString &name) const;
+    FunctionValue *function(const QString &name) const;
+
 protected:
     friend class AttributePrivate;
     friend class ContextPrivate;

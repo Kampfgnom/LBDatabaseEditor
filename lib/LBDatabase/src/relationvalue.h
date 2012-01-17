@@ -3,6 +3,8 @@
 
 #include "propertyvalue.h"
 
+#include "functionvalue.h"
+
 namespace LBDatabase {
 
 class Relation;
@@ -24,6 +26,26 @@ public:
     bool isEditable() const;
     virtual bool setData(const QVariant &data);
     QVariant data(int role = Qt::DisplayRole) const;
+
+    template<class EntityType>
+    QList<EntityType *> cast()
+    {
+        QList<EntityType *> list;
+        foreach(Entity *entity, entities())
+            list.append(static_cast<EntityType *>(entity));
+
+        return list;
+    }
+
+    template<typename SortType, class EntityType>
+    QList<EntityType *> sort(FunctionValue *sortFunction)
+    {
+        QMap<SortType, EntityType *> map;
+        foreach(Entity *entity, entities())
+            map.insert(sortFunction->value(entity).value<SortType>(), static_cast<EntityType *>(entity));
+
+        return map.values();
+    }
 
 protected:
     friend class RelationPrivate;

@@ -1,15 +1,24 @@
 #include "livegamecalculator.h"
 
 #include "livegame.h"
+#include "player.h"
+#include "round.h"
 
 LiveGameCalculator::LiveGameCalculator(QObject *parent) :
     GameCalculator(parent)
 {
 }
 
-QVariant LiveGameCalculator::testAttribute(LBDatabase::Entity *entity)
+EntityVariantHash LiveGameCalculator::points(LBDatabase::Entity *entity)
 {
-    Game *game = static_cast<Game*>(entity);
-    QVariant ret(QLatin1String("LiveGameCalculator::testAttribute ID: ")+QString::number(game->row()->id()));
-    return ret;
+    QHash<LBDatabase::Entity *, QVariant> result;
+
+    LiveGame *game = static_cast<LiveGame*>(entity);
+    foreach(Player *player, game->players()) {
+        foreach(Round *round, game->rounds()) {
+            result.insert(player, result.value(player, QVariant(0)).toInt() + round->points(player));
+        }
+    }
+
+    return result;
 }

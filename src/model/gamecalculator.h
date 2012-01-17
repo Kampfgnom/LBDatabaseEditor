@@ -12,8 +12,6 @@ class GameCalculator : public LBDatabase::Calculator
     Q_OBJECT
 public:
     Q_INVOKABLE explicit GameCalculator(QObject *parent = 0);
-    
-    Q_INVOKABLE QVariant testAttribute(LBDatabase::Entity *entity);
 };
 
 #endif // GAMECALCULATOR_H
