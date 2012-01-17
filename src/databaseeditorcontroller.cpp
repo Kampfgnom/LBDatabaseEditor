@@ -10,6 +10,10 @@
 #include "addentitytypedialog.h"
 #include "createcontextdialog.h"
 
+#include "model/livegame.h"
+#include "model/player.h"
+#include "model/psstorage.h"
+
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
 
@@ -123,7 +127,11 @@ void DatabaseEditorController::openFile(const QString &fileName)
 void DatabaseEditorController::openEntityStorage(const QString &fileName)
 {
     AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
-    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+//    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+
+    static QObject guard;
+    PSStorage *storage = new PSStorage(autosaveFile->copyFileName(), &guard);
+
     if(m_storages.contains(storage)) {
 //        m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
 //        showDatabase(database);
@@ -135,6 +143,12 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     storage->open();
     qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
+
+    LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
+
+    foreach(Player *player, game->playersByPosition()) {
+        qDebug() << player->value("name") << game->points(player);
+    }
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));

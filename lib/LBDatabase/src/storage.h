@@ -41,6 +41,17 @@ public:
 Q_SIGNALS:
     void nameChanged(QString name);
 
+protected:
+    explicit Storage(const QString &fileName, QObject *parent = 0);
+
+    template<class ContextClass>
+    void registerContextType();
+
+    Context *context(int id) const;
+    Context *context(const QString name) const;
+    EntityType *entityType(int id) const;
+    Attribute *attribute(int id) const;
+
 private:
     friend class EntityTypePrivate;
     friend class ContextPrivate;
@@ -48,12 +59,6 @@ private:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class FunctionPrivate;
-
-    explicit Storage(const QString &fileName, QObject *parent = 0);
-
-    Context *context(int id) const;
-    EntityType *entityType(int id) const;
-    Attribute *attribute(int id) const;
 
     void insertEntityType(EntityType *type);
     void insertAttribute(Attribute *attribute);
@@ -64,10 +69,18 @@ private:
     Table *entityTypesTable() const;
     Table *attributesTable() const;
 
+    void registerContextType(const QString &contextName, QMetaObject metaObject);
+
     QScopedPointer<StoragePrivate> d_ptr;
     Q_DECLARE_PRIVATE(Storage)
     Q_DISABLE_COPY(Storage)
 };
+
+template<class ContextClass>
+void Storage::registerContextType()
+{
+    registerContextType(ContextClass::Name, ContextClass::staticMetaObject);
+}
 
 } // namespace LBDatabase
 

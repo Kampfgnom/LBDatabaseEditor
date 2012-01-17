@@ -15,6 +15,10 @@ class PropertyValue : public QObject
 {
     Q_OBJECT
 public:
+    enum DataRole {
+        PlainDataRole = Qt::UserRole + 1
+    };
+
     explicit PropertyValue(QObject *parent = 0);
 
     virtual Entity *entity() const = 0;
@@ -34,6 +38,7 @@ protected:
     friend class RelationPrivate;
 
     virtual void fetchValue() = 0;
+    virtual void calculate() = 0;
 };
 //! \endcond
 

@@ -16,6 +16,7 @@ public:
 
     Entity *entity() const;
     Property *property() const;
+    QVariant value(Entity *entity) const;
     QVariant data(int role = Qt::DisplayRole) const;
     bool setData(const QVariant &data);
 
@@ -27,6 +28,7 @@ private:
     explicit FunctionValue(Function *function, Entity *parent);
 
     void fetchValue();
+    void calculate();
 
     void addValue(Entity *key, const QVariant &value);
 

@@ -20,7 +20,14 @@ SOURCES += main.cpp\
     contextview.cpp \
     addentitytypedialog.cpp \
     entitytypecombobox.cpp \
-    createcontextdialog.cpp
+    createcontextdialog.cpp \
+    model/game.cpp \
+    model/psstorage.cpp \
+    model/gamecalculator.cpp \
+    model/livegame.cpp \
+    model/livegamecalculator.cpp \
+    model/player.cpp \
+    model/round.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -38,7 +45,14 @@ HEADERS  += \
     contextview.h \
     addentitytypedialog.h \
     entitytypecombobox.h \
-    createcontextdialog.h
+    createcontextdialog.h \
+    model/game.h \
+    model/psstorage.h \
+    model/gamecalculator.h \
+    model/livegame.h \
+    model/livegamecalculator.h \
+    model/player.h \
+    model/round.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

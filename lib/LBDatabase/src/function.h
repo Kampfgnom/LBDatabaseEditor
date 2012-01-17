@@ -16,12 +16,18 @@ public:
     static const QString DisplayNameColumn;
     static const QString EntityTypeColumn;
     static const QString KeyEntityTypeRightColumn;
+    static const QString CalculatedColumn;
+    static const QString CacheDataColumn;
 
     ~Function();
 
-    virtual int id() const;
-    virtual QString displayName(const Context *context = 0) const;
-    virtual void setDisplayName(const QString &displayName, const Context *context = 0);
+    int id() const;
+    QString displayName(const Context *context = 0) const;
+    void setDisplayName(const QString &displayName, const Context *context = 0);
+    QString name() const;
+
+    bool isCalculated() const;
+    bool cacheData() const;
 
 private:
     friend class StoragePrivate;
@@ -29,8 +35,8 @@ private:
 
     explicit Function(Row *row, Storage *parent);
 
-    virtual void addPropertyValueToEntities();
-    virtual void addPropertyValue(Entity *entity);
+    void addPropertyValueToEntities();
+    void addPropertyValue(Entity *entity);
     void fetchValues();
 
     QScopedPointer<FunctionPrivate> d_ptr;

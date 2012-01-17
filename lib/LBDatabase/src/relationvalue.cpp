@@ -112,7 +112,10 @@ QVariant RelationValue::data(int role) const
         if(d->otherEntities.size() == 1)
             return d->otherEntities.at(0)->displayName();
 
-        return QVariant::fromValue<QString>(QString::number(d->otherEntities.size())+QLatin1String(" ")+d->otherEntities.at(0)->entityType()->name()+QLatin1String("s"));
+        return QVariant(QString::number(d->otherEntities.size())+QLatin1String(" ")+d->otherEntities.at(0)->entityType()->name()+QLatin1String("s"));
+    }
+    else if(role == PropertyValue::PlainDataRole) {
+        return QVariant::fromValue<QList<Entity *> >(d->otherEntities);
     }
 
     return QVariant();
@@ -135,6 +138,15 @@ Property *RelationValue::property() const
     return d->relation;
 }
 
+Entity *RelationValue::firstEntity() const
+{
+    Q_D(const RelationValue);
+    if(d->otherEntities.isEmpty())
+        return 0;
+
+    return d->otherEntities.first();
+}
+
 /*!
   Initializes the content of the relation value.
   */
@@ -142,6 +154,10 @@ void RelationValue::fetchValue()
 {
     Q_D(RelationValue);
     d->fetchValue();
+}
+
+void RelationValue::calculate()
+{
 }
 
 void RelationValue::addOtherEntity(Entity *entity)

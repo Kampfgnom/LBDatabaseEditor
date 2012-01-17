@@ -23,6 +23,7 @@ public:
     static const QString EntityTypeLeftColumn;
     static const QString EntityTypeRightColumn;
     static const QString CardinalityColumn;
+    static const QString ColumnOrTableNameColumn;
     //! \endcond
 
     enum Cardinality {
@@ -59,4 +60,5 @@ private:
 };
 
 } // namespace LBDatabase
+
 #endif // LBDATABASE_RELATION_H

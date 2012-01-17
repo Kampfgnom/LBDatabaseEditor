@@ -37,10 +37,14 @@ public:
     Context *context() const;
     QList<PropertyValue *> propertyValues() const;
     PropertyValue *propertyValue(Property *property) const;
+    QVariant value(const QString & name) const;
 
     Row *row() const;
 
-private:
+    RelationValue *relation(const QString &name) const;
+    FunctionValue *function(const QString &name) const;
+
+protected:
     friend class AttributePrivate;
     friend class ContextPrivate;
     friend class RelationPrivate;

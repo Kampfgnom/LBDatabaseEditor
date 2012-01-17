@@ -28,6 +28,7 @@ private:
     explicit AttributeValue(Attribute *attribute, Entity *parent);
 
     void fetchValue();
+    void calculate();
 
     QScopedPointer<AttributeValuePrivate> d_ptr;
     Q_DECLARE_PRIVATE(AttributeValue)

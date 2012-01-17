@@ -15,7 +15,7 @@ namespace LBDatabase {
 ** AttributePrivate
 */
 class AttributePrivate {
-    AttributePrivate() : prefetchStrategy(Attribute::PrefetchOnStartup) {}
+    AttributePrivate() {}
 
     void init();
     void addPropertyValueToEntities();
@@ -27,10 +27,10 @@ class AttributePrivate {
     QString name;
     QString displayName;
     EntityType *entityType;
+    bool calculated;
+    bool cacheData;
 
     int columnIndex;
-
-    Attribute::PrefetchStrategy prefetchStrategy;
 
     Attribute * q_ptr;
     Q_DECLARE_PUBLIC(Attribute)
@@ -41,10 +41,13 @@ void AttributePrivate::init()
     Q_Q(Attribute);
     name = row->data(Attribute::NameColumn).toString();
     displayName = row->data(Attribute::DisplayNameColumn).toString();
-    prefetchStrategy = static_cast<Attribute::PrefetchStrategy>(row->data(Attribute::PrefetchStrategyColumn).toInt());
+    calculated = row->data(Attribute::CalculatedColumn).toBool();
+    cacheData = row->data(Attribute::CacheDataColumn).toBool();
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
-    columnIndex = entityType->context()->table()->column(name)->index();
+    columnIndex = -1;
+    if(!calculated)
+        columnIndex = entityType->context()->table()->column(name)->index();
     entityType->addAttribute(q);
     entityType->context()->addAttribute(q);
 }
@@ -109,10 +112,8 @@ const QString Attribute::DisplayNameColumn("displayName");
   The name of 'entityTypeId' column.
   */
 const QString Attribute::EntityTypeIdColumn("entityTypeId");
-/*!
-  The name of 'prefetchStrategy' column.
-  */
-const QString Attribute::PrefetchStrategyColumn("prefetchStrategy");
+const QString Attribute::CalculatedColumn("calculated");
+const QString Attribute::CacheDataColumn("cacheData");
 
 /*!
   Creates an attribute, which contains the meta data from \a row in the given \a
@@ -180,6 +181,18 @@ QString Attribute::name() const
     return d->name;
 }
 
+bool Attribute::isCalculated() const
+{
+    Q_D(const Attribute);
+    return d->calculated;
+}
+
+bool Attribute::cacheData() const
+{
+    Q_D(const Attribute);
+    return d->cacheData;
+}
+
 /*!
   Returns the display name of the attribute. Since each Attribute can only be
   part of one Context, the \a context parameter will be ignored.
@@ -214,16 +227,6 @@ int Attribute::columnIndex() const
 {
     Q_D(const Attribute);
     return d->columnIndex;
-}
-
-/*!
-  Returns the prefetch strategy of the attribute. Currently every attribute is
-  being prefetched when the storage is loaded.
-  */
-Attribute::PrefetchStrategy Attribute::prefetchStrategy() const
-{
-    Q_D(const Attribute);
-    return d->prefetchStrategy;
 }
 
 } // namespace LBDatabase

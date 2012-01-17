@@ -20,6 +20,8 @@ const QString Function::NameColumn("name");
 const QString Function::DisplayNameColumn("displayName");
 const QString Function::EntityTypeColumn("entityType");
 const QString Function::KeyEntityTypeRightColumn("keyEntityType");
+const QString Function::CalculatedColumn("calculated");
+const QString Function::CacheDataColumn("cacheData");
 
 class FunctionPrivate {
     FunctionPrivate() :
@@ -38,6 +40,8 @@ class FunctionPrivate {
     EntityType *entityType;
     EntityType *keyEntityType;
 
+    bool calculated;
+    bool cacheData;
     QString name;
     QString displayName;
 
@@ -54,8 +58,12 @@ void FunctionPrivate::init()
     displayName = row->data(Function::DisplayNameColumn).toString();
     entityType = storage->entityType(row->data(Function::EntityTypeColumn).toInt());
     keyEntityType = storage->entityType(row->data(Function::KeyEntityTypeRightColumn).toInt());
+    calculated = row->data(Function::CalculatedColumn).toBool();
+    cacheData = row->data(Function::CacheDataColumn).toBool();
 
-    functionTable = storage->database()->table(name);
+    if(!calculated) {
+        functionTable = storage->database()->table(name);
+    }
 
     entityType->addFunction(q);
     entityType->context()->addFunction(q);
@@ -78,20 +86,22 @@ void FunctionPrivate::addPropertyValue(Entity *entity)
 void FunctionPrivate::fetchValues()
 {
     Q_Q(Function);
-    int entityColumn = functionTable->column(entityType->name())->index();
-    int keyEntityColumn = functionTable->column(keyEntityType->name())->index();
-    int valueColumn = functionTable->column(name)->index();
-    Entity *entity;
-    Entity *keyEntity;
-    QVariant value;
-    FunctionValue *functionValue;
-    foreach(Row *row, functionTable->rows()) {
-        entity = entityType->context()->entity(row->data(entityColumn).toInt());
-        keyEntity = keyEntityType->context()->entity(row->data(keyEntityColumn).toInt());
-        value = row->data(valueColumn);
+    if(!calculated) {
+        int entityColumn = functionTable->column(entityType->name())->index();
+        int keyEntityColumn = functionTable->column(keyEntityType->name())->index();
+        int valueColumn = functionTable->column(name)->index();
+        Entity *entity;
+        Entity *keyEntity;
+        QVariant value;
+        FunctionValue *functionValue;
+        foreach(Row *row, functionTable->rows()) {
+            entity = entityType->context()->entity(row->data(entityColumn).toInt());
+            keyEntity = keyEntityType->context()->entity(row->data(keyEntityColumn).toInt());
+            value = row->data(valueColumn);
 
-        functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
-        functionValue->addValue(keyEntity, value);
+            functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
+            functionValue->addValue(keyEntity, value);
+        }
     }
 }
 
@@ -136,6 +146,24 @@ void Function::setDisplayName(const QString &displayName, const Context *context
     d->row->setData(Attribute::DisplayNameColumn, QVariant(displayName));
     d->displayName = displayName;
     emit displayNameChanged(displayName, d->entityType->context());
+}
+
+QString Function::name() const
+{
+    Q_D(const Function);
+    return d->name;
+}
+
+bool Function::isCalculated() const
+{
+    Q_D(const Function);
+    return d->calculated;
+}
+
+bool Function::cacheData() const
+{
+    Q_D(const Function);
+    return d->cacheData;
 }
 
 void Function::addPropertyValueToEntities()
