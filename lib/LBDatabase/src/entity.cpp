@@ -185,6 +185,16 @@ PropertyValue *Entity::propertyValue(Property *property) const
     return d->propertyValues.value(property, 0);
 }
 
+QVariant Entity::value(const QString &name) const
+{
+    Q_D(const Entity);
+    PropertyValue *value = d->propertyValues.value(d->entityType->property(name), 0);
+    if(!value)
+        return QVariant();
+
+    return value->data();
+}
+
 /*!
   Returns the Row, which stores the property values of this entity.
   */

@@ -45,6 +45,8 @@ class EntityTypePrivate {
 
     QList<EntityType *> childEntityTypes;
 
+    QHash<QString, Property *> propertiesByName;
+
     QList<Property *> properties;
     QList<Attribute *> attributes;
     QList<Relation *> relations;
@@ -95,9 +97,11 @@ void EntityTypePrivate::addInheritedProperties(EntityType *parent)
 
     foreach(Attribute *attribute, newAttributes) {
         properties.append(attribute);
+        propertiesByName.insert(attribute->name(), attribute);
     }
     foreach(Relation *relation, newRelations) {
         properties.append(relation);
+        propertiesByName.insert(relation->name(), relation);
     }
 
     relations.append(newRelations);
@@ -317,6 +321,12 @@ QList<EntityType *> EntityType::childEntityTypes() const
     return d->childEntityTypes;
 }
 
+Property *EntityType::property(const QString &name) const
+{
+    Q_D(const EntityType);
+    return d->propertiesByName.value(name, 0);
+}
+
 /*!
   Returns the list of properties of the type.
 
@@ -401,6 +411,7 @@ void EntityType::addAttribute(Attribute *attribute)
 {
     Q_D(EntityType);
     d->properties.append(attribute);
+    d->propertiesByName.insert(attribute->name(), attribute);
     d->attributes.append(attribute);
 }
 
@@ -413,6 +424,7 @@ void EntityType::addRelation(Relation *relation)
 {
     Q_D(EntityType);
     d->properties.append(relation);
+    d->propertiesByName.insert(relation->name(), relation);
     d->relations.append(relation);
 }
 
@@ -420,6 +432,7 @@ void EntityType::addFunction(Function *function)
 {
     Q_D(EntityType);
     d->properties.append(function);
+    d->propertiesByName.insert(function->name(), function);
     d->functions.append(function);
 }
 

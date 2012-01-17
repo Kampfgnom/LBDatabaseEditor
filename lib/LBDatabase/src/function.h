@@ -19,9 +19,10 @@ public:
 
     ~Function();
 
-    virtual int id() const;
-    virtual QString displayName(const Context *context = 0) const;
-    virtual void setDisplayName(const QString &displayName, const Context *context = 0);
+    int id() const;
+    QString displayName(const Context *context = 0) const;
+    void setDisplayName(const QString &displayName, const Context *context = 0);
+    QString name() const;
 
 private:
     friend class StoragePrivate;
@@ -29,8 +30,8 @@ private:
 
     explicit Function(Row *row, Storage *parent);
 
-    virtual void addPropertyValueToEntities();
-    virtual void addPropertyValue(Entity *entity);
+    void addPropertyValueToEntities();
+    void addPropertyValue(Entity *entity);
     void fetchValues();
 
     QScopedPointer<FunctionPrivate> d_ptr;

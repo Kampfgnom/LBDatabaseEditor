@@ -138,6 +138,12 @@ void Function::setDisplayName(const QString &displayName, const Context *context
     emit displayNameChanged(displayName, d->entityType->context());
 }
 
+QString Function::name() const
+{
+    Q_D(const Function);
+    return d->name;
+}
+
 void Function::addPropertyValueToEntities()
 {
     Q_D(Function);

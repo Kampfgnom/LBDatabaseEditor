@@ -57,6 +57,7 @@ class StoragePrivate {
     Database *database;
 
     QHash<int, Context *> contexts;
+    QHash<QString, int> contextIds;
     QHash<int, EntityType *> entityTypes;
     QHash<int, Attribute *> attributes;
     QHash<int, Relation *> relations;
@@ -126,6 +127,7 @@ bool StoragePrivate::open()
     foreach(Row *row, contextsTable->rows()) {
         Context *context = createContextInstance(row);
         contexts.insert(row->id(), context);
+        contextIds.insert(context->name(), row->id());
     }
 
     foreach(Row *row, entityTypesTable->rows()) {
@@ -373,6 +375,12 @@ Context *Storage::context(int id) const
 {
     Q_D(const Storage);
     return d->contexts.value(id);
+}
+
+Context *Storage::context(const QString name) const
+{
+    Q_D(const Storage);
+    return d->contexts.value(d->contextIds.value(name));
 }
 
 /*!

@@ -45,7 +45,12 @@ protected:
     explicit Storage(const QString &fileName, QObject *parent = 0);
 
     template<class ContextClass>
-    void registerContextType(const QString &contextName);
+    void registerContextType();
+
+    Context *context(int id) const;
+    Context *context(const QString name) const;
+    EntityType *entityType(int id) const;
+    Attribute *attribute(int id) const;
 
 private:
     friend class EntityTypePrivate;
@@ -54,10 +59,6 @@ private:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class FunctionPrivate;
-
-    Context *context(int id) const;
-    EntityType *entityType(int id) const;
-    Attribute *attribute(int id) const;
 
     void insertEntityType(EntityType *type);
     void insertAttribute(Attribute *attribute);
@@ -76,9 +77,9 @@ private:
 };
 
 template<class ContextClass>
-void Storage::registerContextType(const QString &contextName)
+void Storage::registerContextType()
 {
-    registerContextType(contextName, ContextClass::staticMetaObject);
+    registerContextType(ContextClass::Name, ContextClass::staticMetaObject);
 }
 
 } // namespace LBDatabase

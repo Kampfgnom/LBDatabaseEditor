@@ -37,6 +37,7 @@ public:
     Context *context() const;
     QList<PropertyValue *> propertyValues() const;
     PropertyValue *propertyValue(Property *property) const;
+    QVariant value(const QString & name) const;
 
     Row *row() const;
 

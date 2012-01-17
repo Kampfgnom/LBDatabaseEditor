@@ -393,6 +393,15 @@ Qt::ItemFlags Table::flags(const QModelIndex &index) const
     return QSqlTableModel::flags(index);
 }
 
+bool Table::setData(const QModelIndex &index, const QVariant &value, int role)
+{
+    bool ret = QSqlTableModel::setData(index,value, role);
+    if(ret)
+        database()->setDirty(true);
+
+    return ret;
+}
+
 /*!
   Returns the column with the index \a column. The indexes are sorted by the
   first call to QSqlDatabase::record() and therefore not deterministically

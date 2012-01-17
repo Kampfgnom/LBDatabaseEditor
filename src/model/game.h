@@ -3,14 +3,20 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QDateTime>
+
 class Game : public LBDatabase::Entity
 {
     Q_OBJECT
 public:
     Q_INVOKABLE Game(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 
-private:
-    Q_DISABLE_COPY(Game)
+    static const QString Name;
+
+    QString name() const;
+    QDateTime date() const;
+    QString comment() const;
+    Entity *site() const;
 };
 
 class GamesContext : public LBDatabase::Context
@@ -19,11 +25,9 @@ class GamesContext : public LBDatabase::Context
 public:
     Q_INVOKABLE GamesContext(::LBDatabase::Row *row, ::LBDatabase::Storage *parent);
 
-private:
-    Q_DISABLE_COPY(GamesContext)
-};
+    static const QString Name;
 
-Q_DECLARE_METATYPE(Game *)
-Q_DECLARE_METATYPE(GamesContext *)
+    Game *game(int id) const;
+};
 
 #endif // GAME_H

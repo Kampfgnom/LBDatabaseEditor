@@ -59,4 +59,5 @@ private:
 };
 
 } // namespace LBDatabase
+
 #endif // LBDATABASE_RELATION_H

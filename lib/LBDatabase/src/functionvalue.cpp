@@ -4,8 +4,10 @@
 #include "entity.h"
 #include "function.h"
 
-namespace LBDatabase {
+#define COMMA ,
+Q_DECLARE_METATYPE(QHash<LBDatabase::Entity * COMMA QVariant>)
 
+namespace LBDatabase {
 /******************************************************************************
 ** FunctionValuePrivate
 */
@@ -92,6 +94,9 @@ QVariant FunctionValue::data(int role) const
         }
 
         return QVariant(QString::number(d->values.size()) +QLatin1String(" values"));
+    }
+    else if(role == PropertyValue::PlainDataRole) {
+        return QVariant::fromValue<QHash<Entity *, QVariant> >(d->values);
     }
 
     return QVariant();

@@ -67,7 +67,7 @@ protected:
     explicit Context(Row *row, Storage *parent);
 
     template<class EntityClass>
-    void registerEntityType(const QString &entityTypeName);
+    void registerEntityType();
 
 private:
     void createBaseEntityType(const QString &name);
@@ -87,9 +87,9 @@ private:
 };
 
 template<class EntityClass>
-void Context::registerEntityType(const QString &entityTypeName)
+void Context::registerEntityType()
 {
-    registerEntityType(entityTypeName, EntityClass::staticMetaObject);
+    registerEntityType(EntityClass::Name, EntityClass::staticMetaObject);
 }
 
 } // namespace LBDatabase

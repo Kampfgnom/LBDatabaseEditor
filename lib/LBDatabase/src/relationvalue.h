@@ -18,6 +18,7 @@ public:
     virtual Entity *entity() const;
     Property *property() const;
 
+    Entity *firstEntity() const;
     QList<Entity *> entities() const;
 
     bool isEditable() const;
@@ -38,5 +39,7 @@ protected:
 };
 
 } // namespace LBDatabase
+
+Q_DECLARE_METATYPE(QList<LBDatabase::Entity *>)
 
 #endif // LBDATABASE_RELATIONVALUE_H

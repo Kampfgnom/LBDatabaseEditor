@@ -38,6 +38,8 @@ public:
 
     QList<EntityType *> childEntityTypes() const;
 
+    Property *property(const QString &name) const;
+
     QList<Property *> properties() const;
     QList<Attribute *> attributes() const;
     QList<Relation *> relations() const;
