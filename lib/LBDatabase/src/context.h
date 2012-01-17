@@ -67,7 +67,10 @@ protected:
     explicit Context(Row *row, Storage *parent);
 
     template<class EntityClass>
-    void registerEntityType();
+    void registerEntityClass();
+
+    template<class EntityClass, class CalculatorClass>
+    void registerCalculatorClass();
 
 private:
     void createBaseEntityType(const QString &name);
@@ -79,7 +82,8 @@ private:
     void initializeEntityHierarchy();
     void loadEntities();
 
-    void registerEntityType(const QString &entityTypeName, QMetaObject metaObject);
+    void registerEntityClass(const QString &entityTypeName, QMetaObject metaObject);
+    void registerCalculatorClass(const QString &entityTypeName, QMetaObject metaObject);
 
     QScopedPointer<ContextPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Context)
@@ -87,9 +91,15 @@ private:
 };
 
 template<class EntityClass>
-void Context::registerEntityType()
+void Context::registerEntityClass()
 {
-    registerEntityType(EntityClass::Name, EntityClass::staticMetaObject);
+    registerEntityClass(EntityClass::Name, EntityClass::staticMetaObject);
+}
+
+template<class EntityClass, class CalculatorClass>
+void Context::registerCalculatorClass()
+{
+    registerCalculatorClass(EntityClass::Name, CalculatorClass::staticMetaObject);
 }
 
 } // namespace LBDatabase

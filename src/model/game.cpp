@@ -1,14 +1,29 @@
 #include "game.h"
 
+#include "livegame.h"
+#include "livegamecalculator.h"
+#include "gamecalculator.h"
+
 namespace {
 const QString NameAttribute("name");
 const QString DateAttribute("date");
 const QString CommentAttribute("comment");
 const QString SiteRelation("siteId");
+const QString TestAttribute("testAttribute");
 }
 
 const QString GamesContext::Name("games");
 const QString Game::Name("game");
+
+GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+    Context(row, parent)
+{
+    registerEntityClass<Game>();
+    registerCalculatorClass<Game, GameCalculator>();
+
+    registerEntityClass<LiveGame>();
+    registerCalculatorClass<LiveGame, LiveGameCalculator>();
+}
 
 Game::Game(LBDatabase::Row *row, LBDatabase::Context *context) :
     Entity(row, context)
@@ -41,8 +56,7 @@ LBDatabase::Entity *Game::site() const
     return v->firstEntity();
 }
 
-GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-    Context(row, parent)
+QString Game::testAttribute() const
 {
-    registerEntityType<Game>();
+    return value(TestAttribute).toString();
 }

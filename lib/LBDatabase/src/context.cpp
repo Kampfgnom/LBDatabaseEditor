@@ -2,6 +2,7 @@
 
 #include "attribute.h"
 #include "attributevalue.h"
+#include "calculator.h"
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
@@ -38,6 +39,7 @@ class ContextPrivate {
     Entity *insertEntity(EntityType *type);
 
     Entity *createEntityInstance(Row *row);
+    Calculator *createCalculatorInstance(const QString &entityTypeName);
 
     Row *row;
     Storage *storage;
@@ -50,6 +52,7 @@ class ContextPrivate {
     QList<Property *> properties;
 
     QHash<QString, QMetaObject> entityMetaObjects;
+    QHash<QString, QMetaObject> calculatorMetaObjects;
 
     Context * q_ptr;
     Q_DECLARE_PUBLIC(Context)
@@ -65,6 +68,7 @@ void ContextPrivate::initializeEntityHierarchy()
 {
     EntityType *parentType;
     foreach(EntityType *type, entityTypes) {
+
         parentType = storage->entityType(type->parentEntityTypeId());
         if(parentType) {
             type->setParentEntityType(parentType);
@@ -74,8 +78,13 @@ void ContextPrivate::initializeEntityHierarchy()
             baseEntityType = type;
         }
     }
+    foreach(EntityType *type, entityTypes) {
+        type->setCalculator(createCalculatorInstance(type->name()));
+    }
+
     foreach(EntityType *child, baseEntityType->childEntityTypes()) {
-        child->addInheritedProperties(baseEntityType);
+        child->inheritProperties(baseEntityType);
+        child->inheritCalculator(baseEntityType);
     }
 }
 
@@ -105,7 +114,7 @@ EntityType *ContextPrivate::addEntityType(const QString &name, EntityType *paren
     parentEntityType->addChildEntityType(type);
     storage->insertEntityType(type);
 
-    type->addInheritedProperties(parentEntityType);
+    type->inheritProperties(parentEntityType);
     return type;
 }
 
@@ -154,6 +163,17 @@ Entity *ContextPrivate::createEntityInstance(Row *row)
     QObject *object = entityMetaObjects.value(entityTypeName).newInstance(Q_ARG(::LBDatabase::Row*,row), Q_ARG(::LBDatabase::Context*, q));
     return static_cast<Entity *>(object);
 }
+
+Calculator *ContextPrivate::createCalculatorInstance(const QString &entityTypeName)
+{
+    Q_Q(Context);
+    if(!calculatorMetaObjects.contains(entityTypeName))
+        return 0;
+
+    QObject *object = calculatorMetaObjects.value(entityTypeName).newInstance(Q_ARG(QObject*, q));
+    return static_cast<Calculator *>(object);
+}
+
 
 /******************************************************************************
 ** Context
@@ -556,13 +576,22 @@ Qt::ItemFlags Context::flags(const QModelIndex &index) const
     return QAbstractItemModel::flags(index);
 }
 
-void Context::registerEntityType(const QString &entityName, QMetaObject metaObject)
+void Context::registerEntityClass(const QString &entityName, QMetaObject metaObject)
 {
     Q_D(Context);
     if(d->entityMetaObjects.contains(entityName))
         return;
 
     d->entityMetaObjects.insert(entityName, metaObject);
+}
+
+void Context::registerCalculatorClass(const QString &entityName, QMetaObject metaObject)
+{
+    Q_D(Context);
+    if(d->calculatorMetaObjects.contains(entityName))
+        return;
+
+    d->calculatorMetaObjects.insert(entityName, metaObject);
 }
 
 } // namespace LBDatabase

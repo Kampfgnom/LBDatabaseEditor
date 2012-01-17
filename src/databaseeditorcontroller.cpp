@@ -145,10 +145,11 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
 
     qDebug() << storage->gamesContext()->entities().size();
 
-    Game *game1 = storage->gamesContext()->game(250);
+    Game *game1 = storage->gamesContext()->game(1);
     qDebug() << game1->name();
     qDebug() << game1->comment();
     qDebug() << game1->date();
+    qDebug() << game1->testAttribute();
     if(game1->site())
         qDebug() << game1->site()->value("strasse");
 

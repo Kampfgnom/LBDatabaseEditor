@@ -9,6 +9,7 @@
 namespace LBDatabase {
 
 class Attribute;
+class Calculator;
 class Context;
 class Entity;
 class Function;
@@ -51,6 +52,8 @@ public:
 
     bool inherits(EntityType *entityType) const;
 
+    Calculator *calculator() const;
+
 Q_SIGNALS:
     void nameChanged(QString name);
 
@@ -70,8 +73,10 @@ private:
     void addAttribute(Attribute *attribute);
     void addRelation(Relation *relation);
     void addFunction(Function *function);
-    void addInheritedProperties(EntityType *parent);
+    void inheritProperties(EntityType *parent);
+    void inheritCalculator(EntityType *parent);
     void addEntity(Entity *entity);
+    void setCalculator(Calculator *calculator);
 
     QScopedPointer<EntityTypePrivate> d_ptr;
     Q_DECLARE_PRIVATE(EntityType)

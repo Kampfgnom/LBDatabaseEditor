@@ -17,11 +17,8 @@ public:
     static const QString NameColumn;
     static const QString DisplayNameColumn;
     static const QString EntityTypeIdColumn;
-    static const QString PrefetchStrategyColumn;
-
-    enum PrefetchStrategy {
-        PrefetchOnStartup
-    };
+    static const QString CalculatedColumn;
+    static const QString CacheDataColumn;
 
     enum Type {
         Unkown,
@@ -38,7 +35,9 @@ public:
     int columnIndex() const;
 
     QString name() const;
-    PrefetchStrategy prefetchStrategy() const;
+
+    bool isCalculated() const;
+    bool cacheData() const;
 
 private:
     friend class StoragePrivate;

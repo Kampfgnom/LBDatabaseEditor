@@ -27,6 +27,7 @@ private:
     explicit FunctionValue(Function *function, Entity *parent);
 
     void fetchValue();
+    void calculate();
 
     void addValue(Entity *key, const QVariant &value);
 

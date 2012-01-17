@@ -7,6 +7,7 @@
 #include <LBDatabase/table.h>
 
 #include <LBDatabase/attribute.h>
+#include <LBDatabase/calculator.h>
 #include <LBDatabase/context.h>
 #include <LBDatabase/entity.h>
 #include <LBDatabase/entitytype.h>

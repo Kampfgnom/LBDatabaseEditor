@@ -17,6 +17,8 @@ public:
     QDateTime date() const;
     QString comment() const;
     Entity *site() const;
+
+    QString testAttribute() const;
 };
 
 class GamesContext : public LBDatabase::Context

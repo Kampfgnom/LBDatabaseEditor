@@ -31,6 +31,7 @@ protected:
     explicit RelationValue(Relation *relation, Entity *parent);
 
     void fetchValue();
+    void calculate();
     void addOtherEntity(Entity *entity);
 
     QScopedPointer<RelationValuePrivate> d_ptr;

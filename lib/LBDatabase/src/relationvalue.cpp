@@ -156,6 +156,10 @@ void RelationValue::fetchValue()
     d->fetchValue();
 }
 
+void RelationValue::calculate()
+{
+}
+
 void RelationValue::addOtherEntity(Entity *entity)
 {
     Q_D(RelationValue);

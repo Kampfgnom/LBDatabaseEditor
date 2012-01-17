@@ -56,6 +56,10 @@ void FunctionValue::fetchValue()
     d->fetchValue();
 }
 
+void FunctionValue::calculate()
+{
+}
+
 void FunctionValue::addValue(Entity *key, const QVariant &value)
 {
     Q_D(FunctionValue);

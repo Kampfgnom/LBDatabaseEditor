@@ -269,7 +269,6 @@ void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileN
     attributesTable->addColumn(Attribute::NameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::EntityTypeIdColumn,QLatin1String("INTERGER"));
-    attributesTable->addColumn(Attribute::PrefetchStrategyColumn,QLatin1String("INTERGER"));
 
     relationsTable->addColumn(Relation::NameColumn,QLatin1String("TEXT"));
     relationsTable->addColumn(Relation::DisplayNameLeftColumn,QLatin1String("TEXT"));

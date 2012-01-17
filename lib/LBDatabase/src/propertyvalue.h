@@ -38,6 +38,7 @@ protected:
     friend class RelationPrivate;
 
     virtual void fetchValue() = 0;
+    virtual void calculate() = 0;
 };
 //! \endcond
 

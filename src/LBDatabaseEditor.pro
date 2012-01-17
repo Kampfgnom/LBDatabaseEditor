@@ -22,7 +22,10 @@ SOURCES += main.cpp\
     entitytypecombobox.cpp \
     createcontextdialog.cpp \
     model/game.cpp \
-    model/psstorage.cpp
+    model/psstorage.cpp \
+    model/gamecalculator.cpp \
+    model/livegame.cpp \
+    model/livegamecalculator.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -42,7 +45,10 @@ HEADERS  += \
     entitytypecombobox.h \
     createcontextdialog.h \
     model/game.h \
-    model/psstorage.h
+    model/psstorage.h \
+    model/gamecalculator.h \
+    model/livegame.h \
+    model/livegamecalculator.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include
