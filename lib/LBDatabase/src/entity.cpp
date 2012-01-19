@@ -35,7 +35,7 @@ class EntityPrivate {
     QMultiHash<Property *, PropertyValue *> propertyValues;
 
     QList<AttributeValue *> attributeValues;
-    QList<RelationValue *> relationValues;
+    QList<RelationValueBase *> relationValues;
     QList<FunctionValue *> functionValues;
 
     Entity * q_ptr;
@@ -204,11 +204,6 @@ Row *Entity::row() const
     return d->row;
 }
 
-RelationValue *Entity::relation(const QString &name) const
-{
-    return static_cast<LBDatabase::RelationValue *>(propertyValue(entityType()->property(name)));
-}
-
 FunctionValue *Entity::function(const QString &name) const
 {
     return static_cast<LBDatabase::FunctionValue *>(propertyValue(entityType()->property(name)));
@@ -229,7 +224,7 @@ void Entity::addAttributeValue(AttributeValue *value)
   \internal
   Adds the RelationValue \a value to this entity. This is done when loading the storage.
   */
-void Entity::addRelationValue(RelationValue *value)
+void Entity::addRelationValue(RelationValueBase *value)
 {
     Q_D(Entity);
     d->propertyValues.insert(value->property(), value);

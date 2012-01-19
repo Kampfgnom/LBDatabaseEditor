@@ -9,6 +9,8 @@ class Player : public LBDatabase::Entity
 public:
     Q_INVOKABLE Player(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 
+    QString displayName(int role = Qt::DisplayRole) const;
+
     static const QString Name;
 };
 

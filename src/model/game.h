@@ -7,6 +7,16 @@
 
 class Player;
 
+namespace GameProperties {
+const QString NameAttribute("name");
+const QString DateAttribute("date");
+const QString CommentAttribute("comment");
+const QString SiteRelation("siteId");
+const QString TestAttribute("testAttribute");
+const QString PlayersRelation("playersByPosition");
+const QString PositionFunction("position");
+}
+
 class Game : public LBDatabase::Entity
 {
     Q_OBJECT
@@ -22,10 +32,7 @@ public:
 
     QList<Player *> players() const;
     QList<Player *> playersByPosition() const;
-
-protected:
-    mutable QList<Player *> m_players;
-    mutable QList<Player *> m_playersByPosition;
+    virtual QList<Player *> playersByPlacement() const;
 };
 
 class GamesContext : public LBDatabase::Context

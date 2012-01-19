@@ -5,6 +5,11 @@
 
 class Round;
 
+namespace LiveGameProperties {
+const QString RoundRelation("RoundsPerGame");
+const QString PointsFunction("points");
+}
+
 class LiveGame : public Game
 {
     Q_OBJECT
@@ -13,12 +18,10 @@ public:
 
     static const QString Name;
 
-    QList<Round *> rounds();
-
-    int points(Player *player);
-
-private:
-    QList<Round *> m_rounds;
+    QList<Round *> rounds() const;
+    int points(Player *player) const;
+    int placement(Player *player) const;
+    QList<Player *> playersByPlacement() const;
 };
 
 #endif // LIVEGAME_H

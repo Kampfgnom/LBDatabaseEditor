@@ -5,11 +5,6 @@
 
 #include <QDebug>
 
-namespace {
-const QString RoundRelation("RoundsPerGame");
-const QString PointsFunction("points");
-}
-
 const QString LiveGame::Name("Live Game");
 
 LiveGame::LiveGame(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -17,18 +12,22 @@ LiveGame::LiveGame(LBDatabase::Row *row, LBDatabase::Context *context) :
 {
 }
 
-QList<Round *> LiveGame::rounds()
+QList<Round *> LiveGame::rounds() const
 {
-    if(!m_rounds.isEmpty())
-        return m_rounds;
-
-    LBDatabase::RelationValue *v = relation(RoundRelation);
-    m_rounds = v->cast<Round>();
-    return m_rounds;
+    return relation<Round>(LiveGameProperties::RoundRelation)->entities();
 }
 
-int LiveGame::points(Player *player)
+int LiveGame::points(Player *player) const
 {
-    LBDatabase::FunctionValue *pointsFunction = function(PointsFunction);
-    return pointsFunction->value(player).toInt();
+    return function(LiveGameProperties::PointsFunction)->value(player).toInt();
+}
+
+int LiveGame::placement(Player *player) const
+{
+    return playersByPlacement().indexOf(player) + 1;
+}
+
+QList<Player *> LiveGame::playersByPlacement() const
+{
+    return relation<Player>(GameProperties::PlayersRelation)->sort<int>(function(LiveGameProperties::PointsFunction), LBDatabase::SortDescending);
 }

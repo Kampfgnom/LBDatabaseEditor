@@ -2,6 +2,7 @@
 
 #include "attribute.h"
 #include "column.h"
+#include "concreterelation.h"
 #include "context.h"
 #include "database.h"
 #include "entity.h"
@@ -139,7 +140,7 @@ bool StoragePrivate::open()
     }
 
     foreach(Row *row, relationsTable->rows()) {
-        q->insertRelation(new Relation(row, q));
+        q->insertRelation(new ConcreteRelation<Entity, Entity>(row, q));
     }
 
     foreach(Row *row, functionsTable->rows()) {
@@ -469,6 +470,12 @@ void Storage::insertFunction(Function *function)
 
     d->functions.insert(function->id(), function);
     d->properties.append(function);
+}
+
+QList<Relation *> Storage::relations() const
+{
+    Q_D(const Storage);
+    return d->relations.values();
 }
 
 /*!

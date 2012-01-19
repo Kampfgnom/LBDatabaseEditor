@@ -7,6 +7,7 @@ namespace LBDatabase {
 
 class Context;
 class EntityType;
+class RelationValueBase;
 class Row;
 class Storage;
 class Table;
@@ -43,7 +44,7 @@ public:
     EntityType *entityTypeRight() const;
     Cardinality cardinality() const;
 
-private:
+protected:
     friend class StoragePrivate;
     friend class RelationValueRightPrivate;
     friend class EntityTypePrivate;
@@ -53,6 +54,9 @@ private:
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
     void fetchValues();
+
+    virtual RelationValueBase *createLeftValue(Entity *entity);
+    virtual RelationValueBase *createRightValue(Entity *entity);
 
     QScopedPointer<RelationPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Relation)

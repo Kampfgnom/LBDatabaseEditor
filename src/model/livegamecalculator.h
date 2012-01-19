@@ -9,7 +9,7 @@ class LiveGameCalculator : public GameCalculator
 public:
     Q_INVOKABLE explicit LiveGameCalculator(QObject *parent = 0);
 
-    Q_INVOKABLE EntityVariantHash points(LBDatabase::Entity *entity);
+    Q_INVOKABLE EntityVariantHash points(const LBDatabase::Entity *entity);
 };
 
 #endif // LIVEGAMECALCULATOR_H

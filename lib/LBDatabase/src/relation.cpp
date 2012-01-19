@@ -87,10 +87,10 @@ void RelationPrivate::addPropertyValueToEntities()
 {
     Q_Q(Relation);
     foreach(Entity *entity, entityTypeLeft->entities()) {
-        entity->addRelationValue(new RelationValue(q, entity));
+        entity->addRelationValue(q->createLeftValue(entity));
     }
     foreach(Entity *entity, entityTypeRight->entities()) {
-        entity->addRelationValue(new RelationValue(q, entity));
+        entity->addRelationValue(q->createRightValue(entity));
     }
 }
 
@@ -127,8 +127,8 @@ void RelationPrivate::initializeManyToManyRelation()
             if(leftId > 0 && rightId > 0) {
                 Entity *leftEntity = entityTypeLeft->context()->entity(leftId);
                 Entity *rightEntity = entityTypeRight->context()->entity(rightId);
-                RelationValuePrivate *leftValue = static_cast<RelationValue *>(leftEntity->propertyValue(q))->d_func();
-                RelationValuePrivate *rightValue = static_cast<RelationValue *>(rightEntity->propertyValue(q))->d_func();
+                RelationValueBase *leftValue = static_cast<RelationValueBase *>(leftEntity->propertyValue(q));
+                RelationValueBase *rightValue = static_cast<RelationValueBase *>(rightEntity->propertyValue(q));
                 leftValue->addOtherEntity(rightEntity);
                 rightValue->addOtherEntity(leftEntity);
             }
@@ -144,15 +144,15 @@ void RelationPrivate::initializeOneToXRelation()
 
     int leftId;
     Entity *leftEntity;
-    RelationValuePrivate *leftValue;
-    RelationValuePrivate *rightValue;
+    RelationValueBase *leftValue;
+    RelationValueBase *rightValue;
     foreach(Entity *rightEntity, entityTypeRight->entities()) {
         leftId = rightEntity->row()->data(rightColumnIndex).toInt();
         leftEntity = entityTypeLeft->context()->entity(leftId);
 
         if(leftEntity) {
-            leftValue = static_cast<RelationValue *>(leftEntity->propertyValue(q))->d_func();
-            rightValue = static_cast<RelationValue *>(rightEntity->propertyValue(q))->d_func();
+            leftValue = static_cast<RelationValueBase *>(leftEntity->propertyValue(q));
+            rightValue = static_cast<RelationValueBase *>(rightEntity->propertyValue(q));
             leftValue->addOtherEntity(rightEntity);
             rightValue->addOtherEntity(leftEntity);
         }
@@ -162,7 +162,12 @@ void RelationPrivate::initializeOneToXRelation()
 void RelationPrivate::addPropertyValue(Entity *entity)
 {
     Q_Q(Relation);
-    entity->addRelationValue(new RelationValue(q, entity));
+    if(entity->entityType() == entityTypeLeft) {
+        entity->addRelationValue(q->createLeftValue(entity));
+    }
+    else {
+        entity->addRelationValue(q->createRightValue(entity));
+    }
 }
 
 //! \endcond
@@ -327,6 +332,16 @@ void Relation::fetchValues()
 {
     Q_D(Relation);
     return d->fetchValues();
+}
+
+RelationValueBase *Relation::createLeftValue(Entity *entity)
+{
+    return new RelationValue<Entity>(this, entity);
+}
+
+RelationValueBase *Relation::createRightValue(Entity *entity)
+{
+    return new RelationValue<Entity>(this, entity);
 }
 
 } // namespace LBDatabase

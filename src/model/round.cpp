@@ -22,6 +22,5 @@ Round::Round(LBDatabase::Row *row, LBDatabase::Context *context) :
 
 int Round::points(Player *player)
 {
-    LBDatabase::FunctionValue *pointsFunction = function(PointsFunction);
-    return pointsFunction->value(player).toInt();
+    return function(PointsFunction)->value(player).toInt();
 }

@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "entitytype.h"
+
 #include <QHash>
 
 namespace LBDatabase {
@@ -10,12 +12,13 @@ namespace LBDatabase {
 class Attribute;
 class AttributeValue;
 class Context;
-class EntityType;
 class FunctionValue;
 class Property;
 class PropertyValue;
 class Relation;
+template<class EntityClass>
 class RelationValue;
+class RelationValueBase;
 class Row;
 class Storage;
 
@@ -41,7 +44,12 @@ public:
 
     Row *row() const;
 
-    RelationValue *relation(const QString &name) const;
+    template<class EntityClass>
+    RelationValue<EntityClass> *relation(const QString &name) const
+    {
+        return static_cast<LBDatabase::RelationValue<EntityClass> *>(propertyValue(entityType()->property(name)));
+    }
+
     FunctionValue *function(const QString &name) const;
 
 protected:
@@ -57,7 +65,7 @@ protected:
     bool setData(const QVariant &data, Property *property);
 
     void addAttributeValue(AttributeValue *value);
-    void addRelationValue(RelationValue *value);
+    void addRelationValue(RelationValueBase *value);
     void addFunctionValue(FunctionValue *value);
 
     QScopedPointer<EntityPrivate> d_ptr;

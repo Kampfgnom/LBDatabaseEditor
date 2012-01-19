@@ -145,9 +145,8 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     openDatabase(fileName);
 
     LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
-
-    foreach(Player *player, game->playersByPosition()) {
-        qDebug() << player->value("name") << game->points(player);
+    foreach(Player *player, game->playersByPlacement()) {
+        qDebug() << player->displayName() << game->points(player) << game->placement(player);
     }
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
@@ -269,6 +268,17 @@ void DatabaseEditorController::showContext(LBDatabase::Context *context)
     setCurrentDatabase(0);
     setCurrentStorage(context->storage());
     setCurrentContext(context);
+}
+
+void DatabaseEditorController::exportGraphviz()
+{
+    if(!m_currentStorage)
+        return;
+
+    LBDatabase::GraphvizExporter exporter;
+    exporter.setStorage(m_currentStorage);
+    QString fileName = getSaveFileName("Export", "Graphviz Document (*.dot files)");
+    exporter.exportGraph(fileName);
 }
 
 void DatabaseEditorController::setCurrentDatabase(LBDatabase::Database *database)

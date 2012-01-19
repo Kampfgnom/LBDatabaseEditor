@@ -7,7 +7,7 @@
 #include "function.h"
 
 #define COMMA ,
-Q_DECLARE_METATYPE(QHash<LBDatabase::Entity * COMMA QVariant>)
+Q_DECLARE_METATYPE(QHash<const LBDatabase::Entity * COMMA QVariant>)
 
 namespace LBDatabase {
 /******************************************************************************
@@ -18,15 +18,15 @@ class FunctionValuePrivate {
 
     void init();
     void fetchValue();
-    QHash<Entity *, QVariant> calculate();
-    QVariant calculate(Entity *key);
+    QHash<const Entity *, QVariant> calculate();
+    QVariant calculate(const Entity *key);
 
     Entity *entity;
     Function *function;
 
     mutable bool cached;
 
-    mutable QHash<Entity *, QVariant> values;
+    mutable QHash<const Entity *, QVariant> values;
 
     FunctionValue * q_ptr;
     Q_DECLARE_PUBLIC(FunctionValue)
@@ -42,14 +42,14 @@ void FunctionValuePrivate::fetchValue()
 {
 }
 
-QVariant FunctionValuePrivate::calculate(Entity *key)
+QVariant FunctionValuePrivate::calculate(const Entity *key)
 {
     Q_Q(FunctionValue);
     Calculator *calculator = entity->entityType()->calculator();
     return calculator->calculate(entity,q,key);
 }
 
-QHash<Entity *, QVariant> FunctionValuePrivate::calculate()
+QHash<const Entity *, QVariant> FunctionValuePrivate::calculate()
 {
     Q_Q(FunctionValue);
     Calculator *calculator = entity->entityType()->calculator();
@@ -102,7 +102,7 @@ Property *FunctionValue::property() const
     return d->function;
 }
 
-QVariant FunctionValue::value(Entity *entity) const
+QVariant FunctionValue::value(const Entity *entity) const
 {
     Q_D(const FunctionValue);
 
@@ -126,7 +126,7 @@ QVariant FunctionValue::data(int role) const
 
     if(d->function->isCalculated()) {
         if(!d->function->cacheData()) {
-            return QVariant::fromValue<QHash<Entity *, QVariant> >(const_cast<FunctionValuePrivate*>(d)->calculate());
+            return QVariant::fromValue<QHash<const Entity *, QVariant> >(const_cast<FunctionValuePrivate*>(d)->calculate());
         }
         if(!d->cached) {
             d->values = const_cast<FunctionValuePrivate*>(d)->calculate();
@@ -139,7 +139,7 @@ QVariant FunctionValue::data(int role) const
             return QVariant();
 
         if(d->values.size() == 1) {
-            Entity *key = d->values.keys().at(0);
+            const Entity *key = d->values.keys().at(0);
             QVariant value = d->values.value(key);
             return QVariant(key->displayName() + QLatin1String("=") + value.toString());
         }
@@ -147,7 +147,7 @@ QVariant FunctionValue::data(int role) const
         return QVariant(QString::number(d->values.size()) +QLatin1String(" values"));
     }
     else if(role == PropertyValue::PlainDataRole) {
-        return QVariant::fromValue<QHash<Entity *, QVariant> >(d->values);
+        return QVariant::fromValue<QHash<const Entity *, QVariant> >(d->values);
     }
 
     return QVariant();

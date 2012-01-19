@@ -16,7 +16,7 @@ public:
 
     Entity *entity() const;
     Property *property() const;
-    QVariant value(Entity *entity) const;
+    QVariant value(const Entity *entity) const;
     QVariant data(int role = Qt::DisplayRole) const;
     bool setData(const QVariant &data);
 

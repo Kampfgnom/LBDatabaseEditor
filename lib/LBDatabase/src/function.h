@@ -5,6 +5,7 @@
 
 namespace LBDatabase {
 
+class EntityType;
 class Row;
 class Storage;
 
@@ -25,6 +26,8 @@ public:
     QString displayName(const Context *context = 0) const;
     void setDisplayName(const QString &displayName, const Context *context = 0);
     QString name() const;
+
+    EntityType *keyEntityType() const;
 
     bool isCalculated() const;
     bool cacheData() const;

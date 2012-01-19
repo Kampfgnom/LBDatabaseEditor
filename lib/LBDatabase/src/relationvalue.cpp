@@ -7,6 +7,8 @@
 #include "relation.h"
 #include "row.h"
 
+#include <QDebug>
+
 namespace LBDatabase {
 
 /******************************************************************************
@@ -14,21 +16,16 @@ namespace LBDatabase {
 */
 
 //! \cond PRIVATE
-void RelationValuePrivate::init()
+void RelationValueBasePrivate::init()
 {
-    Q_Q(RelationValue);
+    Q_Q(RelationValueBase);
     QObject::connect(q, SIGNAL(dataChanged(QVariant)), entity->context(), SLOT(onPropertyValueDataChanged(QVariant)));
 }
 
-void RelationValuePrivate::fetchValue()
+void RelationValueBasePrivate::fetchValue()
 {
 }
 
-void RelationValuePrivate::addOtherEntity(Entity *entity)
-{
-    if(!otherEntities.contains(entity))
-        otherEntities.append(entity);
-}
 //! \endcond
 
 /******************************************************************************
@@ -52,11 +49,11 @@ void RelationValuePrivate::addOtherEntity(Entity *entity)
 /*!
   Creates a RelationValue.
   */
-RelationValue::RelationValue(Relation *relation, Entity *parent) :
+RelationValueBase::RelationValueBase(Relation *relation, Entity *parent) :
     PropertyValue(parent),
-    d_ptr(new RelationValuePrivate)
+    d_ptr(new RelationValueBasePrivate)
 {
-    Q_D(RelationValue);
+    Q_D(RelationValueBase);
     d->q_ptr = this;
     d->relation = relation;
     d->entity = parent;
@@ -66,65 +63,32 @@ RelationValue::RelationValue(Relation *relation, Entity *parent) :
 /*!
   Destroys the relation value.
   */
-RelationValue::~RelationValue()
+RelationValueBase::~RelationValueBase()
 {
 }
 
 /*!
   Returns the entity of this relation value.
   */
-Entity *RelationValue::entity() const
+Entity *RelationValueBase::entity() const
 {
-    Q_D(const RelationValue);
+    Q_D(const RelationValueBase);
     return d->entity;
-}
-
-/*!
-  Returns the entities to which this relation maps.
-  */
-QList<Entity *> RelationValue::entities() const
-{
-    Q_D(const RelationValue);
-    return d->otherEntities;
 }
 
 /*!
   Does nothing.
   */
-bool RelationValue::setData(const QVariant &data)
+bool RelationValueBase::setData(const QVariant &data)
 {
     Q_UNUSED(data);
     return false;
 }
 
 /*!
-  Returns a QVariant, which represents the content of the relation in the given role.
-
-  Currently this method supports only the Qt::DisplayRole.
-  */
-QVariant RelationValue::data(int role) const
-{
-    Q_D(const RelationValue);
-    if(role == Qt::DisplayRole) {
-        if(d->otherEntities.isEmpty())
-            return QVariant();
-
-        if(d->otherEntities.size() == 1)
-            return d->otherEntities.at(0)->displayName();
-
-        return QVariant(QString::number(d->otherEntities.size())+QLatin1String(" ")+d->otherEntities.at(0)->entityType()->name()+QLatin1String("s"));
-    }
-    else if(role == PropertyValue::PlainDataRole) {
-        return QVariant::fromValue<QList<Entity *> >(d->otherEntities);
-    }
-
-    return QVariant();
-}
-
-/*!
   Returns false
   */
-bool RelationValue::isEditable() const
+bool RelationValueBase::isEditable() const
 {
     return false;
 }
@@ -132,38 +96,23 @@ bool RelationValue::isEditable() const
 /*!
   Returns the relation, that describes this value.
   */
-Property *RelationValue::property() const
+Property *RelationValueBase::property() const
 {
-    Q_D(const RelationValue);
+    Q_D(const RelationValueBase);
     return d->relation;
-}
-
-Entity *RelationValue::firstEntity() const
-{
-    Q_D(const RelationValue);
-    if(d->otherEntities.isEmpty())
-        return 0;
-
-    return d->otherEntities.first();
 }
 
 /*!
   Initializes the content of the relation value.
   */
-void RelationValue::fetchValue()
+void RelationValueBase::fetchValue()
 {
-    Q_D(RelationValue);
+    Q_D(RelationValueBase);
     d->fetchValue();
 }
 
-void RelationValue::calculate()
+void RelationValueBase::calculate()
 {
-}
-
-void RelationValue::addOtherEntity(Entity *entity)
-{
-    Q_D(RelationValue);
-    d->addOtherEntity(entity);
 }
 
 } // namespace LBDatabase

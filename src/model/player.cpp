@@ -13,3 +13,9 @@ Player::Player(LBDatabase::Row *row, LBDatabase::Context *context) :
     Entity(row, context)
 {
 }
+
+QString Player::displayName(int role) const
+{
+    Q_UNUSED(role);
+    return value("name").toString();
+}

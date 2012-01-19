@@ -3,30 +3,30 @@
 
 #include <QObject>
 
+#include <QHash>
+
 namespace LBDatabase {
 
 class Entity;
+class FunctionValue;
 class Relation;
-class RelationValue;
+class RelationValueBase;
 
 //! \cond PRIVATE
-class RelationValuePrivate {
+class RelationValueBasePrivate {
 protected:
     friend class RelationPrivate;
 
-    RelationValuePrivate() {}
+    RelationValueBasePrivate() {}
 
     virtual void init();
     virtual void fetchValue();
 
-    void addOtherEntity(Entity *entity);
-
     Entity *entity;
     Relation *relation;
-    QList<Entity *> otherEntities;
 
-    RelationValue * q_ptr;
-    Q_DECLARE_PUBLIC(RelationValue)
+    RelationValueBase * q_ptr;
+    Q_DECLARE_PUBLIC(RelationValueBase)
 };
 //! \endcond
 

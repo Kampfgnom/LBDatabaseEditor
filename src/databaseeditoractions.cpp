@@ -67,6 +67,11 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_addEntityTypeAction->setText(tr("&Add EntityType..."));
     m_addEntityTypeAction->setEnabled(false);
     connect(m_addEntityTypeAction, SIGNAL(triggered()), m_controller, SLOT(addEntityType()));
+
+    m_exportUmlGraphvizAction = new Action(this);
+    m_exportUmlGraphvizAction->setText(tr("&UML Graphviz *.dot Document..."));
+    m_exportUmlGraphvizAction->setEnabled(true);
+    connect(m_exportUmlGraphvizAction, SIGNAL(triggered()), m_controller, SLOT(exportGraphviz()));
 }
 
 Action *DatabaseEditorActions::openDatabaseAction() const
@@ -117,6 +122,11 @@ Action *DatabaseEditorActions::createContextAction() const
 Action *DatabaseEditorActions::addEntityTypeAction() const
 {
     return m_addEntityTypeAction;
+}
+
+Action *DatabaseEditorActions::exportUmlGraphvizAction() const
+{
+    return m_exportUmlGraphvizAction;
 }
 
 void DatabaseEditorActions::updateActions()

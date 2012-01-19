@@ -25,7 +25,9 @@ HEADERS += \
     relationvalue_p.h \
     function.h \
     functionvalue.h \
-    calculator.h
+    calculator.h \
+    graphvizexporter.h \
+    concreterelation.h
 
 SOURCES += \
     column.cpp \
@@ -44,7 +46,8 @@ SOURCES += \
     relationvalue.cpp \
     function.cpp \
     functionvalue.cpp \
-    calculator.cpp
+    calculator.cpp \
+    graphvizexporter.cpp
 
 OTHER_FILES +=
 

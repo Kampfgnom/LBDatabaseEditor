@@ -9,11 +9,11 @@ LiveGameCalculator::LiveGameCalculator(QObject *parent) :
 {
 }
 
-EntityVariantHash LiveGameCalculator::points(LBDatabase::Entity *entity)
+EntityVariantHash LiveGameCalculator::points(const LBDatabase::Entity *entity)
 {
-    QHash<LBDatabase::Entity *, QVariant> result;
+    QHash<const LBDatabase::Entity *, QVariant> result;
 
-    LiveGame *game = static_cast<LiveGame*>(entity);
+    const LiveGame *game = static_cast<const LiveGame*>(entity);
     foreach(Player *player, game->players()) {
         foreach(Round *round, game->rounds()) {
             result.insert(player, result.value(player, QVariant(0)).toInt() + round->points(player));

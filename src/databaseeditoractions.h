@@ -29,6 +29,8 @@ public:
     Action *createContextAction() const;
     Action *addEntityTypeAction() const;
 
+    Action *exportUmlGraphvizAction() const;
+
 public slots:
     void updateActions();
 
@@ -48,6 +50,8 @@ private:
     //Entity
     Action *m_createContextAction;
     Action *m_addEntityTypeAction;
+
+    Action *m_exportUmlGraphvizAction;
     
 };
 

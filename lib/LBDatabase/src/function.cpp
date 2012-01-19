@@ -154,6 +154,12 @@ QString Function::name() const
     return d->name;
 }
 
+EntityType *Function::keyEntityType() const
+{
+    Q_D(const Function);
+    return d->keyEntityType;
+}
+
 bool Function::isCalculated() const
 {
     Q_D(const Function);

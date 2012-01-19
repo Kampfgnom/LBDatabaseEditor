@@ -59,11 +59,14 @@ private:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class FunctionPrivate;
+    friend class GraphvizExporter;
 
     void insertEntityType(EntityType *type);
     void insertAttribute(Attribute *attribute);
     void insertRelation(Relation *relation);
     void insertFunction(Function *function);
+
+    QList<Relation *> relations() const;
 
     Table *contextsTable() const;
     Table *entityTypesTable() const;
