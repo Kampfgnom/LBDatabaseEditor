@@ -73,18 +73,9 @@ HEADERS  += \
     addentitytypedialog.h \
     entitytypecombobox.h \
     createcontextdialog.h \
-<<<<<<< HEAD
     editentitytypesdialog.h \
     editattributewidget.h \
     editrelationwidget.h \
-    model/game.h \
-    model/psstorage.h \
-    model/gamecalculator.h \
-    model/livegame.h \
-    model/livegamecalculator.h \
-    model/player.h \
-    model/round.h
-=======
     model2/skatround.h \
     model2/skatofflinegame.h \
     model2/skatlivegame.h \
@@ -115,7 +106,6 @@ HEADERS  += \
 #    model/livegamecalculator.h \
 #    model/player.h \
 #    model/round.h
->>>>>>> 28a84f6e2397acd7aad93a0b14eb9bca978cb275
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include
