@@ -32,6 +32,7 @@ public:
 
     int id() const;
     QString name() const;
+    QString simplifiedName() const;
     void setName(const QString &name);
     Context *context() const;
     EntityType *parentEntityType() const;
@@ -45,6 +46,11 @@ public:
     QList<Attribute *> attributes() const;
     QList<Relation *> relations() const;
     QList<Function *> functions() const;
+
+    QList<Property *> nonInhertitedProperties() const;
+    QList<Attribute *> nonInhertitedAttributes() const;
+    QList<Relation *> nonInhertitedRelations() const;
+    QList<Function *> nonInhertitedFunctions() const;
 
     Attribute *addAttribute(const QString &name, Attribute::Type type);
     Relation *addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality);

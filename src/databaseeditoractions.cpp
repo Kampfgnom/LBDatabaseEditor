@@ -74,9 +74,14 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     connect(m_editEntityTypesAction, SIGNAL(triggered()), m_controller, SLOT(editEntityTypes()));
 
     m_exportUmlGraphvizAction = new Action(this);
-    m_exportUmlGraphvizAction->setText(tr("&UML Graphviz *.dot Document..."));
+    m_exportUmlGraphvizAction->setText(tr("&UML Graphviz *.dot document..."));
     m_exportUmlGraphvizAction->setEnabled(true);
     connect(m_exportUmlGraphvizAction, SIGNAL(triggered()), m_controller, SLOT(exportGraphviz()));
+
+    m_exportCppAction = new Action(this);
+    m_exportCppAction->setText(tr("&C++ Entity Storage..."));
+    m_exportCppAction->setEnabled(true);
+    connect(m_exportCppAction, SIGNAL(triggered()), m_controller, SLOT(exportCpp()));
 }
 
 Action *DatabaseEditorActions::openDatabaseAction() const
@@ -132,6 +137,11 @@ Action *DatabaseEditorActions::addEntityTypeAction() const
 Action *DatabaseEditorActions::exportUmlGraphvizAction() const
 {
     return m_exportUmlGraphvizAction;
+}
+
+Action *DatabaseEditorActions::exportCppAction() const
+{
+    return m_exportCppAction;
 }
 
 void DatabaseEditorActions::updateActions()

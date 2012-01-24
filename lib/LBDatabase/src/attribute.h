@@ -19,12 +19,19 @@ public:
     static const QString EntityTypeIdColumn;
     static const QString CalculatedColumn;
     static const QString CacheDataColumn;
+    static const QString TypeColumn;
 
     enum Type {
-        Unkown,
-        Text,
-        Integer,
-        Real
+        Unkown,     // 0
+        Text,       // 1
+        Integer,    // 2
+        Real,       // 3
+        Icon,       // 4
+        Pixmap,     // 5
+        DateTime,   // 6
+        Time,       // 7
+        Bool,       // 8
+        Color       // 9
     };
 
     ~Attribute();
@@ -38,6 +45,15 @@ public:
 
     bool isCalculated() const;
     bool cacheData() const;
+
+    Type type() const;
+    QString typeName() const;
+    static QString typeToName(Type type);
+    static QStringList typeNames();
+
+    QString qtType() const;
+    static QStringList qtTypeNames();
+    static QString typeToQtType(Type type);
 
 private:
     friend class StoragePrivate;

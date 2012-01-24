@@ -1,10 +1,10 @@
-#include "psstorage.h"
+#include "projectstatsstorage.h"
 
 #include "game.h"
 #include "player.h"
 #include "round.h"
 
-PSStorage::PSStorage(const QString &fileName, QObject *parent) :
+ProjectStatsStorage::ProjectStatsStorage(const QString &fileName, QObject *parent) :
     Storage(fileName, parent)
 {
     registerContextType<GamesContext>();
@@ -12,7 +12,7 @@ PSStorage::PSStorage(const QString &fileName, QObject *parent) :
     registerContextType<RoundsContext>();
 }
 
-GamesContext *PSStorage::gamesContext() const
+GamesContext *ProjectStatsStorage::gamesContext() const
 {
     return static_cast<GamesContext *>(context(GamesContext::Name));
 }

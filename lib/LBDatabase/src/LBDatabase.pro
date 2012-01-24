@@ -27,7 +27,8 @@ HEADERS += \
     functionvalue.h \
     calculator.h \
     graphvizexporter.h \
-    concreterelation.h
+    concreterelation.h \
+    cppexporter.h
 
 SOURCES += \
     column.cpp \
@@ -47,7 +48,8 @@ SOURCES += \
     function.cpp \
     functionvalue.cpp \
     calculator.cpp \
-    graphvizexporter.cpp
+    graphvizexporter.cpp \
+    cppexporter.cpp
 
 OTHER_FILES +=
 

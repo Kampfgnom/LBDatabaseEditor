@@ -29,6 +29,7 @@ public:
 
     int id() const;
     QString name() const;
+    QString simplifiedName() const;
 //    void setName(const QString &name);
     Storage *storage() const;
     Table *table() const;

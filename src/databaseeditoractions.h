@@ -31,6 +31,7 @@ public:
     Action *editEntityTypesAction() const;
 
     Action *exportUmlGraphvizAction() const;
+    Action *exportCppAction() const;
 
 public slots:
     void updateActions();
@@ -54,6 +55,9 @@ private:
     Action *m_editEntityTypesAction;
 
     Action *m_exportUmlGraphvizAction;
+
+    Action *m_exportCppAction;
+
 };
 
 } // namespace LBGUI

@@ -11,9 +11,8 @@
 #include "createcontextdialog.h"
 #include "editentitytypesdialog.h"
 
-#include "model/livegame.h"
-#include "model/player.h"
-#include "model/psstorage.h"
+#include "model2/projectstatsstorage.h"
+#include "model2/game.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -21,6 +20,11 @@
 #include <QFileInfo>
 #include <QMessageBox>
 #include <QElapsedTimer>
+
+#include <QDateTime>
+#include <QTime>
+
+#include <QPushButton>
 
 #include <QDebug>
 
@@ -131,7 +135,7 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
 //    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
 
     static QObject guard;
-    PSStorage *storage = new PSStorage(autosaveFile->copyFileName(), &guard);
+    ProjectStatsStorage *storage = new ProjectStatsStorage(autosaveFile->copyFileName(), &guard);
 
     if(m_storages.contains(storage)) {
 //        m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
@@ -145,10 +149,15 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
 
-    LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
-    foreach(Player *player, game->playersByPlacement()) {
-        qDebug() << player->displayName() << game->points(player) << game->placement(player);
-    }
+//    LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
+//    foreach(Player *player, game->playersByPlacement()) {
+//        qDebug() << player->displayName() << game->points(player) << game->placement(player);
+//    }
+
+//    LBDatabase::CppExporter exporter;
+//    exporter.setStorage(storage);
+//    exporter.setDirectory("/Users/niklas/Documents/Programming/LBDatabaseTest/LBDatabaseEditor/src/model2/");
+//    exporter.exportCpp();
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));
@@ -280,6 +289,18 @@ void DatabaseEditorController::exportGraphviz()
     exporter.setStorage(m_currentStorage);
     QString fileName = getSaveFileName("Export", "Graphviz Document (*.dot files)");
     exporter.exportGraph(fileName);
+}
+
+void DatabaseEditorController::exportCpp()
+{
+    if(!m_currentStorage)
+        return;
+
+    LBDatabase::CppExporter exporter;
+    QString directory = getSaveDirName("Export");
+    exporter.setStorage(m_currentStorage);
+    exporter.setDirectory(directory);
+    exporter.exportCpp();
 }
 
 void DatabaseEditorController::setCurrentDatabase(LBDatabase::Database *database)
