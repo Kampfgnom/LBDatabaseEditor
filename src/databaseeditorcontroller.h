@@ -57,6 +57,7 @@ public slots:
     void showContext(::LBDatabase::Context *context);
 
     void exportGraphviz();
+    void exportCpp();
 
 signals:
     void currentDatabaseChanged(::LBDatabase::Database *database);

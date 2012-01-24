@@ -18,5 +18,6 @@
 #include <LBDatabase/storage.h>
 
 #include <LBDatabase/graphvizexporter.h>
+#include <LBDatabase/cppexporter.h>
 
 #endif // LBDATABASE_H

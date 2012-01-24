@@ -9,6 +9,8 @@
 #include "storage.h"
 #include "table.h"
 
+#include <QStringList>
+
 namespace LBDatabase {
 
 /******************************************************************************
@@ -30,6 +32,8 @@ class AttributePrivate {
     bool calculated;
     bool cacheData;
 
+    Attribute::Type type;
+
     int columnIndex;
 
     Attribute * q_ptr;
@@ -43,6 +47,8 @@ void AttributePrivate::init()
     displayName = row->data(Attribute::DisplayNameColumn).toString();
     calculated = row->data(Attribute::CalculatedColumn).toBool();
     cacheData = row->data(Attribute::CacheDataColumn).toBool();
+
+    type = static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt());
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
     columnIndex = -1;
@@ -114,6 +120,7 @@ const QString Attribute::DisplayNameColumn("displayName");
 const QString Attribute::EntityTypeIdColumn("entityTypeId");
 const QString Attribute::CalculatedColumn("calculated");
 const QString Attribute::CacheDataColumn("cacheData");
+const QString Attribute::TypeColumn("type");
 
 /*!
   Creates an attribute, which contains the meta data from \a row in the given \a
@@ -227,6 +234,66 @@ int Attribute::columnIndex() const
 {
     Q_D(const Attribute);
     return d->columnIndex;
+}
+
+Attribute::Type Attribute::type() const
+{
+    Q_D(const Attribute);
+    return d->type;
+}
+
+QString Attribute::typeName() const
+{
+    Q_D(const Attribute);
+    return Attribute::typeToName(d->type);
+}
+
+QString Attribute::typeToName(Type type)
+{
+    return Attribute::typeNames().at(static_cast<int>(type));
+}
+
+QStringList Attribute::typeNames()
+{
+    QStringList names;
+    names << "Unkown" <<
+    "Text" <<
+    "Integer" <<
+    "Real" <<
+    "Icon" <<
+    "Pixmap" <<
+    "DateTime" <<
+    "Time" <<
+    "Bool" <<
+    "Color";
+    return names;
+}
+
+QString Attribute::qtType() const
+{
+    Q_D(const Attribute);
+    return Attribute::typeToQtType(d->type);
+}
+
+QString Attribute::typeToQtType(Type type)
+{
+    return Attribute::qtTypeNames().at(static_cast<int>(type));
+}
+
+QStringList Attribute::qtTypeNames()
+{
+    QStringList names;
+    names << "QVariant" << //Unknown
+    "QString" << //Text
+    "int" << //Integer
+    "double" << //Real
+    "QIcon" << //Icon
+    "QPixmap" << //Pixmap
+    "QDateTime" << //DateTime
+    "QTime" << //Time
+    "bool" << //Bool
+    "QColor"; //Color
+    return names;
 }
 
 } // namespace LBDatabase

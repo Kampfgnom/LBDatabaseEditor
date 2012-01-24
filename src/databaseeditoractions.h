@@ -30,6 +30,7 @@ public:
     Action *addEntityTypeAction() const;
 
     Action *exportUmlGraphvizAction() const;
+    Action *exportCppAction() const;
 
 public slots:
     void updateActions();
@@ -52,6 +53,7 @@ private:
     Action *m_addEntityTypeAction;
 
     Action *m_exportUmlGraphvizAction;
+    Action *m_exportCppAction;
     
 };
 

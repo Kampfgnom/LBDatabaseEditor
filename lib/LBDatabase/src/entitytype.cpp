@@ -245,6 +245,11 @@ QString EntityType::name() const
     return d->name;
 }
 
+QString EntityType::simplifiedName() const
+{
+    return name().simplified().remove(' ');
+}
+
 /*!
   Sets the name of the type to \a name.
   */
@@ -378,6 +383,50 @@ QList<Function *> EntityType::functions() const
 {
     Q_D(const EntityType);
     return d->functions;
+}
+
+QList<Property *> EntityType::nonInhertitedProperties() const
+{
+    QList<Property *> list = properties();
+    if(parentEntityType()) {
+        foreach(Property *property, parentEntityType()->properties()) {
+            list.removeAll(property);
+        }
+    }
+    return list;
+}
+
+QList<Attribute *> EntityType::nonInhertitedAttributes() const
+{
+    QList<Attribute *> list = attributes();
+    if(parentEntityType()) {
+        foreach(Attribute *attribute, parentEntityType()->attributes()) {
+            list.removeAll(attribute);
+        }
+    }
+    return list;
+}
+
+QList<Relation *> EntityType::nonInhertitedRelations() const
+{
+    QList<Relation *> list = relations();
+    if(parentEntityType()) {
+        foreach(Relation *relation, parentEntityType()->relations()) {
+            list.removeAll(relation);
+        }
+    }
+    return list;
+}
+
+QList<Function *> EntityType::nonInhertitedFunctions() const
+{
+    QList<Function *> list = functions();
+    if(parentEntityType()) {
+        foreach(Function *function, parentEntityType()->functions()) {
+            list.removeAll(function);
+        }
+    }
+    return list;
 }
 
 /*!

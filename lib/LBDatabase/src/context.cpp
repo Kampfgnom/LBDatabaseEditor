@@ -260,6 +260,11 @@ QString Context::name() const
     return d->name;
 }
 
+QString Context::simplifiedName() const
+{
+    return name().simplified().remove(' ');
+}
+
 //void Context::setName(const QString &name)
 //{
 //    Q_D(Context);
