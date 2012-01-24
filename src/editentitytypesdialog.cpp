@@ -4,8 +4,11 @@
 #include "entitytypecombobox.h"
 #include "editattributewidget.h"
 #include "editrelationwidget.h"
+#include "propertycombobox.h"
 
 #include <LBDatabase/LBDatabase.h>
+
+#include <QGroupBox>
 
 
 EditEntityTypesDialog::EditEntityTypesDialog(LBDatabase::Context* context, QWidget *parent) :
@@ -69,44 +72,86 @@ void EditEntityTypesDialog::fillDialogWithEntityType(LBDatabase::EntityType* typ
     }
 
     if(m_entityType->attributes().size() > 0){
-        QVBoxLayout* layout = new QVBoxLayout(this);
-        layout->setContentsMargins(0,0,0,0);
-        layout->setAlignment(Qt::AlignTop);
+
+        QGroupBox* attributeGroupBox = new QGroupBox(this);
+
+        QList<LBDatabase::Property*> list;
         foreach(LBDatabase::Attribute* attribute, m_entityType->attributes()){
-            EditAttributeWidget* w = new EditAttributeWidget(attribute);
-            layout->addWidget(w);
+            list.append(attribute);
         }
-        ui->gridLayout->addLayout(layout,2,1);
-        ui->gridLayout->itemAtPosition(2,1)->setAlignment(Qt::AlignTop);
+        m_attributeBox = new PropertyComboBox(list,this);
+        m_attributeBox->onCurrentPropertyChanged(0);
+        connect(m_attributeBox,SIGNAL(currentPropertyChanged()),this,SLOT(onSelectedAttributeChanged()));
+
+        QVBoxLayout* layout = new QVBoxLayout(this);
+        layout->addWidget(m_attributeBox);
+        layout->addWidget(new EditAttributeWidget(static_cast<LBDatabase::Attribute*>(m_attributeBox->currentItem())));
+
+        attributeGroupBox->setLayout(layout);
+
+        ui->gridLayout->addWidget(attributeGroupBox,2,1);
+
     }
 
     if(m_entityType->relations().size() > 0){
-        QVBoxLayout* layout = new QVBoxLayout(this);
-        layout->setContentsMargins(0,0,0,0);
-        layout->setAlignment(Qt::AlignTop);
+        QGroupBox* relationGroupBox = new QGroupBox(this);
+
+        QList<LBDatabase::Property*> list;
         foreach(LBDatabase::Relation* relation, m_entityType->relations()){
-            EditRelationWidget* w = new EditRelationWidget(relation);
-            layout->addWidget(w);
+            list.append(relation);
         }
-        ui->gridLayout->addLayout(layout,3,1);
-        ui->gridLayout->itemAtPosition(3,1)->setAlignment(Qt::AlignTop);
+        m_relationsBox = new PropertyComboBox(list,this);
+        m_relationsBox->onCurrentPropertyChanged(0);
+        connect(m_relationsBox,SIGNAL(currentPropertyChanged()),this,SLOT(onSelectedRelationChanged()));
+
+        QVBoxLayout* layout = new QVBoxLayout(this);
+        layout->addWidget(m_relationsBox);
+        layout->addWidget(new EditRelationWidget(static_cast<LBDatabase::Relation*>(m_relationsBox->currentItem())));
+
+        relationGroupBox->setLayout(layout);
+
+        ui->gridLayout->addWidget(relationGroupBox,3,1);
     }
 
 }
 
 void EditEntityTypesDialog::clearAttributesAndRelationsLayouts()
 {
-    QLayout* layout = ui->gridLayout->itemAtPosition(2,1)->layout();
+    QWidget* group = ui->gridLayout->itemAtPosition(2,1)->widget();
+    QLayout* layout = group->layout();
     while(!layout->isEmpty()){
         QWidget* widget = layout->takeAt(0)->widget();
         delete widget;
     }
     delete layout;
+    delete group;
 
-    QLayout* rel = ui->gridLayout->itemAtPosition(3,1)->layout();
-    while(!rel->isEmpty()){
-        QWidget* widget = rel->takeAt(0)->widget();
+    QWidget* rel = ui->gridLayout->itemAtPosition(3,1)->widget();
+    QLayout* relLay = rel->layout();
+    while(!relLay->isEmpty()){
+        QWidget* widget = relLay->takeAt(0)->widget();
         delete widget;
     }
+    delete relLay;
     delete rel;
+}
+
+void EditEntityTypesDialog::onSelectedAttributeChanged()
+{
+    QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui->gridLayout->itemAtPosition(2,1)->widget()->layout());
+
+    QWidget* widget = layout->takeAt(1)->widget();
+    delete widget;
+
+    layout->addWidget(new EditAttributeWidget(static_cast<LBDatabase::Attribute*>(m_attributeBox->currentItem())));
+}
+
+void EditEntityTypesDialog::onSelectedRelationChanged()
+{
+    QVBoxLayout* layout = static_cast<QVBoxLayout*>(ui->gridLayout->itemAtPosition(3,1)->widget()->layout());
+
+    QWidget* widget = layout->takeAt(1)->widget();
+    delete widget;
+
+    layout->addWidget(new EditRelationWidget(static_cast<LBDatabase::Relation*>(m_relationsBox->currentItem())));
 }

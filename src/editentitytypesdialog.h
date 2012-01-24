@@ -13,6 +13,7 @@ class EntityType;
 }
 
 class EntityTypeComboBox;
+class PropertyComboBox;
 
 class EditEntityTypesDialog : public QDialog
 {
@@ -29,6 +30,10 @@ private slots:
 
     void onCurrentEntityTypeChanged();
 
+    void onSelectedAttributeChanged();
+
+    void onSelectedRelationChanged();
+
     void fillDialogWithEntityType(LBDatabase::EntityType* type);
 
 private:
@@ -41,6 +46,9 @@ private:
 
     EntityTypeComboBox* m_entityTypeBox;
     EntityTypeComboBox* m_entityTypeParentBox;
+
+    PropertyComboBox* m_attributeBox;
+    PropertyComboBox* m_relationsBox;
 };
 
 #endif // EDITENTITYTYPESDIALOG_H

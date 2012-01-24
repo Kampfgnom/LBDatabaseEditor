@@ -47,7 +47,8 @@ SOURCES += main.cpp\
     model2/doppelkopflivegame.cpp \
     model2/dokoofflinegamebuddy.cpp \
     model2/categoryassignment.cpp \
-    model2/category.cpp
+    model2/category.cpp \
+    propertycombobox.cpp
 #   model/game.cpp \
 #    model/psstorage.cpp \
 #    model/gamecalculator.cpp \
@@ -99,7 +100,8 @@ HEADERS  += \
     model2/doppelkopflivegame.h \
     model2/dokoofflinegamebuddy.h \
     model2/categoryassignment.h \
-    model2/category.h # model/game.h
+    model2/category.h \ # model/game.h
+    propertycombobox.h
 #    model/psstorage.h \
 #    model/gamecalculator.h \
 #    model/livegame.h \
@@ -125,6 +127,8 @@ FORMS += \
 
 RESOURCES += \
     resources/databaseeditor/databaseeditor.qrc
+
+
 
 
 
