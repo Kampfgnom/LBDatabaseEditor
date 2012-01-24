@@ -23,7 +23,14 @@ SOURCES += main.cpp\
     createcontextdialog.cpp \
     editentitytypesdialog.cpp \
     editattributewidget.cpp \
-    editrelationwidget.cpp
+    editrelationwidget.cpp \
+    model/game.cpp \
+    model/psstorage.cpp \
+    model/gamecalculator.cpp \
+    model/livegame.cpp \
+    model/livegamecalculator.cpp \
+    model/player.cpp \
+    model/round.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -44,7 +51,14 @@ HEADERS  += \
     createcontextdialog.h \
     editentitytypesdialog.h \
     editattributewidget.h \
-    editrelationwidget.h
+    editrelationwidget.h \
+    model/game.h \
+    model/psstorage.h \
+    model/gamecalculator.h \
+    model/livegame.h \
+    model/livegamecalculator.h \
+    model/player.h \
+    model/round.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

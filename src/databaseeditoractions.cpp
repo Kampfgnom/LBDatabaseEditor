@@ -22,6 +22,10 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_openDatabaseAction->setShortcut(QKeySequence::Open);
     connect(m_openDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(openFile()));
 
+    m_importDatabaseAction = new Action(this);
+    m_importDatabaseAction->setText(tr("&Import database..."));
+    connect(m_importDatabaseAction, SIGNAL(triggered()), m_controller, SLOT(importDatabase()));
+
     m_closeDatabaseAction = new Action(this);
     m_closeDatabaseAction->setText(tr("C&lose database"));
     m_closeDatabaseAction->setShortcut(Qt::CTRL + Qt::SHIFT + Qt::Key_W);
@@ -68,11 +72,21 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_editEntityTypesAction->setText(tr("&Edit EntityTypes..."));
     m_editEntityTypesAction->setEnabled(false);
     connect(m_editEntityTypesAction, SIGNAL(triggered()), m_controller, SLOT(editEntityTypes()));
+
+    m_exportUmlGraphvizAction = new Action(this);
+    m_exportUmlGraphvizAction->setText(tr("&UML Graphviz *.dot Document..."));
+    m_exportUmlGraphvizAction->setEnabled(true);
+    connect(m_exportUmlGraphvizAction, SIGNAL(triggered()), m_controller, SLOT(exportGraphviz()));
 }
 
 Action *DatabaseEditorActions::openDatabaseAction() const
 {
     return m_openDatabaseAction;
+}
+
+Action *DatabaseEditorActions::importDatabaseAction() const
+{
+    return m_importDatabaseAction;
 }
 
 Action *DatabaseEditorActions::closeDatabaseAction() const
@@ -113,6 +127,11 @@ Action *DatabaseEditorActions::createContextAction() const
 Action *DatabaseEditorActions::addEntityTypeAction() const
 {
     return m_addEntityTypeAction;
+}
+
+Action *DatabaseEditorActions::exportUmlGraphvizAction() const
+{
+    return m_exportUmlGraphvizAction;
 }
 
 void DatabaseEditorActions::updateActions()

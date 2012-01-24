@@ -7,68 +7,112 @@
 #include "relation.h"
 #include "row.h"
 
+#include <QDebug>
+
 namespace LBDatabase {
 
 /******************************************************************************
 ** RelationValuePrivate
 */
-void RelationValuePrivate::init()
+
+//! \cond PRIVATE
+void RelationValueBasePrivate::init()
 {
-    Q_Q(RelationValue);
+    Q_Q(RelationValueBase);
     QObject::connect(q, SIGNAL(dataChanged(QVariant)), entity->context(), SLOT(onPropertyValueDataChanged(QVariant)));
 }
 
-void RelationValuePrivate::addOtherEntity(Entity *entity)
+void RelationValueBasePrivate::fetchValue()
 {
-    if(!otherEntities.contains(entity))
-        otherEntities.append(entity);
 }
+
+//! \endcond
 
 /******************************************************************************
 ** RelationValue
 */
-RelationValue::RelationValue(RelationValuePrivate &dd, Relation *relation, Entity *parent) :
+/*!
+  \class RelationValue
+  \brief The RelationValue class represents a value of a relation between two
+  EntityTypes.
+
+  \ingroup highlevel-database-classes
+
+  \todo Dokument
+  */
+
+/*!
+  \var RelationValue::d_ptr
+  \internal
+  */
+
+/*!
+  Creates a RelationValue.
+  */
+RelationValueBase::RelationValueBase(Relation *relation, Entity *parent) :
     PropertyValue(parent),
-    d_ptr(&dd)
+    d_ptr(new RelationValueBasePrivate)
 {
-    Q_D(RelationValue);
+    Q_D(RelationValueBase);
     d->q_ptr = this;
     d->relation = relation;
     d->entity = parent;
     d->init();
 }
 
-RelationValue::~RelationValue()
+/*!
+  Destroys the relation value.
+  */
+RelationValueBase::~RelationValueBase()
 {
 }
 
-Entity *RelationValue::entity() const
+/*!
+  Returns the entity of this relation value.
+  */
+Entity *RelationValueBase::entity() const
 {
-    Q_D(const RelationValue);
+    Q_D(const RelationValueBase);
     return d->entity;
 }
 
-QList<Entity *> RelationValue::entities() const
+/*!
+  Does nothing.
+  */
+bool RelationValueBase::setData(const QVariant &data)
 {
-    Q_D(const RelationValue);
-    return d->otherEntities;
+    Q_UNUSED(data);
+    return false;
 }
 
-bool RelationValue::isEditable() const
+/*!
+  Returns false
+  */
+bool RelationValueBase::isEditable() const
 {
     return false;
 }
 
-Property *RelationValue::property() const
+/*!
+  Returns the relation, that describes this value.
+  */
+Property *RelationValueBase::property() const
 {
-    Q_D(const RelationValue);
+    Q_D(const RelationValueBase);
     return d->relation;
 }
 
-void RelationValue::fetchValue()
+/*!
+  Initializes the content of the relation value.
+  */
+void RelationValueBase::fetchValue()
 {
-    Q_D(RelationValue);
+    Q_D(RelationValueBase);
     d->fetchValue();
+}
+
+void RelationValueBase::calculate()
+{
 }
 
 } // namespace LBDatabase

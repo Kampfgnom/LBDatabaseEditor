@@ -1,11 +1,13 @@
 #include "attribute.h"
 
 #include "attributevalue.h"
+#include "column.h"
 #include "context.h"
 #include "entity.h"
 #include "entitytype.h"
 #include "row.h"
 #include "storage.h"
+#include "table.h"
 
 namespace LBDatabase {
 
@@ -13,19 +15,22 @@ namespace LBDatabase {
 ** AttributePrivate
 */
 class AttributePrivate {
-    AttributePrivate() : prefetchStrategy(Attribute::PrefetchOnStartup) {}
+    AttributePrivate() {}
 
     void init();
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
+    void fetchValues();
 
     Row *row;
     Storage *storage;
     QString name;
     QString displayName;
     EntityType *entityType;
+    bool calculated;
+    bool cacheData;
 
-    Attribute::PrefetchStrategy prefetchStrategy;
+    int columnIndex;
 
     Attribute * q_ptr;
     Q_DECLARE_PUBLIC(Attribute)
@@ -36,9 +41,13 @@ void AttributePrivate::init()
     Q_Q(Attribute);
     name = row->data(Attribute::NameColumn).toString();
     displayName = row->data(Attribute::DisplayNameColumn).toString();
-    prefetchStrategy = static_cast<Attribute::PrefetchStrategy>(row->data(Attribute::PrefetchStrategyColumn).toInt());
+    calculated = row->data(Attribute::CalculatedColumn).toBool();
+    cacheData = row->data(Attribute::CacheDataColumn).toBool();
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
+    columnIndex = -1;
+    if(!calculated)
+        columnIndex = entityType->context()->table()->column(name)->index();
     entityType->addAttribute(q);
     entityType->context()->addAttribute(q);
 }
@@ -56,11 +65,15 @@ void AttributePrivate::addPropertyValue(Entity *entity)
     entity->addAttributeValue(new AttributeValue(q, entity));
 }
 
+void AttributePrivate::fetchValues()
+{
+}
+
 /******************************************************************************
 ** Attribute
 */
 /*!
-  \class Attribtue
+  \class Attribute
   \brief The Attribute class represents a simple single-value property of an
   EntityType.
 
@@ -71,14 +84,20 @@ void AttributePrivate::addPropertyValue(Entity *entity)
   */
 
 /*!
+  \var Attribute::d_ptr
+  \internal
+  */
+
+/*!
+  \enum Attribute::Type
+
+  This enumeration describes the type stored in the attribute.
+
+  */
+
+/*!
   \enum Attribute::PrefetchStrategy
   \brief Describes if and when the value of an attribute will be prefetched.
-
-  The possible values are:
-
-  \value PrefetchOnStartup The value will be cached, right when the storage is
-  being opened.
-
   */
 
 /*!
@@ -93,10 +112,8 @@ const QString Attribute::DisplayNameColumn("displayName");
   The name of 'entityTypeId' column.
   */
 const QString Attribute::EntityTypeIdColumn("entityTypeId");
-/*!
-  The name of 'prefetchStrategy' column.
-  */
-const QString Attribute::PrefetchStrategyColumn("prefetchStrategy");
+const QString Attribute::CalculatedColumn("calculated");
+const QString Attribute::CacheDataColumn("cacheData");
 
 /*!
   Creates an attribute, which contains the meta data from \a row in the given \a
@@ -132,6 +149,12 @@ void Attribute::addPropertyValue(Entity *entity)
     d->addPropertyValue(entity);
 }
 
+void Attribute::fetchValues()
+{
+    Q_D(Attribute);
+    d->fetchValues();
+}
+
 /*!
   Destroys the attribute.
   */
@@ -156,6 +179,18 @@ QString Attribute::name() const
 {
     Q_D(const Attribute);
     return d->name;
+}
+
+bool Attribute::isCalculated() const
+{
+    Q_D(const Attribute);
+    return d->calculated;
+}
+
+bool Attribute::cacheData() const
+{
+    Q_D(const Attribute);
+    return d->cacheData;
 }
 
 /*!
@@ -186,13 +221,12 @@ void Attribute::setDisplayName(const QString &displayName, const Context *contex
 }
 
 /*!
-  Returns the prefetch strategy of the attribute. Currently every attribute is
-  being prefetched when the storage is loaded.
+  Return the internal index of the column of this attribute.
   */
-Attribute::PrefetchStrategy Attribute::prefetchStrategy() const
+int Attribute::columnIndex() const
 {
     Q_D(const Attribute);
-    return d->prefetchStrategy;
+    return d->columnIndex;
 }
 
 } // namespace LBDatabase

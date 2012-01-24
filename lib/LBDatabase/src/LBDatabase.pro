@@ -23,8 +23,11 @@ HEADERS += \
     propertyvalue.h \
     relationvalue.h \
     relationvalue_p.h \
-    relationvalueright.h \
-    relationvalueleft.h
+    function.h \
+    functionvalue.h \
+    calculator.h \
+    graphvizexporter.h \
+    concreterelation.h
 
 SOURCES += \
     column.cpp \
@@ -41,8 +44,10 @@ SOURCES += \
     property.cpp \
     propertyvalue.cpp \
     relationvalue.cpp \
-    relationvalueright.cpp \
-    relationvalueleft.cpp
+    function.cpp \
+    functionvalue.cpp \
+    calculator.cpp \
+    graphvizexporter.cpp
 
 OTHER_FILES +=
 

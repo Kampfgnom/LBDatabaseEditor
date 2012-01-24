@@ -10,10 +10,15 @@ namespace LBDatabase {
 class Entity;
 class Property;
 
+//! \cond PRIVATE
 class PropertyValue : public QObject
 {
     Q_OBJECT
 public:
+    enum DataRole {
+        PlainDataRole = Qt::UserRole + 1
+    };
+
     explicit PropertyValue(QObject *parent = 0);
 
     virtual Entity *entity() const = 0;
@@ -26,13 +31,16 @@ public:
 Q_SIGNALS:
     void dataChanged(QVariant data);
 
-private:
+protected:
     friend class StoragePrivate;
     friend class ContextPrivate;
     friend class EntityTypePrivate;
+    friend class RelationPrivate;
 
     virtual void fetchValue() = 0;
+    virtual void calculate() = 0;
 };
+//! \endcond
 
 } // namespace LBDatabase
 

@@ -1,10 +1,13 @@
 #include "storage.h"
 
 #include "attribute.h"
+#include "column.h"
+#include "concreterelation.h"
 #include "context.h"
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "function.h"
 #include "propertyvalue.h"
 #include "relation.h"
 #include "row.h"
@@ -12,6 +15,7 @@
 
 #include <QFile>
 #include <QMutex>
+#include <QFileInfo>
 
 #include <QDebug>
 
@@ -26,6 +30,7 @@ const QString ContextsTableName("lbmeta_contexts");
 const QString EntitiesTableName("lbmeta_entitytypes");
 const QString AttributesTableName("lbmeta_attributes");
 const QString RelationsTableName("lbmeta_relations");
+const QString FunctionsTableName("lbmeta_functions");
 
 const QString NameColumn("name");
 }
@@ -39,21 +44,28 @@ class StoragePrivate {
     bool open();
     Context *addContext(const QString &name, const QString &baseEntityTypeName);
 
+    Context *createContextInstance(Row *row);
+
     Table *attributesTable;
     Table *contextsTable;
-    Table *entitiesTable;
+    Table *entityTypesTable;
     Table *metaDataTable;
     Table *relationsTable;
+    Table *functionsTable;
 
     QString name;
     QString fileName;
     Database *database;
 
     QHash<int, Context *> contexts;
+    QHash<QString, int> contextIds;
     QHash<int, EntityType *> entityTypes;
     QHash<int, Attribute *> attributes;
     QHash<int, Relation *> relations;
+    QHash<int, Function *> functions;
     QList<Property *> properties;
+
+    QHash<QString, QMetaObject> contextMetaObjects;
 
     Storage * q_ptr;
     Q_DECLARE_PUBLIC(Storage)
@@ -89,8 +101,8 @@ bool StoragePrivate::open()
     if(!contextsTable)
         return false;
 
-    entitiesTable = database->table(EntitiesTableName);
-    if(!entitiesTable)
+    entityTypesTable = database->table(EntitiesTableName);
+    if(!entityTypesTable)
         return false;
 
     attributesTable = database->table(AttributesTableName);
@@ -101,20 +113,25 @@ bool StoragePrivate::open()
     if(!relationsTable)
         return false;
 
+    functionsTable = database->table(FunctionsTableName);
+    if(!functionsTable)
+        return false;
+
     Row *metaDataRow = metaDataTable->rowAt(0);
     name = metaDataRow->data(NameColumn).toString();
 
     contexts.reserve(contextsTable->rows().size());
-    entityTypes.reserve(entitiesTable->rows().size());
+    entityTypes.reserve(entityTypesTable->rows().size());
     attributes.reserve(attributesTable->rows().size());
-    properties.reserve(attributesTable->rows().size() + relationsTable->rows().size());
+    properties.reserve(attributesTable->rows().size() + relationsTable->rows().size() + functionsTable->rows().size());
 
     foreach(Row *row, contextsTable->rows()) {
-        Context *context = new Context(row, q);
+        Context *context = createContextInstance(row);
         contexts.insert(row->id(), context);
+        contextIds.insert(context->name(), row->id());
     }
 
-    foreach(Row *row, entitiesTable->rows()) {
+    foreach(Row *row, entityTypesTable->rows()) {
         q->insertEntityType(new EntityType(row, q));
     }
 
@@ -123,7 +140,11 @@ bool StoragePrivate::open()
     }
 
     foreach(Row *row, relationsTable->rows()) {
-        q->insertRelation(new Relation(row, q));
+        q->insertRelation(new ConcreteRelation<Entity, Entity>(row, q));
+    }
+
+    foreach(Row *row, functionsTable->rows()) {
+        q->insertFunction(new Function(row, q));
     }
 
     foreach(Context *context, contexts.values()) {
@@ -134,13 +155,8 @@ bool StoragePrivate::open()
     foreach(Property *property, properties) {
         property->addPropertyValueToEntities();
     }
-
-    foreach(Context *context, contexts.values()) {
-        foreach(Entity *entity, context->entities()) {
-            foreach(PropertyValue *value, entity->propertyValues()) {
-                value->fetchValue();
-            }
-        }
+    foreach(Property *property, properties) {
+        property->fetchValues();
     }
 
     return true;
@@ -148,12 +164,11 @@ bool StoragePrivate::open()
 
 Context *StoragePrivate::addContext(const QString &name, const QString &baseEntityTypeName)
 {
-    Q_Q(Storage);
     database->createTable(name);
     Row *row = contextsTable->appendRow();
     row->setData(Context::NameColumn, QVariant(name));
 
-    Context *context = new Context(row, q);
+    Context *context = createContextInstance(row);
     contexts.insert(row->id(), context);
 
     context->createBaseEntityType(baseEntityTypeName);
@@ -161,9 +176,49 @@ Context *StoragePrivate::addContext(const QString &name, const QString &baseEnti
     return context;
 }
 
+Context *StoragePrivate::createContextInstance(Row *row)
+{
+    Q_Q(Storage);
+    const QString contextName = row->data(Context::NameColumn).toString();
+
+    if(!contextMetaObjects.contains(contextName))
+        return new Context(row, q);
+
+    QObject *object = contextMetaObjects.value(contextName).newInstance(Q_ARG(::LBDatabase::Row*,row), Q_ARG(::LBDatabase::Storage*, q));
+    return static_cast<Context *>(object);
+}
+
 /******************************************************************************
 ** Storage
 */
+/*!
+  \class Storage
+  \brief The Storage class represents a high level storage for entities.
+
+  \ingroup highlevel-database-classes
+
+  \todo Dokument
+  */
+
+/*!
+  \var Storage::d_ptr
+  \internal
+  */
+
+/*!
+  \fn Storage::nameChanged()
+
+  This signal is emitted when the name of this storage changes.
+
+  */
+
+/*!
+  Returns a storage instance, which holds the data contained in the storage file
+  \a fileName.
+
+  This will return exactly one instance per file, i.e. you can open each file
+  only exactly once.
+  */
 Storage *Storage::instance(const QString &fileName)
 {
     static QMutex mutex(QMutex::Recursive);
@@ -180,22 +235,97 @@ Storage *Storage::instance(const QString &fileName)
     return storage;
 }
 
+void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileName, const QString &storageFileName)
+{
+    QFile file(sqliteDatabaseFileName);
+    file.open(QFile::ReadOnly);
+    file.copy(storageFileName);
+    file.close();
+
+
+    Database *database = Database::instance(storageFileName);
+    database->open();
+    QList<Table *> tables = database->tables();
+
+    database->createTable(MetaDataTableName);
+    database->createTable(ContextsTableName);
+    database->createTable(EntitiesTableName);
+    database->createTable(AttributesTableName);
+    database->createTable(RelationsTableName);
+    Table *metaDataTable = database->table(MetaDataTableName);
+    Table *contextsTable = database->table(ContextsTableName);
+    Table *entityTypesTable = database->table(EntitiesTableName);
+    Table *attributesTable = database->table(AttributesTableName);
+    Table *relationsTable = database->table(RelationsTableName);
+
+    metaDataTable->addColumn(NameColumn,QLatin1String("TEXT"));
+    metaDataTable->appendRow();
+
+    contextsTable->addColumn(Context::NameColumn,QLatin1String("TEXT"));
+
+    entityTypesTable->addColumn(EntityType::ContextColumn,QLatin1String("INTERGER"));
+    entityTypesTable->addColumn(EntityType::NameColumn,QLatin1String("TEXT"));
+    entityTypesTable->addColumn(EntityType::ParentEntityTypeIdColumn,QLatin1String("INTERGER"));
+
+    attributesTable->addColumn(Attribute::NameColumn,QLatin1String("TEXT"));
+    attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
+    attributesTable->addColumn(Attribute::EntityTypeIdColumn,QLatin1String("INTERGER"));
+
+    relationsTable->addColumn(Relation::NameColumn,QLatin1String("TEXT"));
+    relationsTable->addColumn(Relation::DisplayNameLeftColumn,QLatin1String("TEXT"));
+    relationsTable->addColumn(Relation::DisplayNameRightColumn,QLatin1String("TEXT"));
+    relationsTable->addColumn(Relation::EntityTypeLeftColumn,QLatin1String("INTERGER"));
+    relationsTable->addColumn(Relation::EntityTypeRightColumn,QLatin1String("INTERGER"));
+    relationsTable->addColumn(Relation::CardinalityColumn,QLatin1String("INTERGER"));
+
+    Storage *storage = Storage::instance(storageFileName);
+    storage->open();
+    storage->setName(QFileInfo(storageFileName).fileName());
+
+    foreach(Table *table, tables) {
+        Context *context = storage->addContext(table->name(), table->name().remove(table->name().size() - 1, 1));
+        EntityType *base = context->baseEntityType();
+
+        table->addColumn(Entity::EntityTypeIdColumn, QLatin1String("INTEGER"), QVariant(base->id()));
+
+        foreach(Column *column, table->columns()) {
+            if(column->name().compare("ID", Qt::CaseInsensitive) != 0) {
+                base->addAttribute(column->name(),Attribute::Unkown);
+            }
+        }
+    }
+}
+
+/*!
+  Closes the storage.
+  */
 Storage::~Storage()
 {
 }
 
+/*!
+  Returns the database, on which the storage works. Note that changes to the
+  database are not automatically reflected in the storage.
+  */
 Database *Storage::database() const
 {
     Q_D(const Storage);
     return d->database;
 }
 
+/*!
+  Returns the name of the storage.
+  */
 QString Storage::name() const
 {
     Q_D(const Storage);
     return d->name;
 }
 
+/*!
+  Sets the name of the storage to \a name. Note that this name is not connected
+  to the file name, but is stored in the database itself.
+  */
 void Storage::setName(const QString &name)
 {
     Q_D(Storage);
@@ -207,6 +337,9 @@ void Storage::setName(const QString &name)
     emit nameChanged(name);
 }
 
+/*!
+  Creates a storage, which uses the database \a fileName.
+  */
 Storage::Storage(const QString &fileName, QObject *parent) :
     QObject(parent),
     d_ptr(new StoragePrivate)
@@ -217,42 +350,74 @@ Storage::Storage(const QString &fileName, QObject *parent) :
     d->init();
 }
 
+/*!
+  Returns the file name of the storage.
+  */
 QString Storage::fileName() const
 {
     Q_D(const Storage);
     return d->fileName;
 }
 
+/*!
+  Returns the EntityType with the ID \a id.
+  */
 EntityType *Storage::entityType(int id) const
 {
     Q_D(const Storage);
     return d->entityTypes.value(id, 0);
 }
 
+/*!
+  Returns the EntityType with the ID \a id.
+  */
 Context *Storage::context(int id) const
 {
     Q_D(const Storage);
     return d->contexts.value(id);
 }
 
+Context *Storage::context(const QString name) const
+{
+    Q_D(const Storage);
+    return d->contexts.value(d->contextIds.value(name));
+}
+
+/*!
+  Returns a list of all contexts in this storage.
+  */
 QList<Context *> Storage::contexts() const
 {
     Q_D(const Storage);
     return d->contexts.values();
 }
 
+/*!
+  Creates a new context in the storage with the name \a name. It will
+  automatically create a base entity type for the context named \a
+  baseEntityTypeName, since each context has to have exactly one base entity
+  type.
+  */
 Context *Storage::addContext(const QString &name, const QString &baseEntityTypeName)
 {
     Q_D(Storage);
     return d->addContext(name, baseEntityTypeName);
 }
 
+/*!
+  Returns the Attribute with the ID \a id.
+  */
 Attribute *Storage::attribute(int id) const
 {
     Q_D(const Storage);
     return d->attributes.value(id, 0);
 }
 
+/*!
+  \internal
+
+  Inserts the entity type \a type into the storage-global list of types.
+  */
 void Storage::insertEntityType(EntityType *type)
 {
     Q_D(Storage);
@@ -262,6 +427,11 @@ void Storage::insertEntityType(EntityType *type)
     d->entityTypes.insert(type->id(), type);
 }
 
+/*!
+  \internal
+
+  Inserts the attribute \a attribute into the storage-global list of attributes.
+  */
 void Storage::insertAttribute(Attribute *attribute)
 {
     Q_D(Storage);
@@ -272,6 +442,11 @@ void Storage::insertAttribute(Attribute *attribute)
     d->properties.append(attribute);
 }
 
+/*!
+  \internal
+
+  Inserts the relation \a relation into the storage-global list of relations.
+  */
 void Storage::insertRelation(Relation *relation)
 {
     Q_D(Storage);
@@ -282,30 +457,77 @@ void Storage::insertRelation(Relation *relation)
     d->properties.append(relation);
 }
 
+/*!
+  \internal
+
+  Inserts the function \a function into the storage-global list of functions.
+  */
+void Storage::insertFunction(Function *function)
+{
+    Q_D(Storage);
+    if(d->functions.contains(function->id()))
+        return;
+
+    d->functions.insert(function->id(), function);
+    d->properties.append(function);
+}
+
+QList<Relation *> Storage::relations() const
+{
+    Q_D(const Storage);
+    return d->relations.values();
+}
+
+/*!
+  Returns the table, which defines all contexts.
+  */
 Table *Storage::contextsTable() const
 {
     Q_D(const Storage);
     return d->contextsTable;
 }
 
-Table *Storage::entitiesTable() const
+/*!
+  Returns the table, which defines all entity types.
+  */
+Table *Storage::entityTypesTable() const
 {
     Q_D(const Storage);
-    return d->entitiesTable;
+    return d->entityTypesTable;
 }
 
+/*!
+  Returns the table, which defines all attributes.
+  */
 Table *Storage::attributesTable() const
 {
     Q_D(const Storage);
     return d->attributesTable;
 }
 
+void Storage::registerContextType(const QString &contextName, QMetaObject metaObject)
+{
+    Q_D(Storage);
+    if(d->contextMetaObjects.contains(contextName))
+        return;
+
+    d->contextMetaObjects.insert(contextName, metaObject);
+}
+
+/*!
+  Opens the storage.
+  Returns true upon success and false if something goes wrong (e.g. the file is
+  no correct storage).
+  */
 bool Storage::open()
 {
     Q_D(Storage);
     return d->open();
 }
 
+/*!
+  Returns a list of all entity types, that this storage may contain.
+  */
 QList<EntityType *> Storage::entityTypes() const
 {
     Q_D(const Storage);

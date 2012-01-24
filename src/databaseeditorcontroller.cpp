@@ -11,11 +11,16 @@
 #include "createcontextdialog.h"
 #include "editentitytypesdialog.h"
 
+#include "model/livegame.h"
+#include "model/player.h"
+#include "model/psstorage.h"
+
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
 
 #include <QFileInfo>
 #include <QMessageBox>
+#include <QElapsedTimer>
 
 #include <QDebug>
 
@@ -97,6 +102,15 @@ void DatabaseEditorController::openFile()
     openFile(getOpenFileName(tr("Open File"), tr("Entity Storage (*.lbstorage);;Database Files (*.db);;All Files (*.*)")));
 }
 
+void DatabaseEditorController::importDatabase()
+{
+    QString databaseFileName = getOpenFileName(tr("Choose database"), tr("Database Files (*.db);;All Files (*.*)"));
+    QString storageFileName = getSaveFileName(tr("Enter storage file name"), tr("Entity Storage (*.lbstorage);;All Files (*.*)"));
+
+    LBDatabase::Storage::convertSqlliteDatabaseToStorage(databaseFileName, storageFileName);
+    openFile(storageFileName);
+}
+
 void DatabaseEditorController::openFile(const QString &fileName)
 {
     if(fileName.isNull() || fileName.isEmpty()) {
@@ -114,15 +128,27 @@ void DatabaseEditorController::openFile(const QString &fileName)
 void DatabaseEditorController::openEntityStorage(const QString &fileName)
 {
     AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
-    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+//    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+
+    static QObject guard;
+    PSStorage *storage = new PSStorage(autosaveFile->copyFileName(), &guard);
+
     if(m_storages.contains(storage)) {
 //        m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);
 //        showDatabase(database);
         return;
     }
 
+    QElapsedTimer timer;
+    timer.start();
     storage->open();
+    qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
+
+    LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
+    foreach(Player *player, game->playersByPlacement()) {
+        qDebug() << player->displayName() << game->points(player) << game->placement(player);
+    }
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));
@@ -182,8 +208,11 @@ void DatabaseEditorController::appendRow()
 void DatabaseEditorController::deleteRow()
 {
     if(m_currentTable) {
-        int id = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow()->id();
-        m_currentTable->deleteRow(id);
+        LBDatabase::Row *row = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow();
+        if(row) {
+            int id = m_databaseEditor->tableWidget()->tableView()->firstSelectedRow()->id();
+            m_currentTable->deleteRow(id);
+        }
     }
 }
 
@@ -240,6 +269,17 @@ void DatabaseEditorController::showContext(LBDatabase::Context *context)
     setCurrentDatabase(0);
     setCurrentStorage(context->storage());
     setCurrentContext(context);
+}
+
+void DatabaseEditorController::exportGraphviz()
+{
+    if(!m_currentStorage)
+        return;
+
+    LBDatabase::GraphvizExporter exporter;
+    exporter.setStorage(m_currentStorage);
+    QString fileName = getSaveFileName("Export", "Graphviz Document (*.dot files)");
+    exporter.exportGraph(fileName);
 }
 
 void DatabaseEditorController::setCurrentDatabase(LBDatabase::Database *database)

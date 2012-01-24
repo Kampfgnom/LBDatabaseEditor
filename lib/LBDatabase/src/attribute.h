@@ -17,10 +17,14 @@ public:
     static const QString NameColumn;
     static const QString DisplayNameColumn;
     static const QString EntityTypeIdColumn;
-    static const QString PrefetchStrategyColumn;
+    static const QString CalculatedColumn;
+    static const QString CacheDataColumn;
 
-    enum PrefetchStrategy {
-        PrefetchOnStartup
+    enum Type {
+        Unkown,
+        Text,
+        Integer,
+        Real
     };
 
     ~Attribute();
@@ -28,9 +32,12 @@ public:
     int id() const;
     QString displayName(const Context *context = 0) const;
     virtual void setDisplayName(const QString &displayName, const Context *context = 0);
+    int columnIndex() const;
 
     QString name() const;
-    PrefetchStrategy prefetchStrategy() const;
+
+    bool isCalculated() const;
+    bool cacheData() const;
 
 private:
     friend class StoragePrivate;
@@ -40,6 +47,8 @@ private:
 
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
+
+    void fetchValues();
 
     QScopedPointer<AttributePrivate> d_ptr;
     Q_DECLARE_PRIVATE(Attribute)

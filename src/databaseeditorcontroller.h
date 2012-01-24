@@ -33,6 +33,7 @@ public:
 
 public slots:
     void openFile();
+    void importDatabase();
     void openFile(const QString &fileName);
     void openDatabase(const QString &fileName);
     void openEntityStorage(const QString &fileName);
@@ -55,6 +56,8 @@ public slots:
 
     void showStorage(::LBDatabase::Storage *storage);
     void showContext(::LBDatabase::Context *context);
+
+    void exportGraphviz();
 
 signals:
     void currentDatabaseChanged(::LBDatabase::Database *database);

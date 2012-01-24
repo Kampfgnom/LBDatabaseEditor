@@ -3,13 +3,16 @@
 
 #include <QObject>
 
+#include "attribute.h"
 #include "relation.h"
 
 namespace LBDatabase {
 
 class Attribute;
+class Calculator;
 class Context;
 class Entity;
+class Function;
 class Property;
 class Row;
 class Storage;
@@ -19,16 +22,11 @@ class EntityType : public QObject
 {
     Q_OBJECT
 public:
+    //! \cond PRIVATE
     static const QString ContextColumn;
     static const QString NameColumn;
     static const QString ParentEntityTypeIdColumn;
-
-    enum Type {
-        Unkown,
-        Text,
-        Integer,
-        Real
-    };
+    //! \endcond
 
     ~EntityType();
 
@@ -41,16 +39,21 @@ public:
 
     QList<EntityType *> childEntityTypes() const;
 
+    Property *property(const QString &name) const;
+
     QList<Property *> properties() const;
     QList<Attribute *> attributes() const;
     QList<Relation *> relations() const;
+    QList<Function *> functions() const;
 
-    Attribute *addAttribute(const QString &name, Type type);
+    Attribute *addAttribute(const QString &name, Attribute::Type type);
     Relation *addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality);
 
     QList<Entity *> entities() const;
 
     bool inherits(EntityType *entityType) const;
+
+    Calculator *calculator() const;
 
 Q_SIGNALS:
     void nameChanged(QString name);
@@ -61,17 +64,20 @@ private:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class EntityPrivate;
+    friend class FunctionPrivate;
 
     explicit EntityType(LBDatabase::Row *row, Storage *parent);
 
     void setContext(Context *context);
     void addChildEntityType(EntityType *type);
     void setParentEntityType(EntityType *type);
-    void setParentEntityTypeId(int id);
     void addAttribute(Attribute *attribute);
     void addRelation(Relation *relation);
-    void addInheritedProperties(EntityType *parent);
+    void addFunction(Function *function);
+    void inheritProperties(EntityType *parent);
+    void inheritCalculator(EntityType *parent);
     void addEntity(Entity *entity);
+    void setCalculator(Calculator *calculator);
 
     QScopedPointer<EntityTypePrivate> d_ptr;
     Q_DECLARE_PRIVATE(EntityType)

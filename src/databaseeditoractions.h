@@ -16,6 +16,7 @@ public:
     
     // Database
     Action *openDatabaseAction() const;
+    Action *importDatabaseAction() const;
     Action *closeDatabaseAction() const;
     Action *saveDatabaseAction() const;
     Action *insertRowAction() const;
@@ -29,6 +30,8 @@ public:
     Action *addEntityTypeAction() const;
     Action *editEntityTypesAction() const;
 
+    Action *exportUmlGraphvizAction() const;
+
 public slots:
     void updateActions();
 
@@ -37,6 +40,7 @@ private:
 
     // Database
     Action *m_openDatabaseAction;
+    Action *m_importDatabaseAction;
     Action *m_closeDatabaseAction;
     Action *m_saveDatabaseAction;
     Action *m_createTableAction;
@@ -48,6 +52,8 @@ private:
     Action *m_createContextAction;
     Action *m_addEntityTypeAction;
     Action *m_editEntityTypesAction;
+
+    Action *m_exportUmlGraphvizAction;
 };
 
 } // namespace LBGUI

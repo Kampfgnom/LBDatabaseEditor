@@ -1,9 +1,13 @@
 #include "attributevalue.h"
 
 #include "attribute.h"
+#include "calculator.h"
+#include "column.h"
 #include "context.h"
 #include "entity.h"
+#include "entitytype.h"
 #include "row.h"
+#include "table.h"
 
 #include <QVariant>
 
@@ -13,15 +17,17 @@ namespace LBDatabase {
 ** AttributeValuePrivate
 */
 class AttributeValuePrivate {
-    AttributeValuePrivate() {}
+    AttributeValuePrivate() : cached(false) {}
 
     void init();
     void fetchValue();
+    QVariant calculate();
 
     Entity *entity;
     Attribute *attribute;
 
-    QVariant data;
+    mutable QVariant cachedData;
+    mutable bool cached;
 
     AttributeValue * q_ptr;
     Q_DECLARE_PUBLIC(AttributeValue)
@@ -35,7 +41,13 @@ void AttributeValuePrivate::init()
 
 void AttributeValuePrivate::fetchValue()
 {
-    data = entity->row()->data(attribute->name());
+}
+
+QVariant AttributeValuePrivate::calculate()
+{
+    Q_Q(AttributeValue);
+    Calculator *calculator = entity->entityType()->calculator();
+    return calculator->calculate(entity,q);
 }
 
 /******************************************************************************
@@ -49,6 +61,11 @@ void AttributeValuePrivate::fetchValue()
   \ingroup highlevel-database-classes
 
   \todo Document when done.
+  */
+
+/*!
+  \var AttributeValue::d_ptr
+  \internal
   */
 
 /*!
@@ -91,7 +108,19 @@ QVariant AttributeValue::data(int role) const
 {
     Q_UNUSED(role);
     Q_D(const AttributeValue);
-    return d->data;
+    if(!d->attribute->isCalculated())
+        return d->entity->row()->data(d->attribute->columnIndex());
+
+    if(d->attribute->cacheData()) {
+        if(!d->cached) {
+            d->cachedData = const_cast<AttributeValuePrivate*>(d)->calculate();
+            d->cached = true;
+        }
+
+        return d->cachedData;
+    }
+
+    return const_cast<AttributeValuePrivate*>(d)->calculate();
 }
 
 /*!
@@ -106,7 +135,6 @@ bool AttributeValue::setData(const QVariant &data)
         return false;
 
     d->entity->row()->setData(d->attribute->name(), data);
-    d->data = data;
     emit dataChanged(data);
     return true;
 }
@@ -116,7 +144,8 @@ bool AttributeValue::setData(const QVariant &data)
   */
 bool AttributeValue::isEditable() const
 {
-    return true;
+    Q_D(const AttributeValue);
+    return !d->attribute->isCalculated();
 }
 
 /*!
@@ -135,6 +164,12 @@ void AttributeValue::fetchValue()
 {
     Q_D(AttributeValue);
     d->fetchValue();
+}
+
+void AttributeValue::calculate()
+{
+    Q_D(AttributeValue);
+    d->calculate();
 }
 
 } // namespace LBDatabase

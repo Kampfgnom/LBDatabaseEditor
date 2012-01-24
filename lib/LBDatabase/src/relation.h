@@ -7,6 +7,7 @@ namespace LBDatabase {
 
 class Context;
 class EntityType;
+class RelationValueBase;
 class Row;
 class Storage;
 class Table;
@@ -16,12 +17,15 @@ class Relation : public Property
 {
     Q_OBJECT
 public:
+    //! \cond PRIVATE
     static const QString NameColumn;
     static const QString DisplayNameLeftColumn;
     static const QString DisplayNameRightColumn;
     static const QString EntityTypeLeftColumn;
     static const QString EntityTypeRightColumn;
     static const QString CardinalityColumn;
+    static const QString ColumnOrTableNameColumn;
+    //! \endcond
 
     enum Cardinality {
         OneToOne,
@@ -43,10 +47,7 @@ public:
     EntityType *entityTypeRight() const;
     Cardinality cardinality() const;
 
-    Table *relationTable() const;
-    bool isEditable();
-
-private:
+protected:
     friend class StoragePrivate;
     friend class RelationValueRightPrivate;
     friend class EntityTypePrivate;
@@ -55,8 +56,10 @@ private:
 
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
+    void fetchValues();
 
-    void initializeManyToManyRelation();
+    virtual RelationValueBase *createLeftValue(Entity *entity);
+    virtual RelationValueBase *createRightValue(Entity *entity);
 
     QScopedPointer<RelationPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Relation)
@@ -64,4 +67,5 @@ private:
 };
 
 } // namespace LBDatabase
+
 #endif // LBDATABASE_RELATION_H

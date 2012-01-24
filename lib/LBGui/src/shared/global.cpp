@@ -23,4 +23,12 @@ QString getOpenFileName(const QString &windowTitle, const QString &fileDesc)
     return QString();
 }
 
+QString getSaveFileName(const QString &windowTitle, const QString &fileDesc)
+{
+    QSettings settings;
+    QString lastOpenFolder = settings.value("lastOpenFolder",
+                                            QDesktopServices::storageLocation(QDesktopServices::HomeLocation)).toString();
+    return QFileDialog::getSaveFileName(0,windowTitle, lastOpenFolder, fileDesc);
+}
+
 } // namespace LBGui

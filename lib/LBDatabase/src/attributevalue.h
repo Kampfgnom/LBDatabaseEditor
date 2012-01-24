@@ -15,7 +15,7 @@ class AttributeValue : public PropertyValue
 public:
     ~AttributeValue();
 
-    virtual Entity *entity() const;
+    Entity *entity() const;
     Property *property() const;
     QVariant data(int role = Qt::DisplayRole) const;
     bool setData(const QVariant &data);
@@ -28,6 +28,7 @@ private:
     explicit AttributeValue(Attribute *attribute, Entity *parent);
 
     void fetchValue();
+    void calculate();
 
     QScopedPointer<AttributeValuePrivate> d_ptr;
     Q_DECLARE_PRIVATE(AttributeValue)

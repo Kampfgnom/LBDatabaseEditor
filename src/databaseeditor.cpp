@@ -145,6 +145,8 @@ void DatabaseEditor::createSideBar()
 void DatabaseEditor::createMenuBar()
 {
     m_menuBar->addAction(tr("File"),m_actions->openDatabaseAction());
+    m_menuBar->addAction(tr("File"),m_actions->importDatabaseAction());
+    m_menuBar->addAction(tr("File/Export"),m_actions->exportUmlGraphvizAction());
     m_menuBar->addMenu(tr("File"), m_recentFiles->recentFilesMenu());
     m_menuBar->addSeparator(tr("File"));
     m_menuBar->addAction(tr("File"),m_actions->closeDatabaseAction());
