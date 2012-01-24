@@ -27,6 +27,7 @@ public:
 
     Action *createContextAction() const;
     Action *addEntityTypeAction() const;
+    Action *editEntityTypesAction() const;
 
 public slots:
     void updateActions();
@@ -46,7 +47,7 @@ private:
     //Entity
     Action *m_createContextAction;
     Action *m_addEntityTypeAction;
-    
+    Action *m_editEntityTypesAction;
 };
 
 } // namespace LBGUI

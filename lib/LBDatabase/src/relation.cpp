@@ -213,4 +213,16 @@ void Relation::initializeManyToManyRelation()
     return d->initializeManyToManyRelation();
 }
 
+QString Relation::displayNameLeft() const
+{
+    Q_D(const Relation);
+    return d->displayNameLeft;
+}
+
+QString Relation::displayNameRight() const
+{
+    Q_D(const Relation);
+    return d->displayNameRight;
+}
+
 } // namespace LBDatabase

@@ -157,6 +157,7 @@ void DatabaseEditor::createMenuBar()
 
     m_menuBar->addAction(tr("Context"), m_actions->createContextAction());
     m_menuBar->addAction(tr("Context"), m_actions->addEntityTypeAction());
+    m_menuBar->addAction(tr("Context"), m_actions->editEntityTypesAction());
 
     m_menuBar->addMenu(m_menuBar->windowMenu());
     m_menuBar->addMenu(m_menuBar->helpMenu());

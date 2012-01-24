@@ -15,6 +15,8 @@ public:
 
     LBDatabase::EntityType* currentItem();
 
+    void setEntityTypes(QList<LBDatabase::EntityType*> types);
+
 signals:
 
     void currentEntityTypeChanged();

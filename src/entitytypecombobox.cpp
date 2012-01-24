@@ -5,7 +5,7 @@
 EntityTypeComboBox::EntityTypeComboBox(QList<LBDatabase::EntityType*> types, QWidget *parent) :
     QComboBox(parent),
     m_types(types),
-    m_selectedType(types.first())
+    m_selectedType(0)
 {
     foreach(LBDatabase::EntityType* type, types){
         this->addItem(type->name());
@@ -16,9 +16,11 @@ EntityTypeComboBox::EntityTypeComboBox(QList<LBDatabase::EntityType*> types, QWi
 
 void EntityTypeComboBox::onCurrentEntityTypeChanged(int index)
 {
-    m_selectedType = m_types.at(index);
+    if(index >= 0){
+        m_selectedType = m_types.at(index);
 
-    emit currentEntityTypeChanged();
+        emit currentEntityTypeChanged();
+     }
 }
 
 LBDatabase::EntityType* EntityTypeComboBox::currentItem()
@@ -32,4 +34,11 @@ void EntityTypeComboBox::updateComboBox(){
     foreach(LBDatabase::EntityType* type, m_types){
         this->addItem(type->name());
     }
+}
+
+void EntityTypeComboBox::setEntityTypes(QList<LBDatabase::EntityType*> types)
+{
+    m_types = types;
+
+    updateComboBox();
 }
