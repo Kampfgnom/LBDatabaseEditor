@@ -19,6 +19,9 @@ public:
     explicit EditAttributeWidget(LBDatabase::Attribute* attribute, QWidget *parent = 0);
     ~EditAttributeWidget();
 
+private slots:
+    void on_lineEditDisplayName_editingFinished();
+
 private:
     void updateWidget();
 

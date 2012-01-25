@@ -26,3 +26,8 @@ void EditAttributeWidget::updateWidget()
     ui->labelName->setText(m_attribute->name());
 
 }
+
+void EditAttributeWidget::on_lineEditDisplayName_editingFinished()
+{
+
+}

@@ -47,6 +47,8 @@ public:
     EntityType *entityTypeRight() const;
     Cardinality cardinality() const;
 
+    Storage* storage() const;
+
 protected:
     friend class StoragePrivate;
     friend class RelationValueRightPrivate;

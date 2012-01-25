@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>727</width>
-    <height>67</height>
+    <width>807</width>
+    <height>104</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -22,10 +22,58 @@
     </widget>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEditDisplayLeft"/>
+    <layout class="QVBoxLayout" name="verticalLayoutLeft">
+     <item>
+      <widget class="QLineEdit" name="lineEditDisplayLeft"/>
+     </item>
+    </layout>
    </item>
    <item>
-    <widget class="QLineEdit" name="lineEditDisplayRight"/>
+    <layout class="QVBoxLayout" name="verticalLayoutMiddle">
+     <item>
+      <widget class="QPushButton" name="pushButton">
+       <property name="text">
+        <string>Cardinality</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="Line" name="line">
+       <property name="sizePolicy">
+        <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
+         <horstretch>0</horstretch>
+         <verstretch>0</verstretch>
+        </sizepolicy>
+       </property>
+       <property name="lineWidth">
+        <number>2</number>
+       </property>
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="verticalLayoutRight">
+     <item>
+      <widget class="QLineEdit" name="lineEditDisplayRight"/>
+     </item>
+    </layout>
    </item>
   </layout>
  </widget>

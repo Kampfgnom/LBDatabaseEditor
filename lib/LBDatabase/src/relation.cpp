@@ -356,4 +356,10 @@ QString Relation::displayNameRight() const
     return d->displayNameRight;
 }
 
+Storage* Relation::storage() const
+{
+    Q_D(const Relation);
+    return d->storage;
+}
+
 } // namespace LBDatabase
