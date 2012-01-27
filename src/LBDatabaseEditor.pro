@@ -21,6 +21,9 @@ SOURCES += main.cpp\
     addentitytypedialog.cpp \
     entitytypecombobox.cpp \
     createcontextdialog.cpp \
+    editentitytypesdialog.cpp \
+    editattributewidget.cpp \
+    editrelationwidget.cpp \
     model2/skatround.cpp \
     model2/skatofflinegame.cpp \
     model2/skatlivegame.cpp \
@@ -44,7 +47,9 @@ SOURCES += main.cpp\
     model2/doppelkopflivegame.cpp \
     model2/dokoofflinegamebuddy.cpp \
     model2/categoryassignment.cpp \
-    model2/category.cpp # model/game.cpp \
+    model2/category.cpp \
+    propertycombobox.cpp
+#   model/game.cpp \
 #    model/psstorage.cpp \
 #    model/gamecalculator.cpp \
 #    model/livegame.cpp \
@@ -69,6 +74,9 @@ HEADERS  += \
     addentitytypedialog.h \
     entitytypecombobox.h \
     createcontextdialog.h \
+    editentitytypesdialog.h \
+    editattributewidget.h \
+    editrelationwidget.h \
     model2/skatround.h \
     model2/skatofflinegame.h \
     model2/skatlivegame.h \
@@ -92,7 +100,8 @@ HEADERS  += \
     model2/doppelkopflivegame.h \
     model2/dokoofflinegamebuddy.h \
     model2/categoryassignment.h \
-    model2/category.h # model/game.h
+    model2/category.h \ # model/game.h
+    propertycombobox.h
 #    model/psstorage.h \
 #    model/gamecalculator.h \
 #    model/livegame.h \
@@ -111,10 +120,24 @@ PRE_TARGETDEPS += $$PWD/../lib/LBGui/lib/liblbgui.a
 FORMS += \
     createtabledialog.ui \
     addentitytypedialog.ui \
-    createcontextdialog.ui
+    createcontextdialog.ui \
+    editentitytypesdialog.ui \
+    editattributewidget.ui \
+    editrelationwidget.ui
 
 RESOURCES += \
     resources/databaseeditor/databaseeditor.qrc
+
+
+
+
+
+
+
+
+
+
+
 
 
 

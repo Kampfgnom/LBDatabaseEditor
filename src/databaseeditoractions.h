@@ -28,6 +28,7 @@ public:
 
     Action *createContextAction() const;
     Action *addEntityTypeAction() const;
+    Action *editEntityTypesAction() const;
 
     Action *exportUmlGraphvizAction() const;
     Action *exportCppAction() const;
@@ -51,10 +52,12 @@ private:
     //Entity
     Action *m_createContextAction;
     Action *m_addEntityTypeAction;
+    Action *m_editEntityTypesAction;
 
     Action *m_exportUmlGraphvizAction;
+
     Action *m_exportCppAction;
-    
+
 };
 
 } // namespace LBGUI

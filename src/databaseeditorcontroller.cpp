@@ -9,6 +9,7 @@
 #include "tableview.h"
 #include "addentitytypedialog.h"
 #include "createcontextdialog.h"
+#include "editentitytypesdialog.h"
 
 #include "model2/projectstatsstorage.h"
 #include "model2/game.h"
@@ -347,7 +348,14 @@ void DatabaseEditorController::createContext()
 void DatabaseEditorController::addEntityType()
 {
     if(m_currentContext){
-        AddEntityTypeDialog *d = new AddEntityTypeDialog(m_currentContext);
+        AddEntityTypeDialog *d = new AddEntityTypeDialog(m_currentContext,m_databaseEditor);
+        d->exec();
+    }
+}
+
+void DatabaseEditorController::editEntityTypes(){
+    if(m_currentContext){
+        EditEntityTypesDialog *d = new EditEntityTypesDialog(m_currentContext,m_databaseEditor);
         d->exec();
     }
 }

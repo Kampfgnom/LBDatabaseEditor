@@ -5,6 +5,7 @@
 
 namespace LBDatabase {
 class EntityType;
+class Context;
 }
 
 class EntityTypeComboBox : public QComboBox
@@ -13,7 +14,13 @@ class EntityTypeComboBox : public QComboBox
 public:
     explicit EntityTypeComboBox(QList<LBDatabase::EntityType*> types, QWidget *parent = 0);
 
+    explicit EntityTypeComboBox(QList<LBDatabase::Context*> contexts, QWidget *parent = 0);
+
     LBDatabase::EntityType* currentItem();
+
+    void setEntityTypes(QList<LBDatabase::EntityType*> types);
+
+    void setCurrentEntityType(LBDatabase::EntityType* type);
 
 signals:
 

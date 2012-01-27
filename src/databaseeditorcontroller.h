@@ -49,6 +49,7 @@ public slots:
 
     void createContext();
     void addEntityType();
+    void editEntityTypes();
 
     void showTable(::LBDatabase::Table *table);
     void showDatabase(::LBDatabase::Database *database);

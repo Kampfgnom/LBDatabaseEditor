@@ -68,6 +68,11 @@ DatabaseEditorActions::DatabaseEditorActions(DatabaseEditorController *controlle
     m_addEntityTypeAction->setEnabled(false);
     connect(m_addEntityTypeAction, SIGNAL(triggered()), m_controller, SLOT(addEntityType()));
 
+    m_editEntityTypesAction = new Action(this);
+    m_editEntityTypesAction->setText(tr("&Edit EntityTypes..."));
+    m_editEntityTypesAction->setEnabled(false);
+    connect(m_editEntityTypesAction, SIGNAL(triggered()), m_controller, SLOT(editEntityTypes()));
+
     m_exportUmlGraphvizAction = new Action(this);
     m_exportUmlGraphvizAction->setText(tr("&UML Graphviz *.dot document..."));
     m_exportUmlGraphvizAction->setEnabled(true);
@@ -150,12 +155,18 @@ void DatabaseEditorActions::updateActions()
 
     m_createContextAction->setEnabled(m_controller->currentStorage() != 0);
     m_addEntityTypeAction->setEnabled(m_controller->currentContext() != 0);
+    m_editEntityTypesAction->setEnabled(m_controller->currentContext() != 0);
 
     QString closeText = tr("Close Database");
     if(m_controller->currentDatabase()) {
         closeText = tr("C&lose \"")+QFileInfo(m_controller->currentDatabase()->fileName()).fileName()+tr("\"");
     }
     m_closeDatabaseAction->setText(closeText);
+}
+
+Action *DatabaseEditorActions::editEntityTypesAction() const
+{
+    return m_editEntityTypesAction;
 }
 
 } // namespace LBGUI
