@@ -60,4 +60,3 @@ QString Game::comment() const
 {
 	return value(GameProperties::CommentAttribute).value<QString>();
 }
-

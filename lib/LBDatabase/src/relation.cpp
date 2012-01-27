@@ -255,6 +255,18 @@ QString Relation::displayName(const Context *context) const
     return d->name;
 }
 
+QString Relation::displayNameLeft() const
+{
+    Q_D(const Relation);
+    return d->displayNameLeft;
+}
+
+QString Relation::displayNameRight() const
+{
+    Q_D(const Relation);
+    return d->displayNameRight;
+}
+
 /*!
   Sets the display name in the given \a context.
 

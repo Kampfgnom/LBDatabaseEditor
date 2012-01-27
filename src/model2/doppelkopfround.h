@@ -8,15 +8,22 @@
 namespace DoppelkopfRoundProperties {
 const QString Doko_soloPflichtAttribute("doko_soloPflicht");
 const QString Doko_soloTypeAttribute("doko_soloType");
-const QString Doko_hochzeitPlayerIdRelation("doko_hochzeitPlayerId");
-const QString Doko_re1PlayerIdRelation("doko_re1PlayerId");
-const QString Doko_re2PlayerIdRelation("doko_re2PlayerId");
-const QString Doko_schweinereiPlayerIdRelation("doko_schweinereiPlayerId");
-const QString Doko_trumpfabgabePlayerIdRelation("doko_trumpfabgabePlayerId");
-const QString Doko_soloPlayerIdRelation("doko_soloPlayerId");
+const QString HochzeitPlayerRelation("hochzeitPlayer");
+const QString _1RePlayerRelation("_1RePlayer");
+const QString _2RePlayerRelation("_2RePlayer");
+const QString SchweinereiPlayerRelation("schweinereiPlayer");
+const QString TrumpfabgabePlayerRelation("trumpfabgabePlayer");
+const QString DokoSoloPlayerRelation("dokoSoloPlayer");
 }
 
-class Player;class Player;class Player;class Player;class Player;class Player;class DoppelkopfRound : public Round
+class Player;
+class Player;
+class Player;
+class Player;
+class Player;
+class Player;
+
+class DoppelkopfRound : public Round
 {
 	Q_OBJECT
 public:
@@ -25,6 +32,13 @@ public:
 
 	bool doko_soloPflicht() const;
 	QString doko_soloType() const;
+
+	Player *hochzeitPlayer() const;
+	Player *_1RePlayer() const;
+	Player *_2RePlayer() const;
+	Player *schweinereiPlayer() const;
+	Player *trumpfabgabePlayer() const;
+	Player *dokoSoloPlayer() const;
 };
 
 #endif // DOPPELKOPFROUND_H

@@ -65,4 +65,3 @@ int Offlinegameinformation::doko_trumpfabgaben() const
 {
 	return value(OfflinegameinformationProperties::Doko_trumpfabgabenAttribute).value<int>();
 }
-

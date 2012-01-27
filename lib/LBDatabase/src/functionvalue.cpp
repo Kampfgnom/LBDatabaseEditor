@@ -46,14 +46,20 @@ QVariant FunctionValuePrivate::calculate(const Entity *key)
 {
     Q_Q(FunctionValue);
     Calculator *calculator = entity->entityType()->calculator();
-    return calculator->calculate(entity,q,key);
+    if(calculator)
+        return calculator->calculate(entity,q,key);
+
+    return QVariant();
 }
 
 QHash<const Entity *, QVariant> FunctionValuePrivate::calculate()
 {
     Q_Q(FunctionValue);
     Calculator *calculator = entity->entityType()->calculator();
-    return calculator->calculate(entity,q);
+    if(calculator)
+        return calculator->calculate(entity,q);
+
+    return QHash<const Entity *, QVariant>();
 }
 
 /******************************************************************************

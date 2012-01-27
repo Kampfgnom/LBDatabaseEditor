@@ -13,11 +13,14 @@ const QString Doko_reroundsAttribute("doko_rerounds");
 const QString Doko_rewinsAttribute("doko_rewins");
 const QString Doko_soliAttribute("doko_soli");
 const QString Doko_trumpfabgabenAttribute("doko_trumpfabgaben");
-const QString PlayerIdRelation("playerId");
-const QString GameIdRelation("gameId");
+const QString PlayerRelation("player");
+const QString GameRelation("game");
 }
 
-class Player;class Game;class Offlinegameinformation : public LBDatabase::Entity
+class Player;
+class Game;
+
+class Offlinegameinformation : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -33,6 +36,9 @@ public:
 	int doko_rewins() const;
 	int doko_soli() const;
 	int doko_trumpfabgaben() const;
+
+	Player *player() const;
+	Game *game() const;
 };
 
 class OfflinegameinformationsContext : public LBDatabase::Context

@@ -51,4 +51,3 @@ int Round::db_state() const
 {
 	return value(RoundProperties::Db_stateAttribute).value<int>();
 }
-

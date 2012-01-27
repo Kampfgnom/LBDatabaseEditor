@@ -8,13 +8,18 @@ const QString NameAttribute("name");
 const QString DateAttribute("date");
 const QString LengthAttribute("length");
 const QString CommentAttribute("comment");
-const QString RoundsPerGameRelation("RoundsPerGame");
-const QString SiteIdRelation("siteId");
-const QString GameIdRelation("gameId");
-const QString PlayersByPositionRelation("playersByPosition");
+const QString RoundsRelation("rounds");
+const QString SiteRelation("site");
+const QString DokoBuddiesRelation("dokoBuddies");
+const QString OfflineInformationRelation("offlineInformation");
 }
 
-class Round;class Place;class Dokoofflinegamebuddy;class Offlinegameinformation;class Player;class Game : public LBDatabase::Entity
+class Round;
+class Place;
+class Dokoofflinegamebuddy;
+class Offlinegameinformation;
+
+class Game : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -25,6 +30,11 @@ public:
 	QDateTime date() const;
 	QTime length() const;
 	QString comment() const;
+
+	QList<Round *> rounds() const;
+	Place *site() const;
+	QList<Dokoofflinegamebuddy *> dokoBuddies() const;
+	QList<Offlinegameinformation *> offlineInformation() const;
 };
 
 class GamesContext : public LBDatabase::Context

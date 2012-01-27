@@ -30,4 +30,3 @@ int Dokoofflinegamebuddy::wins() const
 {
 	return value(DokoofflinegamebuddyProperties::WinsAttribute).value<int>();
 }
-

@@ -8,12 +8,14 @@
 namespace DoppelkopfOfflineGameProperties {
 }
 
+
 class DoppelkopfOfflineGame : public OfflineGame
 {
 	Q_OBJECT
 public:
 	Q_INVOKABLE DoppelkopfOfflineGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
+
 
 };
 

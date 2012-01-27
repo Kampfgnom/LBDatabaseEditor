@@ -10,11 +10,14 @@ const QString StrasseAttribute("strasse");
 const QString NummerAttribute("nummer");
 const QString CommentAttribute("comment");
 const QString IconPathAttribute("iconPath");
-const QString SiteIdRelation("siteId");
-const QString PlayerplaceassignmentsRelation("playerplaceassignments");
+const QString GamesRelation("games");
+const QString PlayerRelation("player");
 }
 
-class Game;class Player;class Place : public LBDatabase::Entity
+class Game;
+class Player;
+
+class Place : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -27,6 +30,9 @@ public:
 	int nummer() const;
 	QString comment() const;
 	QIcon iconPath() const;
+
+	QList<Game *> games() const;
+	QList<Player *> player() const;
 };
 
 class PlacesContext : public LBDatabase::Context

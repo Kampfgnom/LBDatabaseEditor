@@ -18,4 +18,3 @@ QString SkatRound::skat_trumpfColor() const
 {
 	return value(SkatRoundProperties::Skat_trumpfColorAttribute).value<QString>();
 }
-

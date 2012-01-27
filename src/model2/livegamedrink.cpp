@@ -26,4 +26,3 @@ QDateTime Livegamedrink::time() const
 {
 	return value(LivegamedrinkProperties::TimeAttribute).value<QDateTime>();
 }
-

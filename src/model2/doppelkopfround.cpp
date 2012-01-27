@@ -18,4 +18,3 @@ QString DoppelkopfRound::doko_soloType() const
 {
 	return value(DoppelkopfRoundProperties::Doko_soloTypeAttribute).value<QString>();
 }
-

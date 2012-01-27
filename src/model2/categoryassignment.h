@@ -8,6 +8,7 @@ const QString CategorieIdAttribute("categorieId");
 const QString ElementIdAttribute("elementId");
 }
 
+
 class Categoryassignment : public LBDatabase::Entity
 {
 	Q_OBJECT
@@ -17,6 +18,7 @@ public:
 
 	int categorieId() const;
 	int elementId() const;
+
 };
 
 class CategorieassignmentsContext : public LBDatabase::Context

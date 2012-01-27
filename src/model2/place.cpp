@@ -51,4 +51,3 @@ QIcon Place::iconPath() const
 {
 	return value(PlaceProperties::IconPathAttribute).value<QIcon>();
 }
-

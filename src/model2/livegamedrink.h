@@ -5,12 +5,16 @@
 
 namespace LivegamedrinkProperties {
 const QString TimeAttribute("time");
-const QString DrinksPerRoundRelation("DrinksPerRound");
-const QString DrinksPerPlayerRelation("DrinksPerPlayer");
-const QString LiveDrinksPerDrinkRelation("LiveDrinksPerDrink");
+const QString RoundRelation("round");
+const QString PlayerRelation("player");
+const QString DrinkRelation("drink");
 }
 
-class Round;class Player;class Drink;class Livegamedrink : public LBDatabase::Entity
+class Round;
+class Player;
+class Drink;
+
+class Livegamedrink : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -18,6 +22,10 @@ public:
 	static const QString Name;
 
 	QDateTime time() const;
+
+	Round *round() const;
+	Player *player() const;
+	Drink *drink() const;
 };
 
 class LivegamedrinksContext : public LBDatabase::Context

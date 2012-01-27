@@ -12,6 +12,7 @@ const QString Skat_maxRoundsAttribute("skat_maxRounds");
 const QString Skat_mitRamschenAttribute("skat_mitRamschen");
 }
 
+
 class SkatLiveGame : public LiveGame
 {
 	Q_OBJECT
@@ -23,6 +24,7 @@ public:
 	int skat_maxPoints() const;
 	int skat_maxRounds() const;
 	bool skat_mitRamschen() const;
+
 };
 
 #endif // SKATLIVEGAME_H

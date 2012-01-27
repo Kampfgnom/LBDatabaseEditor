@@ -5,11 +5,14 @@
 
 namespace SchmeissereiProperties {
 const QString TypeAttribute("type");
-const QString PlayerSchmeissereinRelation("PlayerSchmeisserein");
-const QString SchmeissereienPerRoundRelation("SchmeissereienPerRound");
+const QString PlayerRelation("player");
+const QString RoundRelation("round");
 }
 
-class Player;class Round;class Schmeisserei : public LBDatabase::Entity
+class Player;
+class Round;
+
+class Schmeisserei : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -17,6 +20,9 @@ public:
 	static const QString Name;
 
 	int type() const;
+
+	Player *player() const;
+	Round *round() const;
 };
 
 class SchmeissereisContext : public LBDatabase::Context

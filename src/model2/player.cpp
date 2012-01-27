@@ -52,4 +52,3 @@ QPixmap Player::avatarPath() const
 {
 	return value(PlayerProperties::AvatarPathAttribute).value<QPixmap>();
 }
-

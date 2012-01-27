@@ -45,4 +45,3 @@ int Category::type() const
 {
 	return value(CategoryProperties::TypeAttribute).value<int>();
 }
-

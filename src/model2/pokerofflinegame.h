@@ -8,12 +8,14 @@
 namespace PokerOfflineGameProperties {
 }
 
+
 class PokerOfflineGame : public OfflineGame
 {
 	Q_OBJECT
 public:
 	Q_INVOKABLE PokerOfflineGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
+
 
 };
 

@@ -11,6 +11,7 @@ const QString ParentRuleIdAttribute("parentRuleId");
 const QString TypeAttribute("type");
 }
 
+
 class Rule : public LBDatabase::Entity
 {
 	Q_OBJECT
@@ -23,6 +24,7 @@ public:
 	QString parameter() const;
 	int parentRuleId() const;
 	int type() const;
+
 };
 
 class RulesContext : public LBDatabase::Context

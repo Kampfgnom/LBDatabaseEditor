@@ -25,6 +25,7 @@ const QString Doko_mitFleischlosAttribute("doko_mitFleischlos");
 const QString Doko_mitSchwarzsoloAttribute("doko_mitSchwarzsolo");
 }
 
+
 class DoppelkopfLiveGame : public LiveGame
 {
 	Q_OBJECT
@@ -49,6 +50,7 @@ public:
 	bool doko_mitZuWenigTrumpf() const;
 	bool doko_mitFleischlos() const;
 	bool doko_mitSchwarzsolo() const;
+
 };
 
 #endif // DOPPELKOPFLIVEGAME_H

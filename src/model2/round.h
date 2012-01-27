@@ -9,12 +9,16 @@ const QString CommentAttribute("comment");
 const QString StartTimeAttribute("startTime");
 const QString LengthAttribute("length");
 const QString Db_stateAttribute("db_state");
-const QString DrinksPerRoundRelation("DrinksPerRound");
-const QString SchmeissereienPerRoundRelation("SchmeissereienPerRound");
-const QString RoundsPerGameRelation("RoundsPerGame");
+const QString DrinksRelation("drinks");
+const QString SchmeissereienRelation("schmeissereien");
+const QString GameRelation("game");
 }
 
-class Livegamedrink;class Schmeisserei;class Game;class Round : public LBDatabase::Entity
+class Livegamedrink;
+class Schmeisserei;
+class Game;
+
+class Round : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -26,6 +30,10 @@ public:
 	QDateTime startTime() const;
 	QTime length() const;
 	int db_state() const;
+
+	QList<Livegamedrink *> drinks() const;
+	QList<Schmeisserei *> schmeissereien() const;
+	Game *game() const;
 };
 
 class RoundsContext : public LBDatabase::Context

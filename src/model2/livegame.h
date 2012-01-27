@@ -8,12 +8,14 @@
 namespace LiveGameProperties {
 }
 
+
 class LiveGame : public Game
 {
 	Q_OBJECT
 public:
 	Q_INVOKABLE LiveGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
+
 
 };
 

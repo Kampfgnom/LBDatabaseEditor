@@ -10,23 +10,35 @@ const QString GenderAttribute("gender");
 const QString NameAttribute("name");
 const QString ColorAttribute("color");
 const QString AvatarPathAttribute("avatarPath");
-const QString PlayerSchmeissereinRelation("PlayerSchmeisserein");
-const QString DrinksPerPlayerRelation("DrinksPerPlayer");
-const QString Doko_hochzeitPlayerIdRelation("doko_hochzeitPlayerId");
-const QString Doko_re1PlayerIdRelation("doko_re1PlayerId");
-const QString Doko_re2PlayerIdRelation("doko_re2PlayerId");
-const QString Doko_schweinereiPlayerIdRelation("doko_schweinereiPlayerId");
-const QString Doko_trumpfabgabePlayerIdRelation("doko_trumpfabgabePlayerId");
-const QString Doko_soloPlayerIdRelation("doko_soloPlayerId");
-const QString Skat_solistPlayerIdRelation("skat_solistPlayerId");
-const QString Player1IdRelation("player1Id");
-const QString Player2IdRelation("player2Id");
-const QString PlayerIdRelation("playerId");
-const QString PlayerplaceassignmentsRelation("playerplaceassignments");
-const QString PlayersByPositionRelation("playersByPosition");
+const QString SchmeissereienRelation("schmeissereien");
+const QString DrinksRelation("drinks");
+const QString HochzeitenRelation("hochzeiten");
+const QString Re1RoundsRelation("re1Rounds");
+const QString Re2RoundsRelation("re2Rounds");
+const QString SchweiereiRoundsRelation("schweiereiRounds");
+const QString TrumpfabgabeRoundsRelation("trumpfabgabeRounds");
+const QString DokoSoliRelation("dokoSoli");
+const QString SkatSoliRelation("skatSoli");
+const QString DokoBuddiesRelation("dokoBuddies");
+const QString OfflineInformationRelation("offlineInformation");
+const QString PlaceRelation("place");
 }
 
-class Schmeisserei;class Livegamedrink;class DoppelkopfRound;class DoppelkopfRound;class DoppelkopfRound;class DoppelkopfRound;class DoppelkopfRound;class DoppelkopfRound;class SkatRound;class Dokoofflinegamebuddy;class Dokoofflinegamebuddy;class Offlinegameinformation;class Place;class Game;class Player : public LBDatabase::Entity
+class Schmeisserei;
+class Livegamedrink;
+class DoppelkopfRound;
+class DoppelkopfRound;
+class DoppelkopfRound;
+class DoppelkopfRound;
+class DoppelkopfRound;
+class DoppelkopfRound;
+class SkatRound;
+class Dokoofflinegamebuddy;
+class Dokoofflinegamebuddy;
+class Offlinegameinformation;
+class Place;
+
+class Player : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -39,6 +51,19 @@ public:
 	QString name() const;
 	QColor color() const;
 	QPixmap avatarPath() const;
+
+	QList<Schmeisserei *> schmeissereien() const;
+	QList<Livegamedrink *> drinks() const;
+	QList<DoppelkopfRound *> hochzeiten() const;
+	QList<DoppelkopfRound *> re1Rounds() const;
+	QList<DoppelkopfRound *> re2Rounds() const;
+	QList<DoppelkopfRound *> schweiereiRounds() const;
+	QList<DoppelkopfRound *> trumpfabgabeRounds() const;
+	QList<DoppelkopfRound *> dokoSoli() const;
+	QList<SkatRound *> skatSoli() const;
+    QList<Dokoofflinegamebuddy *> dokoBuddies() const;
+	QList<Offlinegameinformation *> offlineInformation() const;
+	QList<Place *> place() const;
 };
 
 class PlayersContext : public LBDatabase::Context

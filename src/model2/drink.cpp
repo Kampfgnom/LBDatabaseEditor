@@ -46,4 +46,3 @@ QIcon Drink::iconPath() const
 {
 	return value(DrinkProperties::IconPathAttribute).value<QIcon>();
 }
-

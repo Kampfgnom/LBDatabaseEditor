@@ -6,12 +6,16 @@
 namespace DokoofflinegamebuddyProperties {
 const QString RoundsAttribute("rounds");
 const QString WinsAttribute("wins");
-const QString GameIdRelation("gameId");
-const QString Player1IdRelation("player1Id");
-const QString Player2IdRelation("player2Id");
+const QString GameRelation("game");
+const QString Player1Relation("player1");
+const QString Player2Relation("player2");
 }
 
-class Game;class Player;class Player;class Dokoofflinegamebuddy : public LBDatabase::Entity
+class Game;
+class Player;
+class Player;
+
+class Dokoofflinegamebuddy : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -20,6 +24,10 @@ public:
 
 	int rounds() const;
 	int wins() const;
+
+	Game *game() const;
+	Player *player1() const;
+	Player *player2() const;
 };
 
 class DokoofflinegamebuddysContext : public LBDatabase::Context

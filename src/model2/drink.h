@@ -9,10 +9,12 @@ const QString TypeAttribute("type");
 const QString SizeAttribute("size");
 const QString AlcAttribute("alc");
 const QString IconPathAttribute("iconPath");
-const QString LiveDrinksPerDrinkRelation("LiveDrinksPerDrink");
+const QString LiveDrinksRelation("liveDrinks");
 }
 
-class Livegamedrink;class Drink : public LBDatabase::Entity
+class Livegamedrink;
+
+class Drink : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -24,6 +26,8 @@ public:
 	double size() const;
 	double alc() const;
 	QIcon iconPath() const;
+
+	QList<Livegamedrink *> liveDrinks() const;
 };
 
 class DrinksContext : public LBDatabase::Context

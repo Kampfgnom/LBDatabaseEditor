@@ -25,4 +25,3 @@ int Schmeisserei::type() const
 {
 	return value(SchmeissereiProperties::TypeAttribute).value<int>();
 }
-

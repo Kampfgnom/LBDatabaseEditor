@@ -153,10 +153,10 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
 //        qDebug() << player->displayName() << game->points(player) << game->placement(player);
 //    }
 
-//    LBDatabase::CppExporter exporter;
-//    exporter.setStorage(storage);
-//    exporter.setDirectory("/Users/niklas/Documents/Programming/LBDatabaseTest/LBDatabaseEditor/src/model2/");
-//    exporter.exportCpp();
+    LBDatabase::CppExporter exporter;
+    exporter.setStorage(storage);
+    exporter.setDirectory("/Users/niklas/Documents/Programming/LBDatabaseTest/LBDatabaseEditor/src/model2/");
+    exporter.exportCpp();
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));
