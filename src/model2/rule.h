@@ -3,13 +3,14 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace RuleProperties {
 const QString AttributeNameAttribute("attributeName");
 const QString ConstraintIdAttribute("constraintId");
 const QString ParameterAttribute("parameter");
 const QString ParentRuleIdAttribute("parentRuleId");
 const QString TypeAttribute("type");
-}
+} // namespace RuleProperties
 
 
 class Rule : public LBDatabase::Entity

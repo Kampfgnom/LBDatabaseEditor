@@ -3,16 +3,16 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace DokoofflinegamebuddyProperties {
 const QString RoundsAttribute("rounds");
 const QString WinsAttribute("wins");
-const QString GameRelation("game");
-const QString Player1Relation("player1");
-const QString Player2Relation("player2");
-}
+const QString GameRelation("DokoGameBuddiesPerGame");
+const QString Player1Relation("OfflineGameBuddy1");
+const QString Player2Relation("OfflineGameBuddy2");
+} // namespace DokoofflinegamebuddyProperties
 
 class Game;
-class Player;
 class Player;
 
 class Dokoofflinegamebuddy : public LBDatabase::Entity

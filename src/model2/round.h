@@ -3,16 +3,17 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace RoundProperties {
 const QString NumberAttribute("number");
 const QString CommentAttribute("comment");
 const QString StartTimeAttribute("startTime");
 const QString LengthAttribute("length");
 const QString Db_stateAttribute("db_state");
-const QString DrinksRelation("drinks");
-const QString SchmeissereienRelation("schmeissereien");
-const QString GameRelation("game");
-}
+const QString DrinksRelation("DrinksPerRound");
+const QString SchmeissereienRelation("SchmeissereienPerRound");
+const QString GameRelation("RoundsPerGame");
+} // namespace RoundProperties
 
 class Livegamedrink;
 class Schmeisserei;

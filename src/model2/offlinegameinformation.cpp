@@ -3,17 +3,6 @@
 
 
 const QString OfflinegameinformationsContext::Name("offlinegameinformations");
-OfflinegameinformationsContext::OfflinegameinformationsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Offlinegameinformation>();
-}
-
-Offlinegameinformation *OfflinegameinformationsContext::offlinegameinformation(int id) const
-{
-	return static_cast<Offlinegameinformation *>(entity(id));
-}
-
 const QString Offlinegameinformation::Name("offlinegameinformation");
 
 Offlinegameinformation::Offlinegameinformation(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -65,3 +54,25 @@ int Offlinegameinformation::doko_trumpfabgaben() const
 {
 	return value(OfflinegameinformationProperties::Doko_trumpfabgabenAttribute).value<int>();
 }
+
+Player *Offlinegameinformation::player() const
+{
+	return relation<Player>(OfflinegameinformationProperties::PlayerRelation)->firstEntity();
+}
+
+Game *Offlinegameinformation::game() const
+{
+	return relation<Game>(OfflinegameinformationProperties::GameRelation)->firstEntity();
+}
+
+OfflinegameinformationsContext::OfflinegameinformationsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Offlinegameinformation>();
+}
+
+Offlinegameinformation *OfflinegameinformationsContext::offlinegameinformation(int id) const
+{
+	return static_cast<Offlinegameinformation *>(entity(id));
+}
+

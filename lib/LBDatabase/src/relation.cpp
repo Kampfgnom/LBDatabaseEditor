@@ -356,18 +356,6 @@ RelationValueBase *Relation::createRightValue(Entity *entity)
     return new RelationValue<Entity>(this, entity);
 }
 
-QString Relation::displayNameLeft() const
-{
-    Q_D(const Relation);
-    return d->displayNameLeft;
-}
-
-QString Relation::displayNameRight() const
-{
-    Q_D(const Relation);
-    return d->displayNameRight;
-}
-
 Storage* Relation::storage() const
 {
     Q_D(const Relation);

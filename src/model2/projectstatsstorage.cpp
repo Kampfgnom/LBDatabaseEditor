@@ -1,5 +1,4 @@
 #include "projectstatsstorage.h"
-
 #include "categoryassignment.h"
 #include "round.h"
 #include "category.h"

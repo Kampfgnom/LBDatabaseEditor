@@ -41,9 +41,6 @@ public:
     QString displayNameRight() const;
     void setDisplayName(const QString &displayName, const Context *context);
 
-    QString displayNameLeft() const;
-    QString displayNameRight() const;
-
     QString name() const;
     EntityType *entityTypeLeft() const;
     EntityType *entityTypeRight() const;

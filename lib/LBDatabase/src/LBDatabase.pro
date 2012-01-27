@@ -32,7 +32,8 @@ HEADERS += \
     export/storagewriter.h \
     export/writer.h \
     export/contextwriter.h \
-    export/entitytypewriter.h
+    export/entitytypewriter.h \
+    export/calculatorwriter.h
 
 SOURCES += \
     column.cpp \
@@ -57,7 +58,8 @@ SOURCES += \
     export/storagewriter.cpp \
     export/writer.cpp \
     export/contextwriter.cpp \
-    export/entitytypewriter.cpp
+    export/entitytypewriter.cpp \
+    export/calculatorwriter.cpp
 
 OTHER_FILES +=
 

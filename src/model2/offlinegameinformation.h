@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace OfflinegameinformationProperties {
 const QString PlacementAttribute("placement");
 const QString PointsAttribute("points");
@@ -13,9 +14,9 @@ const QString Doko_reroundsAttribute("doko_rerounds");
 const QString Doko_rewinsAttribute("doko_rewins");
 const QString Doko_soliAttribute("doko_soli");
 const QString Doko_trumpfabgabenAttribute("doko_trumpfabgaben");
-const QString PlayerRelation("player");
-const QString GameRelation("game");
-}
+const QString PlayerRelation("OfflineInformationPerPlayer");
+const QString GameRelation("OfflineInformationPerGame");
+} // namespace OfflinegameinformationProperties
 
 class Player;
 class Game;

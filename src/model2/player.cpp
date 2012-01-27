@@ -1,21 +1,10 @@
 #include "player.h"
-
 #include <QColor>
 #include <QPixmap>
 
 
+
 const QString PlayersContext::Name("players");
-PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Player>();
-}
-
-Player *PlayersContext::player(int id) const
-{
-	return static_cast<Player *>(entity(id));
-}
-
 const QString Player::Name("player");
 
 Player::Player(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -52,3 +41,75 @@ QPixmap Player::avatarPath() const
 {
 	return value(PlayerProperties::AvatarPathAttribute).value<QPixmap>();
 }
+
+QList<Schmeisserei *> Player::schmeissereien() const
+{
+	return relation<Schmeisserei>(PlayerProperties::SchmeissereienRelation)->entities();
+}
+
+QList<Livegamedrink *> Player::drinks() const
+{
+	return relation<Livegamedrink>(PlayerProperties::DrinksRelation)->entities();
+}
+
+QList<DoppelkopfRound *> Player::hochzeiten() const
+{
+	return relation<DoppelkopfRound>(PlayerProperties::HochzeitenRelation)->entities();
+}
+
+QList<DoppelkopfRound *> Player::re1Rounds() const
+{
+	return relation<DoppelkopfRound>(PlayerProperties::Re1RoundsRelation)->entities();
+}
+
+QList<DoppelkopfRound *> Player::re2Rounds() const
+{
+	return relation<DoppelkopfRound>(PlayerProperties::Re2RoundsRelation)->entities();
+}
+
+QList<DoppelkopfRound *> Player::schweiereiRounds() const
+{
+	return relation<DoppelkopfRound>(PlayerProperties::SchweiereiRoundsRelation)->entities();
+}
+
+QList<DoppelkopfRound *> Player::trumpfabgabeRounds() const
+{
+	return relation<DoppelkopfRound>(PlayerProperties::TrumpfabgabeRoundsRelation)->entities();
+}
+
+QList<DoppelkopfRound *> Player::dokoSoli() const
+{
+	return relation<DoppelkopfRound>(PlayerProperties::DokoSoliRelation)->entities();
+}
+
+QList<SkatRound *> Player::skatSoli() const
+{
+	return relation<SkatRound>(PlayerProperties::SkatSoliRelation)->entities();
+}
+
+QList<Dokoofflinegamebuddy *> Player::dokoBuddies() const
+{
+	return relation<Dokoofflinegamebuddy>(PlayerProperties::DokoBuddiesRelation)->entities();
+}
+
+QList<Offlinegameinformation *> Player::offlineInformation() const
+{
+	return relation<Offlinegameinformation>(PlayerProperties::OfflineInformationRelation)->entities();
+}
+
+QList<Place *> Player::place() const
+{
+	return relation<Place>(PlayerProperties::PlaceRelation)->entities();
+}
+
+PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Player>();
+}
+
+Player *PlayersContext::player(int id) const
+{
+	return static_cast<Player *>(entity(id));
+}
+

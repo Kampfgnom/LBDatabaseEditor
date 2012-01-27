@@ -1,14 +1,14 @@
 #ifndef LBDATABASE_CONTEXTWRITER_H
 #define LBDATABASE_CONTEXTWRITER_H
 
-#include "writer.h"
+#include "entitytypewriter.h"
 
 namespace LBDatabase {
 
 class CppExporter;
 class Context;
 
-class ContextWriter : public Writer
+class ContextWriter : public EntityTypeWriter
 {
 public:
     ContextWriter(const CppExporter *exporter);
@@ -20,8 +20,8 @@ public:
 private:
     Context *m_context;
 
-    void exportContextHeader() const;
-    void exportContextSource() const;
+    void writeDeclaration(QString &header) const;
+    void writeImplementation(QString &source) const;
 };
 
 } // namespace LBDatabase

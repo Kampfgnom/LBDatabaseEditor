@@ -10,7 +10,7 @@ const QString Skat_gameEndAttribute("skat_gameEnd");
 const QString Skat_maxPointsAttribute("skat_maxPoints");
 const QString Skat_maxRoundsAttribute("skat_maxRounds");
 const QString Skat_mitRamschenAttribute("skat_mitRamschen");
-}
+} // namespace SkatLiveGameProperties
 
 
 class SkatLiveGame : public LiveGame

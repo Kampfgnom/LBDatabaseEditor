@@ -6,7 +6,7 @@
 #include "offlinegame.h"
 
 namespace SkatOfflineGameProperties {
-}
+} // namespace SkatOfflineGameProperties
 
 
 class SkatOfflineGame : public OfflineGame

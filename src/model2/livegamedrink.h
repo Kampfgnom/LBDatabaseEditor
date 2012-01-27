@@ -3,12 +3,13 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace LivegamedrinkProperties {
 const QString TimeAttribute("time");
-const QString RoundRelation("round");
-const QString PlayerRelation("player");
-const QString DrinkRelation("drink");
-}
+const QString RoundRelation("DrinksPerRound");
+const QString PlayerRelation("DrinksPerPlayer");
+const QString DrinkRelation("LiveDrinksPerDrink");
+} // namespace LivegamedrinkProperties
 
 class Round;
 class Player;

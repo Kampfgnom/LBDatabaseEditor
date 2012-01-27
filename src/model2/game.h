@@ -3,16 +3,17 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace GameProperties {
 const QString NameAttribute("name");
 const QString DateAttribute("date");
 const QString LengthAttribute("length");
 const QString CommentAttribute("comment");
-const QString RoundsRelation("rounds");
-const QString SiteRelation("site");
-const QString DokoBuddiesRelation("dokoBuddies");
-const QString OfflineInformationRelation("offlineInformation");
-}
+const QString RoundsRelation("RoundsPerGame");
+const QString SiteRelation("GameSite");
+const QString DokoBuddiesRelation("DokoGameBuddiesPerGame");
+const QString OfflineInformationRelation("OfflineInformationPerGame");
+} // namespace GameProperties
 
 class Round;
 class Place;

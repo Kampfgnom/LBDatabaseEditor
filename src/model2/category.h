@@ -3,16 +3,16 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace CategoryProperties {
 const QString ContentTypeAttribute("contentType");
 const QString OrderIndicatorAttribute("orderIndicator");
 const QString NameAttribute("name");
 const QString IconAttribute("icon");
 const QString TypeAttribute("type");
-const QString ParentCategoryRelation("parentCategory");
-}
+const QString ParentCategoryRelation("ParentChildRelation");
+} // namespace CategoryProperties
 
-class Category;
 class Category;
 
 class Category : public LBDatabase::Entity
@@ -28,7 +28,7 @@ public:
 	QString icon() const;
 	int type() const;
 
-	QList<Category *> parentCategory() const;
+	Category *parentCategory() const;
 };
 
 class CategoriesContext : public LBDatabase::Context

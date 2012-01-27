@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace PlaceProperties {
 const QString PlzAttribute("plz");
 const QString OrtAttribute("ort");
@@ -10,9 +11,9 @@ const QString StrasseAttribute("strasse");
 const QString NummerAttribute("nummer");
 const QString CommentAttribute("comment");
 const QString IconPathAttribute("iconPath");
-const QString GamesRelation("games");
-const QString PlayerRelation("player");
-}
+const QString GamesRelation("GameSite");
+const QString PlayerRelation("PlayersAndPlaces");
+} // namespace PlaceProperties
 
 class Game;
 class Player;

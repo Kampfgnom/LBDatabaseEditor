@@ -6,7 +6,7 @@
 #include "game.h"
 
 namespace LiveGameProperties {
-}
+} // namespace LiveGameProperties
 
 
 class LiveGame : public Game

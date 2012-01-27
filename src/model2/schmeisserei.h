@@ -3,11 +3,12 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace SchmeissereiProperties {
 const QString TypeAttribute("type");
-const QString PlayerRelation("player");
-const QString RoundRelation("round");
-}
+const QString PlayerRelation("PlayerSchmeisserein");
+const QString RoundRelation("SchmeissereienPerRound");
+} // namespace SchmeissereiProperties
 
 class Player;
 class Round;

@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     
     LBGui::DatabaseEditor editor;
     editor.show();
-    //editor.controller()->openEntityStorage("/Users/niklas/Documents/Programming/LBDatabaseTest/LBDatabaseEditor/examples/projectstats.lbstorage");
+    editor.controller()->openEntityStorage("/Users/niklas/Documents/Programming/LBDatabaseTest/LBDatabaseEditor/examples/projectstats.lbstorage");
 
     return a.exec();
 }

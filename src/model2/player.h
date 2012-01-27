@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace PlayerProperties {
 const QString WeightAttribute("weight");
 const QString SizeAttribute("size");
@@ -10,30 +11,24 @@ const QString GenderAttribute("gender");
 const QString NameAttribute("name");
 const QString ColorAttribute("color");
 const QString AvatarPathAttribute("avatarPath");
-const QString SchmeissereienRelation("schmeissereien");
-const QString DrinksRelation("drinks");
-const QString HochzeitenRelation("hochzeiten");
-const QString Re1RoundsRelation("re1Rounds");
-const QString Re2RoundsRelation("re2Rounds");
-const QString SchweiereiRoundsRelation("schweiereiRounds");
-const QString TrumpfabgabeRoundsRelation("trumpfabgabeRounds");
-const QString DokoSoliRelation("dokoSoli");
-const QString SkatSoliRelation("skatSoli");
-const QString DokoBuddiesRelation("dokoBuddies");
-const QString OfflineInformationRelation("offlineInformation");
-const QString PlaceRelation("place");
-}
+const QString SchmeissereienRelation("PlayerSchmeisserein");
+const QString DrinksRelation("DrinksPerPlayer");
+const QString HochzeitenRelation("DokoRoundHochzeitPlayer");
+const QString Re1RoundsRelation("DokoRoundRe1Player");
+const QString Re2RoundsRelation("DokoRoundRe2Player");
+const QString SchweiereiRoundsRelation("DokoRoundSchweinereiPlayer");
+const QString TrumpfabgabeRoundsRelation("DokoRoundTrumpfabgabePlayer");
+const QString DokoSoliRelation("DokoRoundSoloPlayer");
+const QString SkatSoliRelation("SkatRoundSolistPlayer");
+const QString DokoBuddiesRelation("OfflineGameBuddy1");
+const QString OfflineInformationRelation("OfflineInformationPerPlayer");
+const QString PlaceRelation("PlayersAndPlaces");
+} // namespace PlayerProperties
 
 class Schmeisserei;
 class Livegamedrink;
 class DoppelkopfRound;
-class DoppelkopfRound;
-class DoppelkopfRound;
-class DoppelkopfRound;
-class DoppelkopfRound;
-class DoppelkopfRound;
 class SkatRound;
-class Dokoofflinegamebuddy;
 class Dokoofflinegamebuddy;
 class Offlinegameinformation;
 class Place;

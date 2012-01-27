@@ -1,9 +1,10 @@
 #include "game.h"
-
 #include <QDateTime>
 #include <QTime>
 
+
 #include "livegame.h"
+#include "livegamecalculator.h"
 #include "doppelkopflivegame.h"
 #include "prognoseofflinegame.h"
 #include "offlinegame.h"
@@ -14,26 +15,6 @@
 #include "pokerofflinegame.h"
 
 const QString GamesContext::Name("games");
-GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Game>();
-	registerEntityClass<LiveGame>();
-	registerEntityClass<DoppelkopfLiveGame>();
-	registerEntityClass<PrognoseOfflineGame>();
-	registerEntityClass<OfflineGame>();
-	registerEntityClass<DoppelkopfOfflineGame>();
-	registerEntityClass<SkatLiveGame>();
-	registerEntityClass<SkatOfflineGame>();
-	registerEntityClass<HeartsOfflineGame>();
-	registerEntityClass<PokerOfflineGame>();
-}
-
-Game *GamesContext::game(int id) const
-{
-	return static_cast<Game *>(entity(id));
-}
-
 const QString Game::Name("game");
 
 Game::Game(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -60,3 +41,46 @@ QString Game::comment() const
 {
 	return value(GameProperties::CommentAttribute).value<QString>();
 }
+
+QList<Round *> Game::rounds() const
+{
+	return relation<Round>(GameProperties::RoundsRelation)->entities();
+}
+
+Place *Game::site() const
+{
+	return relation<Place>(GameProperties::SiteRelation)->firstEntity();
+}
+
+QList<Dokoofflinegamebuddy *> Game::dokoBuddies() const
+{
+	return relation<Dokoofflinegamebuddy>(GameProperties::DokoBuddiesRelation)->entities();
+}
+
+QList<Offlinegameinformation *> Game::offlineInformation() const
+{
+	return relation<Offlinegameinformation>(GameProperties::OfflineInformationRelation)->entities();
+}
+
+GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Game>();
+	registerEntityClass<LiveGame>();
+	registerCalculatorClass<LiveGame,LiveGameCalculator>();
+
+	registerEntityClass<DoppelkopfLiveGame>();
+	registerEntityClass<PrognoseOfflineGame>();
+	registerEntityClass<OfflineGame>();
+	registerEntityClass<DoppelkopfOfflineGame>();
+	registerEntityClass<SkatLiveGame>();
+	registerEntityClass<SkatOfflineGame>();
+	registerEntityClass<HeartsOfflineGame>();
+	registerEntityClass<PokerOfflineGame>();
+}
+
+Game *GamesContext::game(int id) const
+{
+	return static_cast<Game *>(entity(id));
+}
+

@@ -23,7 +23,7 @@ const QString Doko_mitTrumpfsoloAttribute("doko_mitTrumpfsolo");
 const QString Doko_mitZuWenigTrumpfAttribute("doko_mitZuWenigTrumpf");
 const QString Doko_mitFleischlosAttribute("doko_mitFleischlos");
 const QString Doko_mitSchwarzsoloAttribute("doko_mitSchwarzsolo");
-}
+} // namespace DoppelkopfLiveGameProperties
 
 
 class DoppelkopfLiveGame : public LiveGame

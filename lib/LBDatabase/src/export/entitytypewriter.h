@@ -19,8 +19,9 @@ public:
 
     void write() const;
 
-private:
+protected:
     EntityType *m_entityType;
+    QString m_classname;
 
     void exportHeader() const;
     void exportSource() const;
@@ -29,13 +30,14 @@ private:
     void writePropertyNameStrings(QString &header) const;
     void writeForwardDeclarations(QString &header) const;
 
-    void writeDeclaration(QString &header) const;
-    void writeImplementation(QString &source) const;
+    virtual void writeDeclaration(QString &header) const;
+    virtual void writeImplementation(QString &source) const;
 
     void writeAttributeDeclaration(Attribute *attribute, QString &header) const;
     void writeAttributeImplementation(Attribute *attribute, QString &source) const;
 
     void writeRelationDeclaration(Relation *relation, QString &header) const;
+    void writeRelationImplementation(Relation *relation, QString &source) const;
 
     QString makeRelationName(Relation *relation) const;
     QString makeRelationType(Relation *relation) const;

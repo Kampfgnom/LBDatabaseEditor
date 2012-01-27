@@ -3,10 +3,11 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace CategoryassignmentProperties {
 const QString CategorieIdAttribute("categorieId");
 const QString ElementIdAttribute("elementId");
-}
+} // namespace CategoryassignmentProperties
 
 
 class Categoryassignment : public LBDatabase::Entity

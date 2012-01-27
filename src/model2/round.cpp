@@ -1,25 +1,12 @@
 #include "round.h"
-
 #include <QDateTime>
 #include <QTime>
+
 
 #include "doppelkopfround.h"
 #include "skatround.h"
 
 const QString RoundsContext::Name("rounds");
-RoundsContext::RoundsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Round>();
-	registerEntityClass<DoppelkopfRound>();
-	registerEntityClass<SkatRound>();
-}
-
-Round *RoundsContext::round(int id) const
-{
-	return static_cast<Round *>(entity(id));
-}
-
 const QString Round::Name("round");
 
 Round::Round(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -51,3 +38,32 @@ int Round::db_state() const
 {
 	return value(RoundProperties::Db_stateAttribute).value<int>();
 }
+
+QList<Livegamedrink *> Round::drinks() const
+{
+	return relation<Livegamedrink>(RoundProperties::DrinksRelation)->entities();
+}
+
+QList<Schmeisserei *> Round::schmeissereien() const
+{
+	return relation<Schmeisserei>(RoundProperties::SchmeissereienRelation)->entities();
+}
+
+Game *Round::game() const
+{
+	return relation<Game>(RoundProperties::GameRelation)->firstEntity();
+}
+
+RoundsContext::RoundsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Round>();
+	registerEntityClass<DoppelkopfRound>();
+	registerEntityClass<SkatRound>();
+}
+
+Round *RoundsContext::round(int id) const
+{
+	return static_cast<Round *>(entity(id));
+}
+

@@ -29,7 +29,7 @@ void Writer::endNamespace(QString &file) const
 
 void Writer::writeNamespaceBegin(const QString &namespaceName, QString &file) const
 {
-    file.append(QLatin1String("namespace ")+namespaceName+QLatin1String(" {\n\n"));
+    file.append(QLatin1String("namespace ")+namespaceName+QLatin1String(" {\n"));
 }
 
 void Writer::writeNamespaceEnd(const QString &namespaceName, QString &file) const
@@ -41,8 +41,11 @@ QString Writer::makeClassname(const QString &name) const
 {
     QString classname = name.trimmed().remove(' ').remove('.');
     QRegExp reg("(^\\d*)");
-    QString headingNumbers = reg.cap(0);
-    classname = classname.remove(0, headingNumbers.length()).append(headingNumbers);
+    int pos = reg.indexIn(classname);
+    if(pos > -1) {
+        QString headingNumbers = reg.cap(0);
+        classname = classname.remove(0, headingNumbers.length()).append(headingNumbers);
+    }
     return classname.left(1).toUpper()+classname.mid(1);
 }
 
@@ -78,7 +81,7 @@ void Writer::endHeader(const QString &classname, QString &header) const
 
 void Writer::writeInclude(const QString &className, QString &file) const
 {
-    file.append(QLatin1String("#include \"") + makeHeaderFilename(className) + QLatin1String(".h\"\n"));
+    file.append(QLatin1String("#include \"") + makeHeaderFilename(className) + QLatin1String("\"\n"));
 }
 
 QString Writer::makeHeaderFilename(const QString &classname) const

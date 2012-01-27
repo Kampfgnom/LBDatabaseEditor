@@ -7,7 +7,7 @@
 
 namespace OfflineGameProperties {
 const QString Offline_lengthAttribute("offline_length");
-}
+} // namespace OfflineGameProperties
 
 
 class OfflineGame : public Game

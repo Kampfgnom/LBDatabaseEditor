@@ -6,7 +6,7 @@
 #include "offlinegame.h"
 
 namespace PokerOfflineGameProperties {
-}
+} // namespace PokerOfflineGameProperties
 
 
 class PokerOfflineGame : public OfflineGame

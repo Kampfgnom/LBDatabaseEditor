@@ -1,20 +1,9 @@
 #include "drink.h"
-
 #include <QIcon>
 
 
+
 const QString DrinksContext::Name("drinks");
-DrinksContext::DrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Drink>();
-}
-
-Drink *DrinksContext::drink(int id) const
-{
-	return static_cast<Drink *>(entity(id));
-}
-
 const QString Drink::Name("Drink");
 
 Drink::Drink(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -46,3 +35,20 @@ QIcon Drink::iconPath() const
 {
 	return value(DrinkProperties::IconPathAttribute).value<QIcon>();
 }
+
+QList<Livegamedrink *> Drink::liveDrinks() const
+{
+	return relation<Livegamedrink>(DrinkProperties::LiveDrinksRelation)->entities();
+}
+
+DrinksContext::DrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Drink>();
+}
+
+Drink *DrinksContext::drink(int id) const
+{
+	return static_cast<Drink *>(entity(id));
+}
+

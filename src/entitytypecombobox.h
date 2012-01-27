@@ -34,8 +34,8 @@ private slots:
 private:
     void updateComboBox();
 
-    LBDatabase::EntityType* m_selectedType;
     QList<LBDatabase::EntityType*> m_types;
+    LBDatabase::EntityType* m_selectedType;
 
 };
 

@@ -6,7 +6,7 @@
 #include "offlinegame.h"
 
 namespace DoppelkopfOfflineGameProperties {
-}
+} // namespace DoppelkopfOfflineGameProperties
 
 
 class DoppelkopfOfflineGame : public OfflineGame

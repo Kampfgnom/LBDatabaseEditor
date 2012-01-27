@@ -8,8 +8,8 @@
 namespace SkatRoundProperties {
 const QString Skat_gameTypeAttribute("skat_gameType");
 const QString Skat_trumpfColorAttribute("skat_trumpfColor");
-const QString SkatSoloPlayerRelation("skatSoloPlayer");
-}
+const QString SkatSoloPlayerRelation("SkatRoundSolistPlayer");
+} // namespace SkatRoundProperties
 
 class Player;
 

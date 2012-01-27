@@ -3,14 +3,15 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace DrinkProperties {
 const QString NameAttribute("name");
 const QString TypeAttribute("type");
 const QString SizeAttribute("size");
 const QString AlcAttribute("alc");
 const QString IconPathAttribute("iconPath");
-const QString LiveDrinksRelation("liveDrinks");
-}
+const QString LiveDrinksRelation("LiveDrinksPerDrink");
+} // namespace DrinkProperties
 
 class Livegamedrink;
 

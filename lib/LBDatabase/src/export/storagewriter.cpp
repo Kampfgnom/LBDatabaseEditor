@@ -1,9 +1,11 @@
 #include "storagewriter.h"
 
 #include "cppexporter.h"
-#include "../context.h"
+#include "contextwriter.h"
 
+#include "../context.h"
 #include "../storage.h"
+#include "../entitytype.h"
 
 namespace LBDatabase {
 
@@ -16,6 +18,12 @@ void StorageWriter::write() const
 {
     exportStorageHeader();
     exportStorageSource();
+
+    ContextWriter writer(m_exporter);
+    foreach(Context *context, m_exporter->storage()->contexts()) {
+        writer.setContext(context);
+        writer.write();
+    }
 }
 
 void StorageWriter::exportStorageHeader() const
@@ -65,7 +73,7 @@ void StorageWriter::exportStorageSource() const
     startNamespace(source);
 
     foreach(Context *context, storage->contexts()) {
-        writeInclude(makeClassname(context->name()), source);
+        writeInclude(makeClassname(context->baseEntityType()->name()), source);
     }
 
     source.append(QLatin1String("\n")+
