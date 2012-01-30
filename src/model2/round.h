@@ -23,6 +23,12 @@ class Round : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
+    enum State {
+        Running = 1,
+        Paused = 2,
+        Finished = 3
+    };
+
 	Q_INVOKABLE Round(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
@@ -30,7 +36,7 @@ public:
 	QString comment() const;
 	QDateTime startTime() const;
 	QTime length() const;
-	int db_state() const;
+    State state() const;
 
 	QList<Livegamedrink *> drinks() const;
 	QList<Schmeisserei *> schmeissereien() const;

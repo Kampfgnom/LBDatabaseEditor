@@ -33,7 +33,9 @@ HEADERS += \
     export/writer.h \
     export/contextwriter.h \
     export/entitytypewriter.h \
-    export/calculatorwriter.h
+    export/calculatorwriter.h \
+    enumattribute.h \
+    attribute_p.h
 
 SOURCES += \
     column.cpp \
@@ -59,7 +61,8 @@ SOURCES += \
     export/writer.cpp \
     export/contextwriter.cpp \
     export/entitytypewriter.cpp \
-    export/calculatorwriter.cpp
+    export/calculatorwriter.cpp \
+    enumattribute.cpp
 
 OTHER_FILES +=
 

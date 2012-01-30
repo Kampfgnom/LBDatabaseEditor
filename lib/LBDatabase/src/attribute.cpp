@@ -1,4 +1,5 @@
 #include "attribute.h"
+#include "attribute_p.h"
 
 #include "attributevalue.h"
 #include "column.h"
@@ -16,30 +17,6 @@ namespace LBDatabase {
 /******************************************************************************
 ** AttributePrivate
 */
-class AttributePrivate {
-    AttributePrivate() {}
-
-    void init();
-    void addPropertyValueToEntities();
-    void addPropertyValue(Entity *entity);
-    void fetchValues();
-
-    Row *row;
-    Storage *storage;
-    QString name;
-    QString displayName;
-    EntityType *entityType;
-    bool calculated;
-    bool cacheData;
-
-    Attribute::Type type;
-
-    int columnIndex;
-
-    Attribute * q_ptr;
-    Q_DECLARE_PUBLIC(Attribute)
-};
-
 void AttributePrivate::init()
 {
     Q_Q(Attribute);
@@ -129,6 +106,17 @@ const QString Attribute::TypeColumn("type");
 Attribute::Attribute(Row *row, Storage *parent) :
     Property(parent),
     d_ptr(new AttributePrivate)
+{
+    Q_D(Attribute);
+    d->q_ptr = this;
+    d->row = row;
+    d->storage = parent;
+    d->init();
+}
+
+Attribute::Attribute(AttributePrivate &dd, Row *row, Storage *parent) :
+    Property(parent),
+    d_ptr(&dd)
 {
     Q_D(Attribute);
     d->q_ptr = this;
@@ -265,7 +253,8 @@ QStringList Attribute::typeNames()
     "DateTime" <<
     "Time" <<
     "Bool" <<
-    "Color";
+    "Color" <<
+    "Enum";
     return names;
 }
 
@@ -292,7 +281,8 @@ QStringList Attribute::qtTypeNames()
     "QDateTime" << //DateTime
     "QTime" << //Time
     "bool" << //Bool
-    "QColor"; //Color
+    "QColor" << //Color
+    "Enum"; //Enum
     return names;
 }
 

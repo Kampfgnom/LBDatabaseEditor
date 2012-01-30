@@ -7,6 +7,7 @@
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "enumattribute.h"
 #include "function.h"
 #include "propertyvalue.h"
 #include "relation.h"
@@ -136,7 +137,18 @@ bool StoragePrivate::open()
     }
 
     foreach(Row *row, attributesTable->rows()) {
-        q->insertAttribute(new Attribute(row, q));
+        if(static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt()) == Attribute::Enum) {
+            q->insertAttribute(new EnumAttribute(row, q));
+        }
+        else {
+            q->insertAttribute(new Attribute(row, q));
+        }
+    }
+
+    foreach(Row *row, database->table(EnumAttribute::EnumsTable)->rows()) {
+        EnumAttribute *attribute = static_cast<EnumAttribute *>(attributes.value(row->data(EnumAttribute::AttributeColumn).toInt()));
+        attribute->addEnumValue(row->data(EnumAttribute::NameColumn).toString(),
+                                row->data(EnumAttribute::ValueColumn).toInt());
     }
 
     foreach(Row *row, relationsTable->rows()) {
