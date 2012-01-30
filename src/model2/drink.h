@@ -11,10 +11,14 @@ const QString SizeAttribute("size");
 const QString AlcAttribute("alc");
 const QString IconPathAttribute("iconPath");
 const QString DrinkCountAttribute("drinkCount");
+const QString MostDrinksAttribute("mostDrinks");
 const QString LiveDrinksRelation("LiveDrinksPerDrink");
+const QString PlayersRelation("DrinksPerPlayer");
+const QString CountPerPlayerFunction("countPerPlayer");
 } // namespace DrinkProperties
 
 class Livegamedrink;
+class Player;
 
 class Drink : public LBDatabase::Entity
 {
@@ -29,9 +33,12 @@ public:
 	double alc() const;
 	QIcon iconPath() const;
 	int drinkCount() const;
+	QString mostDrinks() const;
 
+	int countPerPlayer(const Player *player) const;
 
 	QList<Livegamedrink *> liveDrinks() const;
+	QList<Player *> players() const;
 };
 
 class DrinksContext : public LBDatabase::Context

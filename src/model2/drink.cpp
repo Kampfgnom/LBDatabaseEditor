@@ -1,6 +1,7 @@
 #include "drink.h"
 
 #include "livegamedrink.h"
+#include "player.h"
 #include <QIcon>
 
 
@@ -44,9 +45,24 @@ int Drink::drinkCount() const
 	return value(DrinkProperties::DrinkCountAttribute).value<int>();
 }
 
+QString Drink::mostDrinks() const
+{
+	return value(DrinkProperties::MostDrinksAttribute).value<QString>();
+}
+
 QList<Livegamedrink *> Drink::liveDrinks() const
 {
 	return relation<Livegamedrink>(DrinkProperties::LiveDrinksRelation)->entities();
+}
+
+QList<Player *> Drink::players() const
+{
+	return relation<Player>(DrinkProperties::PlayersRelation)->entities();
+}
+
+int Drink::countPerPlayer(const Player *player) const
+{
+	return function(DrinkProperties::CountPerPlayerFunction)->value(player).value<int>();
 }
 
 DrinksContext::DrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :

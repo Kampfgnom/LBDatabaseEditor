@@ -7,7 +7,7 @@
 namespace LivegamedrinkProperties {
 const QString TimeAttribute("time");
 const QString RoundRelation("DrinksPerRound");
-const QString PlayerRelation("DrinksPerPlayer");
+const QString PlayerRelation("LiveDrinksPerPlayer");
 const QString DrinkRelation("LiveDrinksPerDrink");
 } // namespace LivegamedrinkProperties
 

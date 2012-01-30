@@ -8,6 +8,7 @@
 #include "offlinegameinformation.h"
 #include "place.h"
 #include "game.h"
+#include "drink.h"
 #include <QColor>
 #include <QPixmap>
 
@@ -56,9 +57,9 @@ QList<Schmeisserei *> Player::schmeissereien() const
 	return relation<Schmeisserei>(PlayerProperties::SchmeissereienRelation)->entities();
 }
 
-QList<Livegamedrink *> Player::drinks() const
+QList<Livegamedrink *> Player::liveDrinks() const
 {
-	return relation<Livegamedrink>(PlayerProperties::DrinksRelation)->entities();
+	return relation<Livegamedrink>(PlayerProperties::LiveDrinksRelation)->entities();
 }
 
 QList<DoppelkopfRound *> Player::hochzeiten() const
@@ -119,6 +120,11 @@ QList<Place *> Player::place() const
 QList<Game *> Player::games() const
 {
 	return relation<Game>(PlayerProperties::GamesRelation)->entities();
+}
+
+QList<Drink *> Player::drinks() const
+{
+	return relation<Drink>(PlayerProperties::DrinksRelation)->entities();
 }
 
 PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :

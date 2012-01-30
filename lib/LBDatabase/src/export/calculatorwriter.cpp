@@ -37,8 +37,6 @@ bool CalculatorWriter::isNeeded() const
         if(attribute->isCalculated()) {
             hasCalculatedProperties = true;
         }
-
-        qDebug() << name << attribute->name() << attribute->isCalculated();
     }
 
     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {

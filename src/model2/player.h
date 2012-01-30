@@ -12,7 +12,7 @@ const QString NameAttribute("name");
 const QString ColorAttribute("color");
 const QString AvatarPathAttribute("avatarPath");
 const QString SchmeissereienRelation("PlayerSchmeisserein");
-const QString DrinksRelation("DrinksPerPlayer");
+const QString LiveDrinksRelation("LiveDrinksPerPlayer");
 const QString HochzeitenRelation("DokoRoundHochzeitPlayer");
 const QString Re1RoundsRelation("DokoRoundRe1Player");
 const QString Re2RoundsRelation("DokoRoundRe2Player");
@@ -25,6 +25,7 @@ const QString DokoBuddies2Relation("OfflineGameBuddy2");
 const QString OfflineInformationRelation("OfflineInformationPerPlayer");
 const QString PlaceRelation("PlayersAndPlaces");
 const QString GamesRelation("PlayersPerGame");
+const QString DrinksRelation("DrinksPerPlayer");
 } // namespace PlayerProperties
 
 class Schmeisserei;
@@ -35,6 +36,7 @@ class Dokoofflinegamebuddy;
 class Offlinegameinformation;
 class Place;
 class Game;
+class Drink;
 
 class Player : public LBDatabase::Entity
 {
@@ -52,7 +54,7 @@ public:
 
 
 	QList<Schmeisserei *> schmeissereien() const;
-	QList<Livegamedrink *> drinks() const;
+	QList<Livegamedrink *> liveDrinks() const;
 	QList<DoppelkopfRound *> hochzeiten() const;
 	QList<DoppelkopfRound *> re1Rounds() const;
 	QList<DoppelkopfRound *> re2Rounds() const;
@@ -65,6 +67,7 @@ public:
 	QList<Offlinegameinformation *> offlineInformation() const;
 	QList<Place *> place() const;
 	QList<Game *> games() const;
+	QList<Drink *> drinks() const;
 };
 
 class PlayersContext : public LBDatabase::Context
