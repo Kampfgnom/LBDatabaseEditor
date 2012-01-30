@@ -3,15 +3,15 @@
 #include <QTime>
 
 
-const QString OfflineGame::Name("Offline Game");
+const QString Offlinegame::Name("offlinegame");
 
-OfflineGame::OfflineGame(LBDatabase::Row *row, LBDatabase::Context *context) :
+Offlinegame::Offlinegame(LBDatabase::Row *row, LBDatabase::Context *context) :
 	Game(row, context)
 {
 }
 
-QTime OfflineGame::offline_length() const
+QTime Offlinegame::offline_length() const
 {
-	return value(OfflineGameProperties::Offline_lengthAttribute).value<QTime>();
+	return value(OfflinegameProperties::Offline_lengthAttribute).value<QTime>();
 }
 

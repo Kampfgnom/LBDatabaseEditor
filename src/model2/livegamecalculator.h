@@ -11,7 +11,11 @@ public:
 	Q_INVOKABLE explicit LiveGameCalculator(QObject *parent = 0);
 
 	
+	Q_INVOKABLE QVariant state(const LBDatabase::Entity *entity) const;
+	
 	Q_INVOKABLE EntityVariantHash points(const LBDatabase::Entity *entity) const;
+	
+	Q_INVOKABLE EntityVariantHash placement(const LBDatabase::Entity *entity) const;
 };
 
 #endif // LIVEGAMECALCULATOR_H

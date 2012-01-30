@@ -9,7 +9,7 @@ namespace DoppelkopfOfflineGameProperties {
 } // namespace DoppelkopfOfflineGameProperties
 
 
-class DoppelkopfOfflineGame : public OfflineGame
+class DoppelkopfOfflineGame : public Offlinegame
 {
 	Q_OBJECT
 public:

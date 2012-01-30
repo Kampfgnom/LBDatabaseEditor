@@ -1,6 +1,5 @@
 #include "game.h"
 
-#include "round.h"
 #include "place.h"
 #include "dokoofflinegamebuddy.h"
 #include "offlinegameinformation.h"
@@ -9,6 +8,7 @@
 #include <QTime>
 
 
+#include "gamecalculator.h"
 #include "livegame.h"
 #include "livegamecalculator.h"
 #include "doppelkopflivegame.h"
@@ -48,11 +48,6 @@ QString Game::comment() const
 	return value(GameProperties::CommentAttribute).value<QString>();
 }
 
-QList<Round *> Game::rounds() const
-{
-	return relation<Round>(GameProperties::RoundsRelation)->entities();
-}
-
 Place *Game::site() const
 {
 	return relation<Place>(GameProperties::SiteRelation)->firstEntity();
@@ -78,16 +73,29 @@ int Game::position(const Player *player) const
 	return function(GameProperties::PositionFunction)->value(player).value<int>();
 }
 
+int Game::placement(const Player *player) const
+{
+    return function(GameProperties::PlacementFunction)->value(player).value<int>();
+}
+
+int Game::points(const Player *player) const
+{
+    Q_UNUSED(player);
+    return 0;
+}
+
 GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {
 	registerEntityClass<Game>();
+	registerCalculatorClass<Game,GameCalculator>();
+
 	registerEntityClass<LiveGame>();
 	registerCalculatorClass<LiveGame,LiveGameCalculator>();
 
 	registerEntityClass<DoppelkopfLiveGame>();
 	registerEntityClass<PrognoseOfflineGame>();
-	registerEntityClass<OfflineGame>();
+	registerEntityClass<Offlinegame>();
 	registerEntityClass<DoppelkopfOfflineGame>();
 	registerEntityClass<SkatLiveGame>();
 	registerEntityClass<SkatOfflineGame>();

@@ -11,6 +11,9 @@
 #include "storage.h"
 #include "table.h"
 
+#include <QDebug>
+#include <QThread>
+
 namespace LBDatabase {
 
 /******************************************************************************
@@ -23,6 +26,10 @@ const QString Function::KeyEntityTypeRightColumn("keyEntityType");
 const QString Function::CalculatedColumn("calculated");
 const QString Function::CacheDataColumn("cacheData");
 const QString Function::TypeColumn("type");
+
+const QString Function::FunctionReimplementationsTable("lbmeta_functionreimplementations");
+const QString Function::ReimplementedFunctionColumn("function");
+const QString Function::ReimplementingEntityTypeColumn("reimplementingEntityType");
 
 class FunctionPrivate {
     FunctionPrivate() :
@@ -48,6 +55,8 @@ class FunctionPrivate {
     QString displayName;
 
     Table *functionTable;
+
+    QList<EntityType *> reimplementingEntityTypes;
 
     Function * q_ptr;
     Q_DECLARE_PUBLIC(Function)
@@ -122,6 +131,12 @@ Function::Function(Row *row, Storage *parent) :
     d->init();
 }
 
+void Function::addReimplementingEntityType(EntityType *type)
+{
+    Q_D(Function);
+    d->reimplementingEntityTypes.append(type);
+}
+
 Function::~Function()
 {
 }
@@ -179,6 +194,12 @@ bool Function::cacheData() const
 {
     Q_D(const Function);
     return d->cacheData;
+}
+
+QList<EntityType *> Function::reimplementingEntityTypes() const
+{
+    Q_D(const Function);
+    return d->reimplementingEntityTypes;
 }
 
 void Function::addPropertyValueToEntities()

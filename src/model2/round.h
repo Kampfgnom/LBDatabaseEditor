@@ -18,7 +18,7 @@ const QString PointsFunction("points");
 
 class Livegamedrink;
 class Schmeisserei;
-class Game;
+class LiveGame;
 class Player;
 
 class Round : public LBDatabase::Entity
@@ -44,7 +44,7 @@ public:
 
 	QList<Livegamedrink *> drinks() const;
 	QList<Schmeisserei *> schmeissereien() const;
-	Game *game() const;
+	LiveGame *game() const;
 };
 
 class RoundsContext : public LBDatabase::Context

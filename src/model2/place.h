@@ -11,6 +11,7 @@ const QString StrasseAttribute("strasse");
 const QString NummerAttribute("nummer");
 const QString CommentAttribute("comment");
 const QString IconPathAttribute("iconPath");
+const QString GameCountAttribute("gameCount");
 const QString GamesRelation("GameSite");
 const QString PlayerRelation("PlayersAndPlaces");
 } // namespace PlaceProperties
@@ -31,6 +32,7 @@ public:
 	int nummer() const;
 	QString comment() const;
 	QIcon iconPath() const;
+	int gameCount() const;
 
 
 	QList<Game *> games() const;

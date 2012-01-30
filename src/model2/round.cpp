@@ -2,7 +2,7 @@
 
 #include "livegamedrink.h"
 #include "schmeisserei.h"
-#include "game.h"
+#include "livegame.h"
 #include "player.h"
 #include <QDateTime>
 #include <QTime>
@@ -54,9 +54,9 @@ QList<Schmeisserei *> Round::schmeissereien() const
 	return relation<Schmeisserei>(RoundProperties::SchmeissereienRelation)->entities();
 }
 
-Game *Round::game() const
+LiveGame *Round::game() const
 {
-	return relation<Game>(RoundProperties::GameRelation)->firstEntity();
+	return relation<LiveGame>(RoundProperties::GameRelation)->firstEntity();
 }
 
 int Round::points(const Player *player) const

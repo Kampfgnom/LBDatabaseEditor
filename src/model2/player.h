@@ -11,6 +11,17 @@ const QString GenderAttribute("gender");
 const QString NameAttribute("name");
 const QString ColorAttribute("color");
 const QString AvatarPathAttribute("avatarPath");
+const QString GameCountAttribute("gameCount");
+const QString PointsAttribute("points");
+const QString GamePointsAttribute("gamePoints");
+const QString AverageAttribute("average");
+const QString WeightedAverageAttribute("weightedAverage");
+const QString DiffAverageWeightedAverageAttribute("diffAverageWeightedAverage");
+const QString WinsAttribute("wins");
+const QString LossesAttribute("losses");
+const QString AveragePlacementAttribute("averagePlacement");
+const QString LastWinAttribute("lastWin");
+const QString LastGameAttribute("lastGame");
 const QString SchmeissereienRelation("PlayerSchmeisserein");
 const QString LiveDrinksRelation("LiveDrinksPerPlayer");
 const QString HochzeitenRelation("DokoRoundHochzeitPlayer");
@@ -51,6 +62,17 @@ public:
 	QString name() const;
 	QColor color() const;
 	QPixmap avatarPath() const;
+	int gameCount() const;
+	int points() const;
+	int gamePoints() const;
+	double average() const;
+	double weightedAverage() const;
+	double diffAverageWeightedAverage() const;
+	int wins() const;
+	int losses() const;
+	double averagePlacement() const;
+	QDateTime lastWin() const;
+	QDateTime lastGame() const;
 
 
 	QList<Schmeisserei *> schmeissereien() const;

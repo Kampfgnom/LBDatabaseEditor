@@ -50,7 +50,10 @@ SOURCES += main.cpp\
     model2/categoryassignment.cpp \
     model2/category.cpp \
     model2/drinkcalculator.cpp \
-    model2/livegamecalculator.cpp
+    model2/livegamecalculator.cpp \
+    model2/gamecalculator.cpp \
+    model2/placecalculator.cpp \
+    model2/playercalculator.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -98,7 +101,10 @@ HEADERS  += \
     model2/dokoofflinegamebuddy.h \
     model2/categoryassignment.h \
     model2/category.h \
-    model2/drinkcalculator.h
+    model2/drinkcalculator.h \
+    model2/gamecalculator.h \
+    model2/placecalculator.h \
+    model2/playercalculator.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

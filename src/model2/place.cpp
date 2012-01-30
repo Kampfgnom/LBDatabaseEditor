@@ -5,6 +5,7 @@
 #include <QIcon>
 
 
+#include "placecalculator.h"
 
 const QString PlacesContext::Name("places");
 const QString Place::Name("place");
@@ -44,6 +45,11 @@ QIcon Place::iconPath() const
 	return value(PlaceProperties::IconPathAttribute).value<QIcon>();
 }
 
+int Place::gameCount() const
+{
+	return value(PlaceProperties::GameCountAttribute).value<int>();
+}
+
 QList<Game *> Place::games() const
 {
 	return relation<Game>(PlaceProperties::GamesRelation)->entities();
@@ -58,6 +64,8 @@ PlacesContext::PlacesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) 
 	Context(row, parent)
 {
 	registerEntityClass<Place>();
+	registerCalculatorClass<Place,PlaceCalculator>();
+
 }
 
 Place *PlacesContext::place(int id) const

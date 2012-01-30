@@ -21,6 +21,10 @@ public:
     static const QString CacheDataColumn;
     static const QString TypeColumn;
 
+    static const QString FunctionReimplementationsTable;
+    static const QString ReimplementedFunctionColumn;
+    static const QString ReimplementingEntityTypeColumn;
+
     ~Function();
 
     int id() const;
@@ -34,11 +38,15 @@ public:
     bool isCalculated() const;
     bool cacheData() const;
 
+    QList<EntityType *> reimplementingEntityTypes() const;
+
 private:
     friend class StoragePrivate;
     friend class FunctionValue;
 
     explicit Function(Row *row, Storage *parent);
+
+    void addReimplementingEntityType(EntityType *type);
 
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);

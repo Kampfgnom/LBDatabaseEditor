@@ -9,7 +9,7 @@ namespace SkatOfflineGameProperties {
 } // namespace SkatOfflineGameProperties
 
 
-class SkatOfflineGame : public OfflineGame
+class SkatOfflineGame : public Offlinegame
 {
 	Q_OBJECT
 public:

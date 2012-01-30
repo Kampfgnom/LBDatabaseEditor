@@ -423,7 +423,8 @@ QList<Function *> EntityType::nonInhertitedFunctions() const
     QList<Function *> list = functions();
     if(parentEntityType()) {
         foreach(Function *function, parentEntityType()->functions()) {
-            list.removeAll(function);
+            if(!function->reimplementingEntityTypes().contains(const_cast<EntityType*>(this)))
+                list.removeAll(function);
         }
     }
     return list;

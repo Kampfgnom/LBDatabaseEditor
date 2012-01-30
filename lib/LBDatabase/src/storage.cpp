@@ -159,6 +159,12 @@ bool StoragePrivate::open()
         q->insertFunction(new Function(row, q));
     }
 
+    foreach(Row *row, database->table(Function::FunctionReimplementationsTable)->rows()) {
+        Function *function = functions.value(row->data(Function::ReimplementedFunctionColumn).toInt());
+        EntityType *type = entityTypes.value(row->data(Function::ReimplementingEntityTypeColumn).toInt());
+        function->addReimplementingEntityType(type);
+    }
+
     foreach(Context *context, contexts.values()) {
         context->initializeEntityHierarchy();
         context->loadEntities();

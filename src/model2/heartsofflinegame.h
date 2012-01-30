@@ -9,7 +9,7 @@ namespace HeartsOfflineGameProperties {
 } // namespace HeartsOfflineGameProperties
 
 
-class HeartsOfflineGame : public OfflineGame
+class HeartsOfflineGame : public Offlinegame
 {
 	Q_OBJECT
 public:

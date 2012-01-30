@@ -9,7 +9,7 @@ namespace PrognoseOfflineGameProperties {
 } // namespace PrognoseOfflineGameProperties
 
 
-class PrognoseOfflineGame : public OfflineGame
+class PrognoseOfflineGame : public Offlinegame
 {
 	Q_OBJECT
 public:

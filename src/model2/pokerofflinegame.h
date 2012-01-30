@@ -9,7 +9,7 @@ namespace PokerOfflineGameProperties {
 } // namespace PokerOfflineGameProperties
 
 
-class PokerOfflineGame : public OfflineGame
+class PokerOfflineGame : public Offlinegame
 {
 	Q_OBJECT
 public:

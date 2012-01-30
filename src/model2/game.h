@@ -9,15 +9,14 @@ const QString NameAttribute("name");
 const QString DateAttribute("date");
 const QString LengthAttribute("length");
 const QString CommentAttribute("comment");
-const QString RoundsRelation("RoundsPerGame");
 const QString SiteRelation("GameSite");
 const QString DokoBuddiesRelation("DokoGameBuddiesPerGame");
 const QString OfflineInformationRelation("OfflineInformationPerGame");
 const QString PlayersRelation("PlayersPerGame");
 const QString PositionFunction("position");
+const QString PlacementFunction("placement");
 } // namespace GameProperties
 
-class Round;
 class Place;
 class Dokoofflinegamebuddy;
 class Offlinegameinformation;
@@ -36,8 +35,10 @@ public:
 	QString comment() const;
 
 	int position(const Player *player) const;
+	int placement(const Player *player) const;
 
-	QList<Round *> rounds() const;
+    virtual int points(const Player *player) const;
+
 	Place *site() const;
 	QList<Dokoofflinegamebuddy *> dokoBuddies() const;
 	QList<Offlinegameinformation *> offlineInformation() const;

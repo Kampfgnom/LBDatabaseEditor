@@ -11,8 +11,11 @@
 #include "drink.h"
 #include <QColor>
 #include <QPixmap>
+#include <QDateTime>
+#include <QDateTime>
 
 
+#include "playercalculator.h"
 
 const QString PlayersContext::Name("players");
 const QString Player::Name("player");
@@ -50,6 +53,61 @@ QColor Player::color() const
 QPixmap Player::avatarPath() const
 {
 	return value(PlayerProperties::AvatarPathAttribute).value<QPixmap>();
+}
+
+int Player::gameCount() const
+{
+	return value(PlayerProperties::GameCountAttribute).value<int>();
+}
+
+int Player::points() const
+{
+	return value(PlayerProperties::PointsAttribute).value<int>();
+}
+
+int Player::gamePoints() const
+{
+	return value(PlayerProperties::GamePointsAttribute).value<int>();
+}
+
+double Player::average() const
+{
+	return value(PlayerProperties::AverageAttribute).value<double>();
+}
+
+double Player::weightedAverage() const
+{
+	return value(PlayerProperties::WeightedAverageAttribute).value<double>();
+}
+
+double Player::diffAverageWeightedAverage() const
+{
+	return value(PlayerProperties::DiffAverageWeightedAverageAttribute).value<double>();
+}
+
+int Player::wins() const
+{
+	return value(PlayerProperties::WinsAttribute).value<int>();
+}
+
+int Player::losses() const
+{
+	return value(PlayerProperties::LossesAttribute).value<int>();
+}
+
+double Player::averagePlacement() const
+{
+	return value(PlayerProperties::AveragePlacementAttribute).value<double>();
+}
+
+QDateTime Player::lastWin() const
+{
+	return value(PlayerProperties::LastWinAttribute).value<QDateTime>();
+}
+
+QDateTime Player::lastGame() const
+{
+	return value(PlayerProperties::LastGameAttribute).value<QDateTime>();
 }
 
 QList<Schmeisserei *> Player::schmeissereien() const
@@ -131,6 +189,8 @@ PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent
 	Context(row, parent)
 {
 	registerEntityClass<Player>();
+	registerCalculatorClass<Player,PlayerCalculator>();
+
 }
 
 Player *PlayersContext::player(int id) const
