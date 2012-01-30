@@ -17,7 +17,7 @@
 #include <LBDatabase/relationvalue.h>
 #include <LBDatabase/storage.h>
 
-#include <LBDatabase/graphvizexporter.h>
-#include <LBDatabase/cppexporter.h>
+#include <LBDatabase/export/graphvizexporter.h>
+#include <LBDatabase/export/cppexporter.h>
 
 #endif // LBDATABASE_H

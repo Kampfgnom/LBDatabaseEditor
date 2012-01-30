@@ -16,8 +16,11 @@ public:
     ~CppExporter();
     
     void setStorage(Storage *storage);
+    Storage *storage() const;
     void setDirectory(const QString &directory);
+    QString directory() const;
     void setNamespaceName(const QString &namespaceName);
+    QString namespaceName() const;
 
     void exportCpp() const;
 

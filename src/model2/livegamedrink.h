@@ -3,14 +3,20 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QDateTime>
+
 namespace LivegamedrinkProperties {
 const QString TimeAttribute("time");
-const QString DrinksPerRoundRelation("DrinksPerRound");
-const QString DrinksPerPlayerRelation("DrinksPerPlayer");
-const QString LiveDrinksPerDrinkRelation("LiveDrinksPerDrink");
-}
+const QString RoundRelation("DrinksPerRound");
+const QString PlayerRelation("LiveDrinksPerPlayer");
+const QString DrinkRelation("LiveDrinksPerDrink");
+} // namespace LivegamedrinkProperties
 
-class Round;class Player;class Drink;class Livegamedrink : public LBDatabase::Entity
+class Round;
+class Player;
+class Drink;
+
+class Livegamedrink : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -18,6 +24,23 @@ public:
 	static const QString Name;
 
 	QDateTime time() const;
+
+	void setTime(const QDateTime &time);
+
+
+	Round *round() const;
+	Player *player() const;
+	Drink *drink() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
+	void timeChanged(QDateTime time);
 };
 
 class LivegamedrinksContext : public LBDatabase::Context

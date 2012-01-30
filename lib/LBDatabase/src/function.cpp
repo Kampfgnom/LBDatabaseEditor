@@ -11,6 +11,9 @@
 #include "storage.h"
 #include "table.h"
 
+#include <QDebug>
+#include <QThread>
+
 namespace LBDatabase {
 
 /******************************************************************************
@@ -22,6 +25,11 @@ const QString Function::EntityTypeColumn("entityType");
 const QString Function::KeyEntityTypeRightColumn("keyEntityType");
 const QString Function::CalculatedColumn("calculated");
 const QString Function::CacheDataColumn("cacheData");
+const QString Function::TypeColumn("type");
+
+const QString Function::FunctionReimplementationsTable("lbmeta_functionreimplementations");
+const QString Function::ReimplementedFunctionColumn("function");
+const QString Function::ReimplementingEntityTypeColumn("reimplementingEntityType");
 
 class FunctionPrivate {
     FunctionPrivate() :
@@ -39,6 +47,7 @@ class FunctionPrivate {
     Storage *storage;
     EntityType *entityType;
     EntityType *keyEntityType;
+    Attribute::Type type;
 
     bool calculated;
     bool cacheData;
@@ -46,6 +55,8 @@ class FunctionPrivate {
     QString displayName;
 
     Table *functionTable;
+
+    QList<EntityType *> reimplementingEntityTypes;
 
     Function * q_ptr;
     Q_DECLARE_PUBLIC(Function)
@@ -60,6 +71,7 @@ void FunctionPrivate::init()
     keyEntityType = storage->entityType(row->data(Function::KeyEntityTypeRightColumn).toInt());
     calculated = row->data(Function::CalculatedColumn).toBool();
     cacheData = row->data(Function::CacheDataColumn).toBool();
+    type = static_cast<Attribute::Type>(row->data(Function::TypeColumn).toInt());
 
     if(!calculated) {
         functionTable = storage->database()->table(name);
@@ -119,6 +131,12 @@ Function::Function(Row *row, Storage *parent) :
     d->init();
 }
 
+void Function::addReimplementingEntityType(EntityType *type)
+{
+    Q_D(Function);
+    d->reimplementingEntityTypes.append(type);
+}
+
 Function::~Function()
 {
 }
@@ -160,6 +178,12 @@ EntityType *Function::keyEntityType() const
     return d->keyEntityType;
 }
 
+QString Function::qtTypeName() const
+{
+    Q_D(const Function);
+    return Attribute::typeToQtType(d->type);
+}
+
 bool Function::isCalculated() const
 {
     Q_D(const Function);
@@ -170,6 +194,12 @@ bool Function::cacheData() const
 {
     Q_D(const Function);
     return d->cacheData;
+}
+
+QList<EntityType *> Function::reimplementingEntityTypes() const
+{
+    Q_D(const Function);
+    return d->reimplementingEntityTypes;
 }
 
 void Function::addPropertyValueToEntities()

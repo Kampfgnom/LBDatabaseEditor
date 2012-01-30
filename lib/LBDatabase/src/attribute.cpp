@@ -1,4 +1,5 @@
 #include "attribute.h"
+#include "attribute_p.h"
 
 #include "attributevalue.h"
 #include "column.h"
@@ -16,30 +17,6 @@ namespace LBDatabase {
 /******************************************************************************
 ** AttributePrivate
 */
-class AttributePrivate {
-    AttributePrivate() {}
-
-    void init();
-    void addPropertyValueToEntities();
-    void addPropertyValue(Entity *entity);
-    void fetchValues();
-
-    Row *row;
-    Storage *storage;
-    QString name;
-    QString displayName;
-    EntityType *entityType;
-    bool calculated;
-    bool cacheData;
-
-    Attribute::Type type;
-
-    int columnIndex;
-
-    Attribute * q_ptr;
-    Q_DECLARE_PUBLIC(Attribute)
-};
-
 void AttributePrivate::init()
 {
     Q_Q(Attribute);
@@ -47,6 +24,7 @@ void AttributePrivate::init()
     displayName = row->data(Attribute::DisplayNameColumn).toString();
     calculated = row->data(Attribute::CalculatedColumn).toBool();
     cacheData = row->data(Attribute::CacheDataColumn).toBool();
+    editable = row->data(Attribute::EditableColumn).toBool();
 
     type = static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt());
 
@@ -121,6 +99,7 @@ const QString Attribute::EntityTypeIdColumn("entityTypeId");
 const QString Attribute::CalculatedColumn("calculated");
 const QString Attribute::CacheDataColumn("cacheData");
 const QString Attribute::TypeColumn("type");
+const QString Attribute::EditableColumn("editable");
 
 /*!
   Creates an attribute, which contains the meta data from \a row in the given \a
@@ -129,6 +108,17 @@ const QString Attribute::TypeColumn("type");
 Attribute::Attribute(Row *row, Storage *parent) :
     Property(parent),
     d_ptr(new AttributePrivate)
+{
+    Q_D(Attribute);
+    d->q_ptr = this;
+    d->row = row;
+    d->storage = parent;
+    d->init();
+}
+
+Attribute::Attribute(AttributePrivate &dd, Row *row, Storage *parent) :
+    Property(parent),
+    d_ptr(&dd)
 {
     Q_D(Attribute);
     d->q_ptr = this;
@@ -200,6 +190,12 @@ bool Attribute::cacheData() const
     return d->cacheData;
 }
 
+bool Attribute::isEditable() const
+{
+    Q_D(const Attribute);
+    return d->editable;
+}
+
 /*!
   Returns the display name of the attribute. Since each Attribute can only be
   part of one Context, the \a context parameter will be ignored.
@@ -265,7 +261,8 @@ QStringList Attribute::typeNames()
     "DateTime" <<
     "Time" <<
     "Bool" <<
-    "Color";
+    "Color" <<
+    "Enum";
     return names;
 }
 
@@ -292,7 +289,8 @@ QStringList Attribute::qtTypeNames()
     "QDateTime" << //DateTime
     "QTime" << //Time
     "bool" << //Bool
-    "QColor"; //Color
+    "QColor" << //Color
+    "Enum"; //Enum
     return names;
 }
 

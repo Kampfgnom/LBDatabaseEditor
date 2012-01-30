@@ -3,14 +3,19 @@
 
 #include "propertyvalue.h"
 
+#include "storage.h"
+#include "context.h"
 #include "functionvalue.h"
+#include "entity.h"
 
 #include <QVariant>
+#include <QDebug>
 
 namespace LBDatabase {
 
 class Relation;
 class Entity;
+class Attribute;
 
 class RelationValueBasePrivate;
 class RelationValueBase : public PropertyValue
@@ -70,6 +75,20 @@ public:
         return list;
     }
 
+    template<typename SortType>
+    QList<EntityClass *> sort(const QString &sortAttributeName, SortingDirection dir = SortAscending)
+    {
+        if(otherEntitiesSortedByAttribute.contains(sortAttributeName))
+            return otherEntitiesSortedByAttribute.value(sortAttributeName);
+
+        QList<EntityClass *> list = otherEntities.value(0);
+
+        qSort(list.begin(), list.end(), FunctionSorter<EntityClass, SortType>(sortAttributeName, dir));
+
+        otherEntitiesSortedByAttribute.insert(sortAttributeName, list);
+        return list;
+    }
+
     /*!
       Returns a QVariant, which represents the content of the relation in the given role.
 
@@ -123,6 +142,7 @@ private:
     }
 
     QHash<FunctionValue *, QList<EntityClass *> > otherEntities;
+    QHash<QString, QList<EntityClass *> > otherEntitiesSortedByAttribute;
 };
 
 template<class EntityClass, class SortType>
@@ -130,13 +150,23 @@ class FunctionSorter
 {
 public:
 
-    FunctionSorter(FunctionValue *value, SortingDirection dir) : m_value(value), m_dir(dir) {}
+    FunctionSorter(FunctionValue *value, SortingDirection dir) : m_sortFunction(value),m_sortAttributeName(QString()), m_dir(dir) {}
+    FunctionSorter(const QString &attributeName, SortingDirection dir) : m_sortFunction(0), m_sortAttributeName(attributeName), m_dir(dir) {}
 
     bool operator()(const EntityClass *left, const EntityClass *right) const
     {
-        QVariant leftVariant = m_value->value(left);
+        QVariant leftVariant;
+        QVariant rightVariant;
+        if(m_sortFunction) {
+            leftVariant = m_sortFunction->value(left);
+            rightVariant = m_sortFunction->value(right);
+        }
+        else if(!m_sortAttributeName.isEmpty()) {
+            leftVariant = left->value(m_sortAttributeName);
+            rightVariant = right->value(m_sortAttributeName);
+        }
+
         SortType leftValue = leftVariant.value<SortType>();
-        QVariant rightVariant = m_value->value(right);
         SortType rightValue = rightVariant.value<SortType>();
         if(m_dir == SortAscending) {
             return rightValue > leftValue;
@@ -146,7 +176,8 @@ public:
         }
     }
 
-    FunctionValue *m_value;
+    FunctionValue *m_sortFunction;
+    QString m_sortAttributeName;
     SortingDirection m_dir;
 };
 

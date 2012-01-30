@@ -6,6 +6,8 @@
 #include "entitytype.h"
 #include "function.h"
 
+#include <QDebug>
+
 #define COMMA ,
 Q_DECLARE_METATYPE(QHash<const LBDatabase::Entity * COMMA QVariant>)
 
@@ -14,7 +16,7 @@ namespace LBDatabase {
 ** FunctionValuePrivate
 */
 class FunctionValuePrivate {
-    FunctionValuePrivate() {}
+    FunctionValuePrivate() : cached(false) {}
 
     void init();
     void fetchValue();
@@ -46,14 +48,22 @@ QVariant FunctionValuePrivate::calculate(const Entity *key)
 {
     Q_Q(FunctionValue);
     Calculator *calculator = entity->entityType()->calculator();
-    return calculator->calculate(entity,q,key);
+
+    if(calculator)
+        return calculator->calculate(entity,q,key);
+
+    return QVariant();
 }
 
 QHash<const Entity *, QVariant> FunctionValuePrivate::calculate()
 {
     Q_Q(FunctionValue);
     Calculator *calculator = entity->entityType()->calculator();
-    return calculator->calculate(entity,q);
+
+    if(calculator)
+        return calculator->calculate(entity,q);
+
+    return QHash<const Entity *, QVariant>();
 }
 
 /******************************************************************************

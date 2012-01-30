@@ -7,6 +7,7 @@
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "enumattribute.h"
 #include "function.h"
 #include "propertyvalue.h"
 #include "relation.h"
@@ -33,6 +34,7 @@ const QString RelationsTableName("lbmeta_relations");
 const QString FunctionsTableName("lbmeta_functions");
 
 const QString NameColumn("name");
+const QString SourcePathColumn("cpppath");
 }
 
 class StoragePrivate {
@@ -54,6 +56,7 @@ class StoragePrivate {
     Table *functionsTable;
 
     QString name;
+    QString sourcePath;
     QString fileName;
     Database *database;
 
@@ -119,6 +122,7 @@ bool StoragePrivate::open()
 
     Row *metaDataRow = metaDataTable->rowAt(0);
     name = metaDataRow->data(NameColumn).toString();
+    sourcePath = metaDataRow->data(SourcePathColumn).toString();
 
     contexts.reserve(contextsTable->rows().size());
     entityTypes.reserve(entityTypesTable->rows().size());
@@ -136,7 +140,18 @@ bool StoragePrivate::open()
     }
 
     foreach(Row *row, attributesTable->rows()) {
-        q->insertAttribute(new Attribute(row, q));
+        if(static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt()) == Attribute::Enum) {
+            q->insertAttribute(new EnumAttribute(row, q));
+        }
+        else {
+            q->insertAttribute(new Attribute(row, q));
+        }
+    }
+
+    foreach(Row *row, database->table(EnumAttribute::EnumsTable)->rows()) {
+        EnumAttribute *attribute = static_cast<EnumAttribute *>(attributes.value(row->data(EnumAttribute::AttributeColumn).toInt()));
+        attribute->addEnumValue(row->data(EnumAttribute::NameColumn).toString(),
+                                row->data(EnumAttribute::ValueColumn).toInt());
     }
 
     foreach(Row *row, relationsTable->rows()) {
@@ -145,6 +160,12 @@ bool StoragePrivate::open()
 
     foreach(Row *row, functionsTable->rows()) {
         q->insertFunction(new Function(row, q));
+    }
+
+    foreach(Row *row, database->table(Function::FunctionReimplementationsTable)->rows()) {
+        Function *function = functions.value(row->data(Function::ReimplementedFunctionColumn).toInt());
+        EntityType *type = entityTypes.value(row->data(Function::ReimplementingEntityTypeColumn).toInt());
+        function->addReimplementingEntityType(type);
     }
 
     foreach(Context *context, contexts.values()) {
@@ -357,6 +378,12 @@ QString Storage::fileName() const
 {
     Q_D(const Storage);
     return d->fileName;
+}
+
+QString Storage::sourcePath() const
+{
+    Q_D(const Storage);
+    return d->sourcePath;
 }
 
 /*!

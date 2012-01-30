@@ -3,15 +3,19 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace DokoofflinegamebuddyProperties {
 const QString RoundsAttribute("rounds");
 const QString WinsAttribute("wins");
-const QString GameIdRelation("gameId");
-const QString Player1IdRelation("player1Id");
-const QString Player2IdRelation("player2Id");
-}
+const QString GameRelation("DokoGameBuddiesPerGame");
+const QString Player1Relation("OfflineGameBuddy1");
+const QString Player2Relation("OfflineGameBuddy2");
+} // namespace DokoofflinegamebuddyProperties
 
-class Game;class Player;class Player;class Dokoofflinegamebuddy : public LBDatabase::Entity
+class Game;
+class Player;
+
+class Dokoofflinegamebuddy : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -20,6 +24,21 @@ public:
 
 	int rounds() const;
 	int wins() const;
+
+
+
+	Game *game() const;
+	Player *player1() const;
+	Player *player2() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
 };
 
 class DokoofflinegamebuddysContext : public LBDatabase::Context

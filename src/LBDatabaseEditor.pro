@@ -24,6 +24,7 @@ SOURCES += main.cpp\
     editentitytypesdialog.cpp \
     editattributewidget.cpp \
     editrelationwidget.cpp \
+    propertycombobox.cpp \
     model2/skatround.cpp \
     model2/skatofflinegame.cpp \
     model2/skatlivegame.cpp \
@@ -48,14 +49,11 @@ SOURCES += main.cpp\
     model2/dokoofflinegamebuddy.cpp \
     model2/categoryassignment.cpp \
     model2/category.cpp \
-    propertycombobox.cpp
-#   model/game.cpp \
-#    model/psstorage.cpp \
-#    model/gamecalculator.cpp \
-#    model/livegame.cpp \
-#    model/livegamecalculator.cpp \
-#    model/player.cpp \
-#    model/round.cpp
+    model2/drinkcalculator.cpp \
+    model2/livegamecalculator.cpp \
+    model2/gamecalculator.cpp \
+    model2/placecalculator.cpp \
+    model2/playercalculator.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -77,6 +75,7 @@ HEADERS  += \
     editentitytypesdialog.h \
     editattributewidget.h \
     editrelationwidget.h \
+    propertycombobox.h \
     model2/skatround.h \
     model2/skatofflinegame.h \
     model2/skatlivegame.h \
@@ -91,6 +90,7 @@ HEADERS  += \
     model2/offlinegameinformation.h \
     model2/offlinegame.h \
     model2/livegamedrink.h \
+    model2/livegamecalculator.h \
     model2/livegame.h \
     model2/heartsofflinegame.h \
     model2/game.h \
@@ -100,14 +100,11 @@ HEADERS  += \
     model2/doppelkopflivegame.h \
     model2/dokoofflinegamebuddy.h \
     model2/categoryassignment.h \
-    model2/category.h \ # model/game.h
-    propertycombobox.h
-#    model/psstorage.h \
-#    model/gamecalculator.h \
-#    model/livegame.h \
-#    model/livegamecalculator.h \
-#    model/player.h \
-#    model/round.h
+    model2/category.h \
+    model2/drinkcalculator.h \
+    model2/gamecalculator.h \
+    model2/placecalculator.h \
+    model2/playercalculator.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

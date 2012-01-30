@@ -5,6 +5,9 @@
 #include <QVBoxLayout>
 #include <QScrollArea>
 #include <QListWidget>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QLabel>
 
 namespace LBGui {
 
@@ -40,21 +43,23 @@ StorageWidget::StorageWidget(QWidget *parent) :
     tablesLayout->addWidget(m_contextListWidget);
     overviewLayout->addWidget(tablesGroupBox);
 
-//    GroupBox *sourceGroupBox = new GroupBox(overviewWidget);
-//    sourceGroupBox->setCheckable(true);
-//    sourceGroupBox->setChecked(false);
-//    sourceGroupBox->setFixedWidth(792);
-//    sourceGroupBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Maximum);
-//    sourceGroupBox->setStyle(GroupBox::ItunesWhite);
-//    sourceGroupBox->setTitle(tr("Keep sources in sync (not supported yet)"));
-//    QHBoxLayout *sourceLayout = new QHBoxLayout();
-//    sourceGroupBox->setLayout(sourceLayout);
-//    sourceLayout->addWidget(new QLabel(tr("Source directory")));
-//    sourceLayout->addWidget(new QLineEdit());
-//    QPushButton *chooseSourceButton = new QPushButton(tr("Choose..."),sourceGroupBox);
-//    sourceLayout->addWidget(chooseSourceButton);
+    GroupBox *sourceGroupBox = new GroupBox(overviewWidget);
+    sourceGroupBox->setCheckable(true);
+    sourceGroupBox->setChecked(true);
+    sourceGroupBox->setFixedWidth(792);
+    sourceGroupBox->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Maximum);
+    sourceGroupBox->setStyle(GroupBox::ItunesWhite);
+    sourceGroupBox->setTitle(tr("Keep sources in sync"));
+    QHBoxLayout *sourceLayout = new QHBoxLayout();
+    sourceGroupBox->setLayout(sourceLayout);
+    sourceLayout->addWidget(new QLabel(tr("Source directory")));
+    m_sourcePathLineEdit = new QLineEdit(sourceGroupBox);
+    sourceLayout->addWidget(m_sourcePathLineEdit);
+    QPushButton *exportButton = new QPushButton(tr("Export now"),sourceGroupBox);
+    connect(exportButton, SIGNAL(clicked()), this, SLOT(exportSource()));
+    sourceLayout->addWidget(exportButton);
 
-//    overviewLayout->addWidget(sourceGroupBox);
+    overviewLayout->addWidget(sourceGroupBox);
 
     QScrollArea *overviewScrollArea = new QScrollArea();
     overviewScrollArea->setWidget(overviewWidget);
@@ -67,10 +72,20 @@ void StorageWidget::setStorage(LBDatabase::Storage *storage)
 {
     setWindowTitle(storage->name());
 
+    m_storage = storage;
     m_contextListWidget->clear();
+    m_sourcePathLineEdit->setText(storage->sourcePath());
     foreach(LBDatabase::Context *context, storage->contexts()) {
         m_contextListWidget->addItem(context->name());
     }
+}
+
+void StorageWidget::exportSource()
+{
+    LBDatabase::CppExporter exporter;
+    exporter.setStorage(m_storage);
+    exporter.setDirectory(m_sourcePathLineEdit->text());
+    exporter.exportCpp();
 }
 
 } // namespace LBGui

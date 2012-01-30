@@ -1,19 +1,10 @@
 #include "category.h"
 
+#include "category.h"
+
 
 
 const QString CategoriesContext::Name("categories");
-CategoriesContext::CategoriesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Category>();
-}
-
-Category *CategoriesContext::category(int id) const
-{
-	return static_cast<Category *>(entity(id));
-}
-
 const QString Category::Name("category");
 
 Category::Category(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -44,5 +35,29 @@ QString Category::icon() const
 int Category::type() const
 {
 	return value(CategoryProperties::TypeAttribute).value<int>();
+}
+
+Category *Category::parentCategory() const
+{
+	return relation<Category>(CategoryProperties::ParentCategoryRelation)->firstEntity();
+}
+
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+CategoriesContext::CategoriesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Category>();
+}
+
+Category *CategoriesContext::category(int id) const
+{
+	return static_cast<Category *>(entity(id));
 }
 

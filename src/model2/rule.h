@@ -3,13 +3,15 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace RuleProperties {
 const QString AttributeNameAttribute("attributeName");
 const QString ConstraintIdAttribute("constraintId");
 const QString ParameterAttribute("parameter");
 const QString ParentRuleIdAttribute("parentRuleId");
 const QString TypeAttribute("type");
-}
+} // namespace RuleProperties
+
 
 class Rule : public LBDatabase::Entity
 {
@@ -23,6 +25,18 @@ public:
 	QString parameter() const;
 	int parentRuleId() const;
 	int type() const;
+
+
+
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
 };
 
 class RulesContext : public LBDatabase::Context

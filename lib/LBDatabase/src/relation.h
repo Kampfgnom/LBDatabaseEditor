@@ -37,10 +37,9 @@ public:
 
     int id() const;
     QString displayName(const Context *context = 0) const;
-    void setDisplayName(const QString &displayName, const Context *context);
-
     QString displayNameLeft() const;
     QString displayNameRight() const;
+    void setDisplayName(const QString &displayName, const Context *context);
 
     QString name() const;
     EntityType *entityTypeLeft() const;

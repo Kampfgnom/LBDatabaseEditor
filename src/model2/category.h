@@ -3,16 +3,19 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+
 namespace CategoryProperties {
 const QString ContentTypeAttribute("contentType");
 const QString OrderIndicatorAttribute("orderIndicator");
 const QString NameAttribute("name");
 const QString IconAttribute("icon");
 const QString TypeAttribute("type");
-const QString ParentChildRelationRelation("ParentChildRelation");
-}
+const QString ParentCategoryRelation("ParentChildRelation");
+} // namespace CategoryProperties
 
-class Category;class Category;class Category : public LBDatabase::Entity
+class Category;
+
+class Category : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -24,6 +27,19 @@ public:
 	QString name() const;
 	QString icon() const;
 	int type() const;
+
+
+
+	Category *parentCategory() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
 };
 
 class CategoriesContext : public LBDatabase::Context

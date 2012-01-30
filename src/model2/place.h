@@ -3,6 +3,8 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QIcon>
+
 namespace PlaceProperties {
 const QString PlzAttribute("plz");
 const QString OrtAttribute("ort");
@@ -10,11 +12,15 @@ const QString StrasseAttribute("strasse");
 const QString NummerAttribute("nummer");
 const QString CommentAttribute("comment");
 const QString IconPathAttribute("iconPath");
-const QString SiteIdRelation("siteId");
-const QString PlayerplaceassignmentsRelation("playerplaceassignments");
-}
+const QString GameCountAttribute("gameCount");
+const QString GamesRelation("GameSite");
+const QString PlayerRelation("PlayersAndPlaces");
+} // namespace PlaceProperties
 
-class Game;class Player;class Place : public LBDatabase::Entity
+class Game;
+class Player;
+
+class Place : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
@@ -27,6 +33,31 @@ public:
 	int nummer() const;
 	QString comment() const;
 	QIcon iconPath() const;
+	int gameCount() const;
+
+	void setPlz(int plz);
+	void setOrt(const QString &ort);
+	void setStrasse(const QString &strasse);
+	void setNummer(int nummer);
+	void setComment(const QString &comment);
+
+
+	QList<Game *> games() const;
+	QList<Player *> player() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
+	void plzChanged(int plz);
+	void ortChanged(QString ort);
+	void strasseChanged(QString strasse);
+	void nummerChanged(int nummer);
+	void commentChanged(QString comment);
 };
 
 class PlacesContext : public LBDatabase::Context

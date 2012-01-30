@@ -26,9 +26,16 @@ HEADERS += \
     function.h \
     functionvalue.h \
     calculator.h \
-    graphvizexporter.h \
     concreterelation.h \
-    cppexporter.h
+    export/graphvizexporter.h \
+    export/cppexporter.h \
+    export/storagewriter.h \
+    export/writer.h \
+    export/contextwriter.h \
+    export/entitytypewriter.h \
+    export/calculatorwriter.h \
+    enumattribute.h \
+    attribute_p.h
 
 SOURCES += \
     column.cpp \
@@ -48,8 +55,14 @@ SOURCES += \
     function.cpp \
     functionvalue.cpp \
     calculator.cpp \
-    graphvizexporter.cpp \
-    cppexporter.cpp
+    export/graphvizexporter.cpp \
+    export/cppexporter.cpp \
+    export/storagewriter.cpp \
+    export/writer.cpp \
+    export/contextwriter.cpp \
+    export/entitytypewriter.cpp \
+    export/calculatorwriter.cpp \
+    enumattribute.cpp
 
 OTHER_FILES +=
 

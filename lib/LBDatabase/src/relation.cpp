@@ -255,6 +255,18 @@ QString Relation::displayName(const Context *context) const
     return d->name;
 }
 
+QString Relation::displayNameLeft() const
+{
+    Q_D(const Relation);
+    return d->displayNameLeft;
+}
+
+QString Relation::displayNameRight() const
+{
+    Q_D(const Relation);
+    return d->displayNameRight;
+}
+
 /*!
   Sets the display name in the given \a context.
 
@@ -342,18 +354,6 @@ RelationValueBase *Relation::createLeftValue(Entity *entity)
 RelationValueBase *Relation::createRightValue(Entity *entity)
 {
     return new RelationValue<Entity>(this, entity);
-}
-
-QString Relation::displayNameLeft() const
-{
-    Q_D(const Relation);
-    return d->displayNameLeft;
-}
-
-QString Relation::displayNameRight() const
-{
-    Q_D(const Relation);
-    return d->displayNameRight;
 }
 
 Storage* Relation::storage() const

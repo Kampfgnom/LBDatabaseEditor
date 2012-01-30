@@ -2,18 +2,8 @@
 
 
 
+
 const QString RulesContext::Name("rules");
-RulesContext::RulesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
-	Context(row, parent)
-{
-	registerEntityClass<Rule>();
-}
-
-Rule *RulesContext::rule(int id) const
-{
-	return static_cast<Rule *>(entity(id));
-}
-
 const QString Rule::Name("rule");
 
 Rule::Rule(LBDatabase::Row *row, LBDatabase::Context *context) :
@@ -44,5 +34,24 @@ int Rule::parentRuleId() const
 int Rule::type() const
 {
 	return value(RuleProperties::TypeAttribute).value<int>();
+}
+
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+RulesContext::RulesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
+	Context(row, parent)
+{
+	registerEntityClass<Rule>();
+}
+
+Rule *RulesContext::rule(int id) const
+{
+	return static_cast<Rule *>(entity(id));
 }
 

@@ -6,15 +6,28 @@
 #include "offlinegame.h"
 
 namespace PokerOfflineGameProperties {
-}
+} // namespace PokerOfflineGameProperties
 
-class PokerOfflineGame : public OfflineGame
+
+class PokerOfflineGame : public Offlinegame
 {
 	Q_OBJECT
 public:
 	Q_INVOKABLE PokerOfflineGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+
+
+
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
 };
 
 #endif // POKEROFFLINEGAME_H

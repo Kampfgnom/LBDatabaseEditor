@@ -47,6 +47,9 @@ QVariant AttributeValuePrivate::calculate()
 {
     Q_Q(AttributeValue);
     Calculator *calculator = entity->entityType()->calculator();
+    if(!calculator)
+        return QVariant();
+
     return calculator->calculate(entity,q);
 }
 
@@ -145,7 +148,7 @@ bool AttributeValue::setData(const QVariant &data)
 bool AttributeValue::isEditable() const
 {
     Q_D(const AttributeValue);
-    return !d->attribute->isCalculated();
+    return !d->attribute->isCalculated() && d->attribute->isEditable();
 }
 
 /*!

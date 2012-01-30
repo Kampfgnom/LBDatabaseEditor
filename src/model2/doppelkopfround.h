@@ -8,15 +8,17 @@
 namespace DoppelkopfRoundProperties {
 const QString Doko_soloPflichtAttribute("doko_soloPflicht");
 const QString Doko_soloTypeAttribute("doko_soloType");
-const QString Doko_hochzeitPlayerIdRelation("doko_hochzeitPlayerId");
-const QString Doko_re1PlayerIdRelation("doko_re1PlayerId");
-const QString Doko_re2PlayerIdRelation("doko_re2PlayerId");
-const QString Doko_schweinereiPlayerIdRelation("doko_schweinereiPlayerId");
-const QString Doko_trumpfabgabePlayerIdRelation("doko_trumpfabgabePlayerId");
-const QString Doko_soloPlayerIdRelation("doko_soloPlayerId");
-}
+const QString HochzeitPlayerRelation("DokoRoundHochzeitPlayer");
+const QString RePlayer1Relation("DokoRoundRe1Player");
+const QString RePlayer2Relation("DokoRoundRe2Player");
+const QString SchweinereiPlayerRelation("DokoRoundSchweinereiPlayer");
+const QString TrumpfabgabePlayerRelation("DokoRoundTrumpfabgabePlayer");
+const QString DokoSoloPlayerRelation("DokoRoundSoloPlayer");
+} // namespace DoppelkopfRoundProperties
 
-class Player;class Player;class Player;class Player;class Player;class Player;class DoppelkopfRound : public Round
+class Player;
+
+class DoppelkopfRound : public Round
 {
 	Q_OBJECT
 public:
@@ -25,6 +27,28 @@ public:
 
 	bool doko_soloPflicht() const;
 	QString doko_soloType() const;
+
+	void setDoko_soloPflicht(bool doko_soloPflicht);
+	void setDoko_soloType(const QString &doko_soloType);
+
+
+	Player *hochzeitPlayer() const;
+	Player *rePlayer1() const;
+	Player *rePlayer2() const;
+	Player *schweinereiPlayer() const;
+	Player *trumpfabgabePlayer() const;
+	Player *dokoSoloPlayer() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
+
+signals:
+	void doko_soloPflichtChanged(bool doko_soloPflicht);
+	void doko_soloTypeChanged(QString doko_soloType);
 };
 
 #endif // DOPPELKOPFROUND_H

@@ -20,6 +20,7 @@ public:
     static const QString CalculatedColumn;
     static const QString CacheDataColumn;
     static const QString TypeColumn;
+    static const QString EditableColumn;
 
     enum Type {
         Unkown,     // 0
@@ -31,7 +32,8 @@ public:
         DateTime,   // 6
         Time,       // 7
         Bool,       // 8
-        Color       // 9
+        Color,      // 9
+        Enum        //10
     };
 
     ~Attribute();
@@ -45,21 +47,23 @@ public:
 
     bool isCalculated() const;
     bool cacheData() const;
+    bool isEditable() const;
 
     Type type() const;
-    QString typeName() const;
+    virtual QString typeName() const;
     static QString typeToName(Type type);
     static QStringList typeNames();
 
-    QString qtType() const;
+    virtual QString qtType() const;
     static QStringList qtTypeNames();
     static QString typeToQtType(Type type);
 
-private:
+protected:
     friend class StoragePrivate;
     friend class EntityTypePrivate;
 
     explicit Attribute(Row *row, Storage *parent);
+    explicit Attribute(AttributePrivate &dd, Row *row, Storage *parent);
 
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);

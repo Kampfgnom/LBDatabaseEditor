@@ -27,8 +27,8 @@ public slots:
 private:
     void updateComboBox();
 
-    LBDatabase::Property* m_selectedProperty;
     QList<LBDatabase::Property*> m_properties;
+    LBDatabase::Property* m_selectedProperty;
 };
 
 #endif // PROPERTYCOMBOBOX_H
