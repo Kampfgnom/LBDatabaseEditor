@@ -36,7 +36,7 @@ QTime Round::length() const
 
 Round::State Round::state() const
 {
-    return static_cast<State>(value(RoundProperties::Db_stateAttribute).value<int>());
+	return static_cast<State>(value(RoundProperties::StateAttribute).value<int>());
 }
 
 QList<Livegamedrink *> Round::drinks() const

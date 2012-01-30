@@ -79,6 +79,7 @@ void CalculatorWriter::exportHeader() const
 void CalculatorWriter::exportSource() const
 {
     QString calculatorClass = makeClassname(m_entityType->name() + QLatin1String("Calculator"));
+    QString entityTypeClass = makeClassname(m_entityType->name());
     QString source;
 
     writeInclude(calculatorClass, source);
@@ -95,8 +96,10 @@ void CalculatorWriter::exportSource() const
         if(attribute->isCalculated()) {
             source.append(QLatin1String("QVariant ")+calculatorClass+QLatin1String("::")+makeMethodName(attribute->name())+QLatin1String("(const LBDatabase::Entity *entity) const\n"
             "{\n"
-                 "\t//! \\todo IMPLEMENT ME\n"
-                 "\treturn QVariant();\n"
+                 "\t//! \\todo IMPLEMENT ME\n\t")+
+                          entityTypeClass+QLatin1String(" *")+makeMethodName(entityTypeClass)+
+                          QLatin1String(" = static_cast<")+entityTypeClass+QLatin1String(" *>(entity);\n")+
+                 QLatin1String("\treturn QVariant();\n"
             "}\n\n"));
         }
     }

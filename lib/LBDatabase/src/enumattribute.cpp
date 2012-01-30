@@ -18,7 +18,7 @@ const QString EnumAttribute::ValueColumn("value");
 class EnumAttributePrivate : public AttributePrivate {
     void init();
 
-    QHash<int, QString> enumValues;
+    QMap<int, QString> enumValues;
 
     Q_DECLARE_PUBLIC(EnumAttribute)
 };
@@ -41,10 +41,10 @@ QString EnumAttribute::typeName() const
 
 QString EnumAttribute::qtType() const
 {
-    return typeName();
+    return typeName().left(1).toUpper() + typeName().mid(1);
 }
 
-QHash<int, QString> EnumAttribute::enumValues() const
+QMap<int, QString> EnumAttribute::enumValues() const
 {
     Q_D(const EnumAttribute);
     return d->enumValues;

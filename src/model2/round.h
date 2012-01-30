@@ -9,7 +9,7 @@ const QString NumberAttribute("number");
 const QString CommentAttribute("comment");
 const QString StartTimeAttribute("startTime");
 const QString LengthAttribute("length");
-const QString Db_stateAttribute("db_state");
+const QString StateAttribute("state");
 const QString DrinksRelation("DrinksPerRound");
 const QString SchmeissereienRelation("SchmeissereienPerRound");
 const QString GameRelation("RoundsPerGame");
@@ -23,20 +23,20 @@ class Round : public LBDatabase::Entity
 {
 	Q_OBJECT
 public:
-    enum State {
-        Running = 1,
-        Paused = 2,
-        Finished = 3
-    };
-
 	Q_INVOKABLE Round(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
+
+	enum State {
+		Running = 1,
+		Paused = 2,
+		Finished = 3
+	};
 
 	int number() const;
 	QString comment() const;
 	QDateTime startTime() const;
 	QTime length() const;
-    State state() const;
+	State state() const;
 
 	QList<Livegamedrink *> drinks() const;
 	QList<Schmeisserei *> schmeissereien() const;

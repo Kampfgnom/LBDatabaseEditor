@@ -102,6 +102,11 @@ QList<Place *> Player::place() const
 	return relation<Place>(PlayerProperties::PlaceRelation)->entities();
 }
 
+QList<Game *> Player::games() const
+{
+	return relation<Game>(PlayerProperties::GamesRelation)->entities();
+}
+
 PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

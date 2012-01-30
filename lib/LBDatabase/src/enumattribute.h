@@ -3,7 +3,7 @@
 
 #include "attribute.h"
 
-#include <QHash>
+#include <QMap>
 
 namespace LBDatabase {
 
@@ -20,7 +20,7 @@ public:
     QString typeName() const;
     QString qtType() const;
 
-    QHash<int, QString> enumValues() const;
+    QMap<int, QString> enumValues() const;
 
 private:
     friend class StoragePrivate;

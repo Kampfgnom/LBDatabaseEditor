@@ -62,6 +62,11 @@ QList<Offlinegameinformation *> Game::offlineInformation() const
 	return relation<Offlinegameinformation>(GameProperties::OfflineInformationRelation)->entities();
 }
 
+QList<Player *> Game::players() const
+{
+	return relation<Player>(GameProperties::PlayersRelation)->entities();
+}
+
 GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

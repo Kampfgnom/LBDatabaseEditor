@@ -23,6 +23,7 @@ const QString SkatSoliRelation("SkatRoundSolistPlayer");
 const QString DokoBuddiesRelation("OfflineGameBuddy1");
 const QString OfflineInformationRelation("OfflineInformationPerPlayer");
 const QString PlaceRelation("PlayersAndPlaces");
+const QString GamesRelation("PlayersPerGame");
 } // namespace PlayerProperties
 
 class Schmeisserei;
@@ -32,6 +33,7 @@ class SkatRound;
 class Dokoofflinegamebuddy;
 class Offlinegameinformation;
 class Place;
+class Game;
 
 class Player : public LBDatabase::Entity
 {
@@ -59,6 +61,7 @@ public:
     QList<Dokoofflinegamebuddy *> dokoBuddies() const;
 	QList<Offlinegameinformation *> offlineInformation() const;
 	QList<Place *> place() const;
+	QList<Game *> games() const;
 };
 
 class PlayersContext : public LBDatabase::Context

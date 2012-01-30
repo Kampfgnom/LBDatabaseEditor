@@ -13,12 +13,14 @@ const QString RoundsRelation("RoundsPerGame");
 const QString SiteRelation("GameSite");
 const QString DokoBuddiesRelation("DokoGameBuddiesPerGame");
 const QString OfflineInformationRelation("OfflineInformationPerGame");
+const QString PlayersRelation("PlayersPerGame");
 } // namespace GameProperties
 
 class Round;
 class Place;
 class Dokoofflinegamebuddy;
 class Offlinegameinformation;
+class Player;
 
 class Game : public LBDatabase::Entity
 {
@@ -36,6 +38,7 @@ public:
 	Place *site() const;
 	QList<Dokoofflinegamebuddy *> dokoBuddies() const;
 	QList<Offlinegameinformation *> offlineInformation() const;
+	QList<Player *> players() const;
 };
 
 class GamesContext : public LBDatabase::Context

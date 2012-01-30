@@ -8,6 +8,7 @@ namespace LBDatabase {
 class Attribute;
 class CppExporter;
 class EntityType;
+class EnumAttribute;
 class Relation;
 
 class EntityTypeWriter : public Writer
@@ -32,6 +33,8 @@ protected:
 
     virtual void writeDeclaration(QString &header) const;
     virtual void writeImplementation(QString &source) const;
+
+    void writeEnum(EnumAttribute *attribute, QString &header) const;
 
     void writeAttributeDeclaration(Attribute *attribute, QString &header) const;
     void writeAttributeImplementation(Attribute *attribute, QString &source) const;

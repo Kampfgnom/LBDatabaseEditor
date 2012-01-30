@@ -4,6 +4,7 @@
 
 #include "../attribute.h"
 #include "../entitytype.h"
+#include "../enumattribute.h"
 
 #include <QStringList>
 
@@ -63,9 +64,13 @@ void EntityTypeWriter::writePropertyNameStrings(QString &header) const
                       attributeName+QLatin1String("\");\n"));
     }
 
+    QList<Relation *> visitedRelations;
     foreach(Relation *relation, m_entityType->nonInhertitedRelations()) {
-        header.append(QLatin1String("const QString ")+ makeRelationName(relation) + QLatin1String("Relation(\"") +
-                      relation->name()+QLatin1String("\");\n"));
+        if(!visitedRelations.contains(relation)) {
+            header.append(QLatin1String("const QString ")+ makeRelationName(relation) + QLatin1String("Relation(\"") +
+                          relation->name()+QLatin1String("\");\n"));
+            visitedRelations.append(relation);
+        }
     }
 
     writeNamespaceEnd(m_classname+QLatin1String("Properties"), header);
@@ -111,13 +116,23 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
         "\tstatic const QString Name;\n\n"));
 
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
+        if(attribute->type() == Attribute::Enum) {
+            writeEnum(static_cast<EnumAttribute *>(attribute), header);
+        }
+    }
+
+    foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         writeAttributeDeclaration(attribute, header);
     }
 
     header.append(QLatin1String("\n"));
 
+    QList<Relation *> visitedRelations;
     foreach(Relation *relation, m_entityType->nonInhertitedRelations()) {
-        writeRelationDeclaration(relation, header);
+        if(!visitedRelations.contains(relation)) {
+            writeRelationDeclaration(relation, header);
+            visitedRelations.append(relation);
+        }
     }
 
     header.append(QLatin1String("};\n\n"));
@@ -143,9 +158,29 @@ void EntityTypeWriter::writeImplementation(QString &source) const
          writeAttributeImplementation(attribute, source);
      }
 
+     QList<Relation *> visitedRelations;
      foreach(Relation *relation, m_entityType->nonInhertitedRelations()) {
-         writeRelationImplementation(relation, source);
+         if(!visitedRelations.contains(relation)) {
+            writeRelationImplementation(relation, source);
+            visitedRelations.append(relation);
+         }
      }
+}
+
+void EntityTypeWriter::writeEnum(EnumAttribute *attribute, QString &header) const
+{
+    header.append(QLatin1String("\tenum ")+makeClassname(attribute->name())+QLatin1String(" {\n"));
+
+    const QMap<int, QString> map = attribute->enumValues();
+    QMap<int, QString>::const_iterator i = map.constBegin();
+    while (i != map.constEnd()) {
+        if(i != map.constBegin()) {
+            header.append(QLatin1String(",\n"));
+        }
+        header.append(QLatin1String("\t\t")+i.value()+QLatin1String(" = ")+QString::number(i.key()));
+        ++i;
+    }
+    header.append(QLatin1String("\n\t};\n\n"));
 }
 
 void EntityTypeWriter::writeAttributeDeclaration(Attribute *attribute, QString &header) const
@@ -158,13 +193,23 @@ void EntityTypeWriter::writeAttributeImplementation(Attribute *attribute, QStrin
 {
     QString attributeType = attribute->qtType();
     QString attributeName = attribute->name();
-    source.append(attributeType+QLatin1String(" ")+m_classname+QLatin1String("::")+attributeName.left(1).toLower()+attributeName.mid(1)+
-                  QLatin1String("() const\n"
-                                "{\n"
-                                "\treturn value(")+m_classname+
-                  QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute).value<") +
-                  attributeType+QLatin1String(">();\n"
-                                              "}\n\n"));
+    if(attribute->type() == Attribute::Enum) {
+        source.append(m_classname+QLatin1String("::")+makeClassname(attributeType)+QLatin1String(" ")+m_classname+QLatin1String("::")+makeMethodName(attributeName)+
+                      QLatin1String("() const\n"
+                                    "{\n"
+                                    "\treturn static_cast<")+makeClassname(attributeType)+QLatin1String(">(value(")+m_classname+
+                      QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute).value<int>());\n"
+                                                  "}\n\n"));
+    }
+    else {
+        source.append(attributeType+QLatin1String(" ")+m_classname+QLatin1String("::")+makeMethodName(attributeName)+
+                      QLatin1String("() const\n"
+                                    "{\n"
+                                    "\treturn value(")+m_classname+
+                      QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute).value<") +
+                      attributeType+QLatin1String(">();\n"
+                                                  "}\n\n"));
+    }
 }
 
 void EntityTypeWriter::writeRelationDeclaration(Relation *relation, QString &header) const
