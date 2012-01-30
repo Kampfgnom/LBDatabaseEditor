@@ -19,6 +19,7 @@ public:
     static const QString KeyEntityTypeRightColumn;
     static const QString CalculatedColumn;
     static const QString CacheDataColumn;
+    static const QString TypeColumn;
 
     ~Function();
 
@@ -28,6 +29,7 @@ public:
     QString name() const;
 
     EntityType *keyEntityType() const;
+    QString qtTypeName() const;
 
     bool isCalculated() const;
     bool cacheData() const;

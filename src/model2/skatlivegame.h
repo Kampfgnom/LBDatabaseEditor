@@ -25,6 +25,7 @@ public:
 	int skat_maxRounds() const;
 	bool skat_mitRamschen() const;
 
+
 };
 
 #endif // SKATLIVEGAME_H

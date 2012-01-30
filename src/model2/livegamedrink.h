@@ -24,6 +24,7 @@ public:
 
 	QDateTime time() const;
 
+
 	Round *round() const;
 	Player *player() const;
 	Drink *drink() const;

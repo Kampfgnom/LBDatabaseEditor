@@ -6,6 +6,7 @@
 
 class LiveGameCalculator : public LBDatabase::Calculator
 {
+    Q_OBJECT
 public:
 	Q_INVOKABLE explicit LiveGameCalculator(QObject *parent = 0);
 

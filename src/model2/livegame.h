@@ -6,8 +6,10 @@
 #include "game.h"
 
 namespace LiveGameProperties {
+const QString PointsFunction("points");
 } // namespace LiveGameProperties
 
+class Player;
 
 class LiveGame : public Game
 {
@@ -16,6 +18,8 @@ public:
 	Q_INVOKABLE LiveGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+
+	int points(const Player *player) const;
 
 };
 

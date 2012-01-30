@@ -1,4 +1,13 @@
 #include "player.h"
+
+#include "schmeisserei.h"
+#include "livegamedrink.h"
+#include "doppelkopfround.h"
+#include "skatround.h"
+#include "dokoofflinegamebuddy.h"
+#include "offlinegameinformation.h"
+#include "place.h"
+#include "game.h"
 #include <QColor>
 #include <QPixmap>
 
@@ -87,9 +96,14 @@ QList<SkatRound *> Player::skatSoli() const
 	return relation<SkatRound>(PlayerProperties::SkatSoliRelation)->entities();
 }
 
-QList<Dokoofflinegamebuddy *> Player::dokoBuddies() const
+QList<Dokoofflinegamebuddy *> Player::dokoBuddies1() const
 {
-	return relation<Dokoofflinegamebuddy>(PlayerProperties::DokoBuddiesRelation)->entities();
+	return relation<Dokoofflinegamebuddy>(PlayerProperties::DokoBuddies1Relation)->entities();
+}
+
+QList<Dokoofflinegamebuddy *> Player::dokoBuddies2() const
+{
+	return relation<Dokoofflinegamebuddy>(PlayerProperties::DokoBuddies2Relation)->entities();
 }
 
 QList<Offlinegameinformation *> Player::offlineInformation() const

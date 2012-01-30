@@ -1,5 +1,7 @@
 #include "category.h"
 
+#include "category.h"
+
 
 
 const QString CategoriesContext::Name("categories");

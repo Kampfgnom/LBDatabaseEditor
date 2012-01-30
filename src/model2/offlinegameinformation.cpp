@@ -1,5 +1,8 @@
 #include "offlinegameinformation.h"
 
+#include "player.h"
+#include "game.h"
+
 
 
 const QString OfflinegameinformationsContext::Name("offlinegameinformations");

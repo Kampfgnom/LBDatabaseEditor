@@ -1,5 +1,8 @@
 #include "schmeisserei.h"
 
+#include "player.h"
+#include "round.h"
+
 
 
 const QString SchmeissereisContext::Name("schmeissereis");

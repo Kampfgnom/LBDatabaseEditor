@@ -1,4 +1,9 @@
 #include "round.h"
+
+#include "livegamedrink.h"
+#include "schmeisserei.h"
+#include "game.h"
+#include "player.h"
 #include <QDateTime>
 #include <QTime>
 
@@ -52,6 +57,11 @@ QList<Schmeisserei *> Round::schmeissereien() const
 Game *Round::game() const
 {
 	return relation<Game>(RoundProperties::GameRelation)->firstEntity();
+}
+
+int Round::points(const Player *player) const
+{
+	return function(RoundProperties::PointsFunction)->value(player).value<int>();
 }
 
 RoundsContext::RoundsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :

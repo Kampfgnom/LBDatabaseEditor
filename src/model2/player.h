@@ -20,7 +20,8 @@ const QString SchweiereiRoundsRelation("DokoRoundSchweinereiPlayer");
 const QString TrumpfabgabeRoundsRelation("DokoRoundTrumpfabgabePlayer");
 const QString DokoSoliRelation("DokoRoundSoloPlayer");
 const QString SkatSoliRelation("SkatRoundSolistPlayer");
-const QString DokoBuddiesRelation("OfflineGameBuddy1");
+const QString DokoBuddies1Relation("OfflineGameBuddy1");
+const QString DokoBuddies2Relation("OfflineGameBuddy2");
 const QString OfflineInformationRelation("OfflineInformationPerPlayer");
 const QString PlaceRelation("PlayersAndPlaces");
 const QString GamesRelation("PlayersPerGame");
@@ -49,6 +50,7 @@ public:
 	QColor color() const;
 	QPixmap avatarPath() const;
 
+
 	QList<Schmeisserei *> schmeissereien() const;
 	QList<Livegamedrink *> drinks() const;
 	QList<DoppelkopfRound *> hochzeiten() const;
@@ -58,7 +60,8 @@ public:
 	QList<DoppelkopfRound *> trumpfabgabeRounds() const;
 	QList<DoppelkopfRound *> dokoSoli() const;
 	QList<SkatRound *> skatSoli() const;
-    QList<Dokoofflinegamebuddy *> dokoBuddies() const;
+	QList<Dokoofflinegamebuddy *> dokoBuddies1() const;
+	QList<Dokoofflinegamebuddy *> dokoBuddies2() const;
 	QList<Offlinegameinformation *> offlineInformation() const;
 	QList<Place *> place() const;
 	QList<Game *> games() const;

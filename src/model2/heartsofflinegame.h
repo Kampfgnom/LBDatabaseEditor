@@ -17,6 +17,7 @@ public:
 	static const QString Name;
 
 
+
 };
 
 #endif // HEARTSOFFLINEGAME_H

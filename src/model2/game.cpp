@@ -1,4 +1,10 @@
 #include "game.h"
+
+#include "round.h"
+#include "place.h"
+#include "dokoofflinegamebuddy.h"
+#include "offlinegameinformation.h"
+#include "player.h"
 #include <QDateTime>
 #include <QTime>
 
@@ -65,6 +71,11 @@ QList<Offlinegameinformation *> Game::offlineInformation() const
 QList<Player *> Game::players() const
 {
 	return relation<Player>(GameProperties::PlayersRelation)->entities();
+}
+
+int Game::position(const Player *player) const
+{
+	return function(GameProperties::PositionFunction)->value(player).value<int>();
 }
 
 GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :

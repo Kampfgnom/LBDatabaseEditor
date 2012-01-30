@@ -38,6 +38,7 @@ public:
 	int doko_soli() const;
 	int doko_trumpfabgaben() const;
 
+
 	Player *player() const;
 	Game *game() const;
 };

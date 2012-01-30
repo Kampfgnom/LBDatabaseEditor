@@ -17,6 +17,7 @@ public:
 	static const QString Name;
 
 
+
 };
 
 #endif // PROGNOSEOFFLINEGAME_H

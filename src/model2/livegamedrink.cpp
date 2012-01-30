@@ -1,4 +1,8 @@
 #include "livegamedrink.h"
+
+#include "round.h"
+#include "player.h"
+#include "drink.h"
 #include <QDateTime>
 
 

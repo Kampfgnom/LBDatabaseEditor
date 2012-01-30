@@ -25,6 +25,7 @@ public:
 	int rounds() const;
 	int wins() const;
 
+
 	Game *game() const;
 	Player *player1() const;
 	Player *player2() const;

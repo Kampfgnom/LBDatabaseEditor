@@ -26,6 +26,7 @@ public:
 	int parentRuleId() const;
 	int type() const;
 
+
 };
 
 class RulesContext : public LBDatabase::Context

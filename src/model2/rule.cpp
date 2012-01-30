@@ -2,6 +2,7 @@
 
 
 
+
 const QString RulesContext::Name("rules");
 const QString Rule::Name("rule");
 

@@ -22,6 +22,7 @@ const QString Function::EntityTypeColumn("entityType");
 const QString Function::KeyEntityTypeRightColumn("keyEntityType");
 const QString Function::CalculatedColumn("calculated");
 const QString Function::CacheDataColumn("cacheData");
+const QString Function::TypeColumn("type");
 
 class FunctionPrivate {
     FunctionPrivate() :
@@ -39,6 +40,7 @@ class FunctionPrivate {
     Storage *storage;
     EntityType *entityType;
     EntityType *keyEntityType;
+    Attribute::Type type;
 
     bool calculated;
     bool cacheData;
@@ -60,6 +62,7 @@ void FunctionPrivate::init()
     keyEntityType = storage->entityType(row->data(Function::KeyEntityTypeRightColumn).toInt());
     calculated = row->data(Function::CalculatedColumn).toBool();
     cacheData = row->data(Function::CacheDataColumn).toBool();
+    type = static_cast<Attribute::Type>(row->data(Function::TypeColumn).toInt());
 
     if(!calculated) {
         functionTable = storage->database()->table(name);
@@ -158,6 +161,12 @@ EntityType *Function::keyEntityType() const
 {
     Q_D(const Function);
     return d->keyEntityType;
+}
+
+QString Function::qtTypeName() const
+{
+    Q_D(const Function);
+    return Attribute::typeToQtType(d->type);
 }
 
 bool Function::isCalculated() const

@@ -22,6 +22,7 @@ public:
 
 	int type() const;
 
+
 	Player *player() const;
 	Round *round() const;
 };

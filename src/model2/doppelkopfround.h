@@ -28,6 +28,7 @@ public:
 	bool doko_soloPflicht() const;
 	QString doko_soloType() const;
 
+
 	Player *hochzeitPlayer() const;
 	Player *rePlayer1() const;
 	Player *rePlayer2() const;

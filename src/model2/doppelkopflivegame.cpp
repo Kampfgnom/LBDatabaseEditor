@@ -1,6 +1,7 @@
 #include "doppelkopflivegame.h"
 
 
+
 const QString DoppelkopfLiveGame::Name("Doppelkopf Live Game");
 
 DoppelkopfLiveGame::DoppelkopfLiveGame(LBDatabase::Row *row, LBDatabase::Context *context) :

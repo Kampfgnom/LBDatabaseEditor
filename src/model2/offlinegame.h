@@ -19,6 +19,7 @@ public:
 
 	QTime offline_length() const;
 
+
 };
 
 #endif // OFFLINEGAME_H

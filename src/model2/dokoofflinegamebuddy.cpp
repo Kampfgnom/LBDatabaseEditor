@@ -1,5 +1,8 @@
 #include "dokoofflinegamebuddy.h"
 
+#include "game.h"
+#include "player.h"
+
 
 
 const QString DokoofflinegamebuddysContext::Name("dokoofflinegamebuddys");

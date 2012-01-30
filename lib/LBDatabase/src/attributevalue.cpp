@@ -47,6 +47,9 @@ QVariant AttributeValuePrivate::calculate()
 {
     Q_Q(AttributeValue);
     Calculator *calculator = entity->entityType()->calculator();
+    if(!calculator)
+        return QVariant();
+
     return calculator->calculate(entity,q);
 }
 

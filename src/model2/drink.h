@@ -10,6 +10,7 @@ const QString TypeAttribute("type");
 const QString SizeAttribute("size");
 const QString AlcAttribute("alc");
 const QString IconPathAttribute("iconPath");
+const QString DrinkCountAttribute("drinkCount");
 const QString LiveDrinksRelation("LiveDrinksPerDrink");
 } // namespace DrinkProperties
 
@@ -27,6 +28,8 @@ public:
 	double size() const;
 	double alc() const;
 	QIcon iconPath() const;
+	int drinkCount() const;
+
 
 	QList<Livegamedrink *> liveDrinks() const;
 };

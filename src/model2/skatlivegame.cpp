@@ -1,6 +1,7 @@
 #include "skatlivegame.h"
 
 
+
 const QString SkatLiveGame::Name("Skat Live Game");
 
 SkatLiveGame::SkatLiveGame(LBDatabase::Row *row, LBDatabase::Context *context) :

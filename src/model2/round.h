@@ -13,11 +13,13 @@ const QString StateAttribute("state");
 const QString DrinksRelation("DrinksPerRound");
 const QString SchmeissereienRelation("SchmeissereienPerRound");
 const QString GameRelation("RoundsPerGame");
+const QString PointsFunction("points");
 } // namespace RoundProperties
 
 class Livegamedrink;
 class Schmeisserei;
 class Game;
+class Player;
 
 class Round : public LBDatabase::Entity
 {
@@ -37,6 +39,8 @@ public:
 	QDateTime startTime() const;
 	QTime length() const;
 	State state() const;
+
+	int points(const Player *player) const;
 
 	QList<Livegamedrink *> drinks() const;
 	QList<Schmeisserei *> schmeissereien() const;

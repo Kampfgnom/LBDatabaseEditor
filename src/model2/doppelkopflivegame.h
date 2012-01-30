@@ -51,6 +51,7 @@ public:
 	bool doko_mitFleischlos() const;
 	bool doko_mitSchwarzsolo() const;
 
+
 };
 
 #endif // DOPPELKOPFLIVEGAME_H

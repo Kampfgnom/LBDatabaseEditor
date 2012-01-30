@@ -1,5 +1,7 @@
 #include "skatround.h"
 
+#include "player.h"
+
 
 const QString SkatRound::Name("Skat Round");
 

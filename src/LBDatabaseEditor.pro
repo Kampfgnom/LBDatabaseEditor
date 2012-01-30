@@ -39,7 +39,6 @@ SOURCES += main.cpp\
     model2/offlinegameinformation.cpp \
     model2/offlinegame.cpp \
     model2/livegamedrink.cpp \
-    model2/livegamecalculator.cpp \
     model2/livegame.cpp \
     model2/heartsofflinegame.cpp \
     model2/game.cpp \
@@ -49,7 +48,9 @@ SOURCES += main.cpp\
     model2/doppelkopflivegame.cpp \
     model2/dokoofflinegamebuddy.cpp \
     model2/categoryassignment.cpp \
-    model2/category.cpp
+    model2/category.cpp \
+    model2/drinkcalculator.cpp \
+    model2/livegamecalculator.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -96,7 +97,8 @@ HEADERS  += \
     model2/doppelkopflivegame.h \
     model2/dokoofflinegamebuddy.h \
     model2/categoryassignment.h \
-    model2/category.h
+    model2/category.h \
+    model2/drinkcalculator.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

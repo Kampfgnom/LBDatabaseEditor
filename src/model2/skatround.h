@@ -23,6 +23,7 @@ public:
 	QString skat_gameType() const;
 	QString skat_trumpfColor() const;
 
+
 	Player *skatSoloPlayer() const;
 };
 

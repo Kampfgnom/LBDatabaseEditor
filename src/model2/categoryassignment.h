@@ -20,6 +20,7 @@ public:
 	int categorieId() const;
 	int elementId() const;
 
+
 };
 
 class CategorieassignmentsContext : public LBDatabase::Context

@@ -9,6 +9,7 @@ class Attribute;
 class CppExporter;
 class EntityType;
 class EnumAttribute;
+class Function;
 class Relation;
 
 class EntityTypeWriter : public Writer
@@ -41,6 +42,9 @@ protected:
 
     void writeRelationDeclaration(Relation *relation, QString &header) const;
     void writeRelationImplementation(Relation *relation, QString &source) const;
+
+    void writeFunctionDeclaration(Function *function, QString &header) const;
+    void writeFunctionImplementation(Function *function, QString &source) const;
 
     QString makeRelationName(Relation *relation) const;
     QString makeRelationType(Relation *relation) const;

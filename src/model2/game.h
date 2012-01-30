@@ -14,6 +14,7 @@ const QString SiteRelation("GameSite");
 const QString DokoBuddiesRelation("DokoGameBuddiesPerGame");
 const QString OfflineInformationRelation("OfflineInformationPerGame");
 const QString PlayersRelation("PlayersPerGame");
+const QString PositionFunction("position");
 } // namespace GameProperties
 
 class Round;
@@ -33,6 +34,8 @@ public:
 	QDateTime date() const;
 	QTime length() const;
 	QString comment() const;
+
+	int position(const Player *player) const;
 
 	QList<Round *> rounds() const;
 	Place *site() const;

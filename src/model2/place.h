@@ -32,6 +32,7 @@ public:
 	QString comment() const;
 	QIcon iconPath() const;
 
+
 	QList<Game *> games() const;
 	QList<Player *> player() const;
 };

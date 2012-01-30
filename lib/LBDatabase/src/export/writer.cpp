@@ -105,4 +105,18 @@ void Writer::writeToFile(const QString &fileName, const QString &content) const
     file.close();
 }
 
+QString Writer::readFromFile(const QString &fileName) const
+{
+    QFile file(m_exporter->directory() + fileName);
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
+        return QString();
+
+    QString content;
+    QTextStream in(&file);
+    while (!in.atEnd()) {
+        content += in.readLine()+"\n";
+    }
+    return content;
+}
+
 } // namespace LBDatabase

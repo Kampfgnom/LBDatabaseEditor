@@ -1,5 +1,7 @@
 #include "doppelkopfround.h"
 
+#include "player.h"
+
 
 const QString DoppelkopfRound::Name("Doppelkopf Round");
 

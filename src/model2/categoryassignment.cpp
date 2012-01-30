@@ -2,6 +2,7 @@
 
 
 
+
 const QString CategorieassignmentsContext::Name("categorieassignments");
 const QString Categoryassignment::Name("categoryassignment");
 

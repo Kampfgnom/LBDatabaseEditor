@@ -5,6 +5,7 @@
 #include "../attribute.h"
 #include "../entitytype.h"
 #include "../enumattribute.h"
+#include "../function.h"
 
 #include <QStringList>
 
@@ -31,27 +32,53 @@ void EntityTypeWriter::write() const
     writer.write();
 }
 
-void EntityTypeWriter::writeNeededHeaders(QString &header) const
+void EntityTypeWriter::writeNeededHeaders(QString &source) const
 {
-    QString type;
-    foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
-        if(attribute->type() == Attribute::Pixmap) {
-            header.append(QLatin1String("#include <QPixmap>\n"));
+    QStringList declaredTypes;
+    QString name;
+
+    source.append(QLatin1String("\n"));
+
+    foreach(Relation *relation, m_entityType->nonInhertitedRelations()) {
+        if(relation->entityTypeLeft() == m_entityType) {
+            name = makeClassname(relation->entityTypeRight()->name());
         }
-        else if(attribute->type() == Attribute::Icon) {
-            header.append(QLatin1String("#include <QIcon>\n"));
+        else {
+            name = makeClassname(relation->entityTypeLeft()->name());
         }
-        else if(attribute->type() == Attribute::DateTime) {
-            header.append(QLatin1String("#include <QDateTime>\n"));
-        }
-        else if(attribute->type() == Attribute::Time) {
-            header.append(QLatin1String("#include <QTime>\n"));
-        }
-        else if(attribute->type() == Attribute::Color) {
-            header.append(QLatin1String("#include <QColor>\n"));
+
+        if(!declaredTypes.contains(name)) {
+            declaredTypes << name;
+            writeInclude(name, source);
         }
     }
-    header.append(QLatin1String("\n"));
+
+    foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+        name = makeClassname(function->keyEntityType()->name());
+        if(!declaredTypes.contains(name)) {
+            declaredTypes << name;
+            writeInclude(name, source);
+        }
+    }
+
+    foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
+        if(attribute->type() == Attribute::Pixmap) {
+            source.append(QLatin1String("#include <QPixmap>\n"));
+        }
+        else if(attribute->type() == Attribute::Icon) {
+            source.append(QLatin1String("#include <QIcon>\n"));
+        }
+        else if(attribute->type() == Attribute::DateTime) {
+            source.append(QLatin1String("#include <QDateTime>\n"));
+        }
+        else if(attribute->type() == Attribute::Time) {
+            source.append(QLatin1String("#include <QTime>\n"));
+        }
+        else if(attribute->type() == Attribute::Color) {
+            source.append(QLatin1String("#include <QColor>\n"));
+        }
+    }
+    source.append(QLatin1String("\n"));
 }
 
 void EntityTypeWriter::writePropertyNameStrings(QString &header) const
@@ -73,6 +100,12 @@ void EntityTypeWriter::writePropertyNameStrings(QString &header) const
         }
     }
 
+    foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+        QString functionName = function->name();
+        header.append(QLatin1String("const QString ")+ makeClassname(functionName) + QLatin1String("Function(\"") +
+                      functionName+QLatin1String("\");\n"));
+    }
+
     writeNamespaceEnd(m_classname+QLatin1String("Properties"), header);
 }
 
@@ -88,6 +121,14 @@ void EntityTypeWriter::writeForwardDeclarations(QString &header) const
             name = makeClassname(relation->entityTypeLeft()->name());
         }
 
+        if(!declaredTypes.contains(name)) {
+            declaredTypes << name;
+            header.append(QLatin1String("class ") + name + QLatin1String(";\n"));
+        }
+    }
+
+    foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+        name = makeClassname(function->keyEntityType()->name());
         if(!declaredTypes.contains(name)) {
             declaredTypes << name;
             header.append(QLatin1String("class ") + name + QLatin1String(";\n"));
@@ -123,6 +164,12 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
 
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         writeAttributeDeclaration(attribute, header);
+    }
+
+    header.append(QLatin1String("\n"));
+
+    foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+        writeFunctionDeclaration(function, header);
     }
 
     header.append(QLatin1String("\n"));
@@ -164,6 +211,10 @@ void EntityTypeWriter::writeImplementation(QString &source) const
             writeRelationImplementation(relation, source);
             visitedRelations.append(relation);
          }
+     }
+
+     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+         writeFunctionImplementation(function, source);
      }
 }
 
@@ -258,6 +309,26 @@ void EntityTypeWriter::writeRelationImplementation(Relation *relation, QString &
                                 QLatin1String("Properties::")+relationName+QLatin1String("Relation)->entities();\n"
               "}\n\n"));
     }
+}
+
+void EntityTypeWriter::writeFunctionDeclaration(Function *function, QString &header) const
+{
+    header.append(QLatin1String("\t") + function->qtTypeName() + QLatin1String(" ") +
+                  makeMethodName(function->name()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->name())+
+                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->name())+QLatin1String(") const;\n"));
+}
+
+void EntityTypeWriter::writeFunctionImplementation(Function *function, QString &source) const
+{
+    source.append(function->qtTypeName() + QLatin1String(" ") +m_classname+QLatin1String("::")+
+                  makeMethodName(function->name()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->name())+
+                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->name())+QLatin1String(") const\n"
+                                "{\n"
+                                "\treturn function(")+m_classname+
+                  QLatin1String("Properties::")+makeClassname(function->name()) + QLatin1String("Function)->value(")+
+                  makeMethodName(function->keyEntityType()->name())+QLatin1String(").value<") +
+                  function->qtTypeName()+QLatin1String(">();\n"
+                                              "}\n\n"));
 }
 
 void EntityTypeWriter::exportHeader() const

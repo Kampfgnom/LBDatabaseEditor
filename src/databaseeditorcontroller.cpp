@@ -132,10 +132,10 @@ void DatabaseEditorController::openFile(const QString &fileName)
 void DatabaseEditorController::openEntityStorage(const QString &fileName)
 {
     AutosaveFile *autosaveFile = AutosaveFile::instance(fileName);
-    LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
+    //LBDatabase::Storage *storage = LBDatabase::Storage::instance(autosaveFile->copyFileName());
 
     static QObject guard;
-    //ProjectStatsStorage *storage = new ProjectStatsStorage(autosaveFile->copyFileName(), &guard);
+    ProjectStatsStorage *storage = new ProjectStatsStorage(autosaveFile->copyFileName(), &guard);
 
     if(m_storages.contains(storage)) {
 //        m_databaseEditor->dbeSidebar()->setSelectedDatabase(database);

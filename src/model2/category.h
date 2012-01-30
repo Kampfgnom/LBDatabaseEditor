@@ -28,6 +28,7 @@ public:
 	QString icon() const;
 	int type() const;
 
+
 	Category *parentCategory() const;
 };
 

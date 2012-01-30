@@ -32,6 +32,7 @@ protected:
     QString makeSourceFilename(const QString &classname) const;
 
     void writeToFile(const QString &fileName, const QString &content) const;
+    QString readFromFile(const QString &fileName) const;
 
     const CppExporter * const m_exporter;
 };
