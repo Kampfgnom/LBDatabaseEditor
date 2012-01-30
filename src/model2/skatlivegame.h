@@ -25,6 +25,10 @@ public:
 	int skat_maxRounds() const;
 	bool skat_mitRamschen() const;
 
+	void setSkat_gameEnd(const QString &skat_gameEnd);
+	void setSkat_maxPoints(int skat_maxPoints);
+	void setSkat_maxRounds(int skat_maxRounds);
+	void setSkat_mitRamschen(bool skat_mitRamschen);
 
 
 
@@ -36,6 +40,10 @@ public:
 	// END
 
 signals:
+	void skat_gameEndChanged(QString skat_gameEnd);
+	void skat_maxPointsChanged(int skat_maxPoints);
+	void skat_maxRoundsChanged(int skat_maxRounds);
+	void skat_mitRamschenChanged(bool skat_mitRamschen);
 };
 
 #endif // SKATLIVEGAME_H

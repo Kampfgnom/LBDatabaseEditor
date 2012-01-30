@@ -2,7 +2,6 @@
 
 #include "game.h"
 #include "player.h"
-#include <QIcon>
 
 
 #include "placecalculator.h"
@@ -50,6 +49,46 @@ int Place::gameCount() const
 	return value(PlaceProperties::GameCountAttribute).value<int>();
 }
 
+void Place::setPlz(int plz)
+{
+	if(plz == this->plz())
+		return;
+	setValue(PlaceProperties::PlzAttribute,QVariant::fromValue<int>(plz));
+	emit plzChanged(plz);
+}
+
+void Place::setOrt(const QString &ort)
+{
+	if(ort == this->ort())
+		return;
+	setValue(PlaceProperties::OrtAttribute,QVariant::fromValue<QString>(ort));
+	emit ortChanged(ort);
+}
+
+void Place::setStrasse(const QString &strasse)
+{
+	if(strasse == this->strasse())
+		return;
+	setValue(PlaceProperties::StrasseAttribute,QVariant::fromValue<QString>(strasse));
+	emit strasseChanged(strasse);
+}
+
+void Place::setNummer(int nummer)
+{
+	if(nummer == this->nummer())
+		return;
+	setValue(PlaceProperties::NummerAttribute,QVariant::fromValue<int>(nummer));
+	emit nummerChanged(nummer);
+}
+
+void Place::setComment(const QString &comment)
+{
+	if(comment == this->comment())
+		return;
+	setValue(PlaceProperties::CommentAttribute,QVariant::fromValue<QString>(comment));
+	emit commentChanged(comment);
+}
+
 QList<Game *> Place::games() const
 {
 	return relation<Game>(PlaceProperties::GamesRelation)->entities();
@@ -67,6 +106,7 @@ QList<Player *> Place::player() const
 
 
 	// END
+
 PlacesContext::PlacesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

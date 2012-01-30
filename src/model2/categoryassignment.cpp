@@ -28,6 +28,7 @@ int Categoryassignment::elementId() const
 
 
 	// END
+
 CategorieassignmentsContext::CategorieassignmentsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

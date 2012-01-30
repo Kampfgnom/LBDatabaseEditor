@@ -16,3 +16,4 @@ HeartsOfflineGame::HeartsOfflineGame(LBDatabase::Row *row, LBDatabase::Context *
 
 
 	// END
+

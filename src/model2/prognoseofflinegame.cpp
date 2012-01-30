@@ -16,3 +16,4 @@ PrognoseOfflineGame::PrognoseOfflineGame(LBDatabase::Row *row, LBDatabase::Conte
 
 
 	// END
+

@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QIcon>
 
 namespace PlaceProperties {
 const QString PlzAttribute("plz");
@@ -34,6 +35,11 @@ public:
 	QIcon iconPath() const;
 	int gameCount() const;
 
+	void setPlz(int plz);
+	void setOrt(const QString &ort);
+	void setStrasse(const QString &strasse);
+	void setNummer(int nummer);
+	void setComment(const QString &comment);
 
 
 	QList<Game *> games() const;
@@ -47,6 +53,11 @@ public:
 	// END
 
 signals:
+	void plzChanged(int plz);
+	void ortChanged(QString ort);
+	void strasseChanged(QString strasse);
+	void nummerChanged(int nummer);
+	void commentChanged(QString comment);
 };
 
 class PlacesContext : public LBDatabase::Context

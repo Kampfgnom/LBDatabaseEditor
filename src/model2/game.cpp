@@ -4,8 +4,6 @@
 #include "dokoofflinegamebuddy.h"
 #include "offlinegameinformation.h"
 #include "player.h"
-#include <QDateTime>
-#include <QTime>
 
 
 #include "gamecalculator.h"
@@ -46,6 +44,38 @@ QTime Game::length() const
 QString Game::comment() const
 {
 	return value(GameProperties::CommentAttribute).value<QString>();
+}
+
+void Game::setName(const QString &name)
+{
+	if(name == this->name())
+		return;
+	setValue(GameProperties::NameAttribute,QVariant::fromValue<QString>(name));
+	emit nameChanged(name);
+}
+
+void Game::setDate(const QDateTime &date)
+{
+	if(date == this->date())
+		return;
+	setValue(GameProperties::DateAttribute,QVariant::fromValue<QDateTime>(date));
+	emit dateChanged(date);
+}
+
+void Game::setLength(const QTime &length)
+{
+	if(length == this->length())
+		return;
+	setValue(GameProperties::LengthAttribute,QVariant::fromValue<QTime>(length));
+	emit lengthChanged(length);
+}
+
+void Game::setComment(const QString &comment)
+{
+	if(comment == this->comment())
+		return;
+	setValue(GameProperties::CommentAttribute,QVariant::fromValue<QString>(comment));
+	emit commentChanged(comment);
 }
 
 Place *Game::site() const
@@ -89,6 +119,7 @@ int Game::points(const Player *player) const
 }
 
 	// END
+
 GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

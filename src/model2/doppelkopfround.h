@@ -28,6 +28,8 @@ public:
 	bool doko_soloPflicht() const;
 	QString doko_soloType() const;
 
+	void setDoko_soloPflicht(bool doko_soloPflicht);
+	void setDoko_soloType(const QString &doko_soloType);
 
 
 	Player *hochzeitPlayer() const;
@@ -45,6 +47,8 @@ public:
 	// END
 
 signals:
+	void doko_soloPflichtChanged(bool doko_soloPflicht);
+	void doko_soloTypeChanged(QString doko_soloType);
 };
 
 #endif // DOPPELKOPFROUND_H

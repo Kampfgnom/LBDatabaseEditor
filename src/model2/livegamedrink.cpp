@@ -3,7 +3,6 @@
 #include "round.h"
 #include "player.h"
 #include "drink.h"
-#include <QDateTime>
 
 
 
@@ -18,6 +17,14 @@ Livegamedrink::Livegamedrink(LBDatabase::Row *row, LBDatabase::Context *context)
 QDateTime Livegamedrink::time() const
 {
 	return value(LivegamedrinkProperties::TimeAttribute).value<QDateTime>();
+}
+
+void Livegamedrink::setTime(const QDateTime &time)
+{
+	if(time == this->time())
+		return;
+	setValue(LivegamedrinkProperties::TimeAttribute,QVariant::fromValue<QDateTime>(time));
+	emit timeChanged(time);
 }
 
 Round *Livegamedrink::round() const
@@ -42,6 +49,7 @@ Drink *Livegamedrink::drink() const
 
 
 	// END
+
 LivegamedrinksContext::LivegamedrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

@@ -16,3 +16,4 @@ SkatOfflineGame::SkatOfflineGame(LBDatabase::Row *row, LBDatabase::Context *cont
 
 
 	// END
+

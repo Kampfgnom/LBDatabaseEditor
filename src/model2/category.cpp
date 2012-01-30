@@ -49,6 +49,7 @@ Category *Category::parentCategory() const
 
 
 	// END
+
 CategoriesContext::CategoriesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

@@ -29,6 +29,7 @@ protected:
     void exportSource() const;
 
     void writeNeededHeaders(QString &header) const;
+    void writeNeededQtHeaders(QString &header) const;
     void writePropertyNameStrings(QString &header) const;
     void writeForwardDeclarations(QString &header) const;
 

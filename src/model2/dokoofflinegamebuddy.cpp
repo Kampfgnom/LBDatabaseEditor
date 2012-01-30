@@ -45,6 +45,7 @@ Player *Dokoofflinegamebuddy::player2() const
 
 
 	// END
+
 DokoofflinegamebuddysContext::DokoofflinegamebuddysContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

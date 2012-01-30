@@ -2,7 +2,6 @@
 
 #include "livegamedrink.h"
 #include "player.h"
-#include <QIcon>
 
 
 #include "drinkcalculator.h"
@@ -104,6 +103,7 @@ int Drink::countPerPlayer(const Player *player) const
 
 
 	// END
+
 DrinksContext::DrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

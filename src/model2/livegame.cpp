@@ -38,3 +38,4 @@ int LiveGame::placement(const Player *player) const
 
 
 	// END
+

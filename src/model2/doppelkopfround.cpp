@@ -20,6 +20,22 @@ QString DoppelkopfRound::doko_soloType() const
 	return value(DoppelkopfRoundProperties::Doko_soloTypeAttribute).value<QString>();
 }
 
+void DoppelkopfRound::setDoko_soloPflicht(bool doko_soloPflicht)
+{
+	if(doko_soloPflicht == this->doko_soloPflicht())
+		return;
+	setValue(DoppelkopfRoundProperties::Doko_soloPflichtAttribute,QVariant::fromValue<bool>(doko_soloPflicht));
+	emit doko_soloPflichtChanged(doko_soloPflicht);
+}
+
+void DoppelkopfRound::setDoko_soloType(const QString &doko_soloType)
+{
+	if(doko_soloType == this->doko_soloType())
+		return;
+	setValue(DoppelkopfRoundProperties::Doko_soloTypeAttribute,QVariant::fromValue<QString>(doko_soloType));
+	emit doko_soloTypeChanged(doko_soloType);
+}
+
 Player *DoppelkopfRound::hochzeitPlayer() const
 {
 	return relation<Player>(DoppelkopfRoundProperties::HochzeitPlayerRelation)->firstEntity();
@@ -57,3 +73,4 @@ Player *DoppelkopfRound::dokoSoloPlayer() const
 
 
 	// END
+

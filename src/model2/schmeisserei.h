@@ -20,8 +20,9 @@ public:
 	Q_INVOKABLE Schmeisserei(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
-	int type() const;
+	QString type() const;
 
+	void setType(const QString &type);
 
 
 	Player *player() const;
@@ -35,6 +36,7 @@ public:
 	// END
 
 signals:
+	void typeChanged(QString type);
 };
 
 class SchmeissereisContext : public LBDatabase::Context

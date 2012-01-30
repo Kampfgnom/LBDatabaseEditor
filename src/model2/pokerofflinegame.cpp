@@ -16,3 +16,4 @@ PokerOfflineGame::PokerOfflineGame(LBDatabase::Row *row, LBDatabase::Context *co
 
 
 	// END
+

@@ -4,8 +4,6 @@
 #include "schmeisserei.h"
 #include "livegame.h"
 #include "player.h"
-#include <QDateTime>
-#include <QTime>
 
 
 #include "doppelkopfround.h"
@@ -44,6 +42,46 @@ Round::State Round::state() const
 	return static_cast<State>(value(RoundProperties::StateAttribute).value<int>());
 }
 
+void Round::setNumber(int number)
+{
+	if(number == this->number())
+		return;
+	setValue(RoundProperties::NumberAttribute,QVariant::fromValue<int>(number));
+	emit numberChanged(number);
+}
+
+void Round::setComment(const QString &comment)
+{
+	if(comment == this->comment())
+		return;
+	setValue(RoundProperties::CommentAttribute,QVariant::fromValue<QString>(comment));
+	emit commentChanged(comment);
+}
+
+void Round::setStartTime(const QDateTime &startTime)
+{
+	if(startTime == this->startTime())
+		return;
+	setValue(RoundProperties::StartTimeAttribute,QVariant::fromValue<QDateTime>(startTime));
+	emit startTimeChanged(startTime);
+}
+
+void Round::setLength(const QTime &length)
+{
+	if(length == this->length())
+		return;
+	setValue(RoundProperties::LengthAttribute,QVariant::fromValue<QTime>(length));
+	emit lengthChanged(length);
+}
+
+void Round::setState(State state)
+{
+	if(state == this->state())
+		return;
+	setValue(RoundProperties::StateAttribute,QVariant::fromValue<int>(state));
+	emit stateChanged(state);
+}
+
 QList<Livegamedrink *> Round::drinks() const
 {
 	return relation<Livegamedrink>(RoundProperties::DrinksRelation)->entities();
@@ -71,6 +109,7 @@ int Round::points(const Player *player) const
 
 
 	// END
+
 RoundsContext::RoundsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

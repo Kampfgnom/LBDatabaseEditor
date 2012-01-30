@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QTime>
 #include "game.h"
 
 namespace OfflinegameProperties {
@@ -19,6 +20,7 @@ public:
 
 	QTime offline_length() const;
 
+	void setOffline_length(const QTime &offline_length);
 
 
 
@@ -30,6 +32,7 @@ public:
 	// END
 
 signals:
+	void offline_lengthChanged(QTime offline_length);
 };
 
 #endif // OFFLINEGAME_H

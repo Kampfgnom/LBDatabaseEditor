@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QIcon>
 
 namespace DrinkProperties {
 const QString NameAttribute("name");

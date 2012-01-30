@@ -9,10 +9,6 @@
 #include "place.h"
 #include "game.h"
 #include "drink.h"
-#include <QColor>
-#include <QPixmap>
-#include <QDateTime>
-#include <QDateTime>
 
 
 #include "playercalculator.h"
@@ -110,6 +106,38 @@ QDateTime Player::lastGame() const
 	return value(PlayerProperties::LastGameAttribute).value<QDateTime>();
 }
 
+void Player::setWeight(int weight)
+{
+	if(weight == this->weight())
+		return;
+	setValue(PlayerProperties::WeightAttribute,QVariant::fromValue<int>(weight));
+	emit weightChanged(weight);
+}
+
+void Player::setSize(int size)
+{
+	if(size == this->size())
+		return;
+	setValue(PlayerProperties::SizeAttribute,QVariant::fromValue<int>(size));
+	emit sizeChanged(size);
+}
+
+void Player::setGender(const QString &gender)
+{
+	if(gender == this->gender())
+		return;
+	setValue(PlayerProperties::GenderAttribute,QVariant::fromValue<QString>(gender));
+	emit genderChanged(gender);
+}
+
+void Player::setName(const QString &name)
+{
+	if(name == this->name())
+		return;
+	setValue(PlayerProperties::NameAttribute,QVariant::fromValue<QString>(name));
+	emit nameChanged(name);
+}
+
 QList<Schmeisserei *> Player::schmeissereien() const
 {
 	return relation<Schmeisserei>(PlayerProperties::SchmeissereienRelation)->entities();
@@ -192,6 +220,7 @@ QList<Drink *> Player::drinks() const
 
 
 	// END
+
 PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

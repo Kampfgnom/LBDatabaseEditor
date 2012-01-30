@@ -13,9 +13,17 @@ Schmeisserei::Schmeisserei(LBDatabase::Row *row, LBDatabase::Context *context) :
 {
 }
 
-int Schmeisserei::type() const
+QString Schmeisserei::type() const
 {
-	return value(SchmeissereiProperties::TypeAttribute).value<int>();
+	return value(SchmeissereiProperties::TypeAttribute).value<QString>();
+}
+
+void Schmeisserei::setType(const QString &type)
+{
+	if(type == this->type())
+		return;
+	setValue(SchmeissereiProperties::TypeAttribute,QVariant::fromValue<QString>(type));
+	emit typeChanged(type);
 }
 
 Player *Schmeisserei::player() const
@@ -35,6 +43,7 @@ Round *Schmeisserei::round() const
 
 
 	// END
+
 SchmeissereisContext::SchmeissereisContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

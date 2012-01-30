@@ -23,6 +23,8 @@ public:
 	QString skat_gameType() const;
 	QString skat_trumpfColor() const;
 
+	void setSkat_gameType(const QString &skat_gameType);
+	void setSkat_trumpfColor(const QString &skat_trumpfColor);
 
 
 	Player *skatSoloPlayer() const;
@@ -35,6 +37,8 @@ public:
 	// END
 
 signals:
+	void skat_gameTypeChanged(QString skat_gameType);
+	void skat_trumpfColorChanged(QString skat_trumpfColor);
 };
 
 #endif // SKATROUND_H

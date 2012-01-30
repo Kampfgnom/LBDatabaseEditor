@@ -43,6 +43,7 @@ int Rule::type() const
 
 
 	// END
+
 RulesContext::RulesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

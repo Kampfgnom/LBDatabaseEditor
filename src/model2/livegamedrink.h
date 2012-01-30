@@ -3,6 +3,7 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QDateTime>
 
 namespace LivegamedrinkProperties {
 const QString TimeAttribute("time");
@@ -24,6 +25,7 @@ public:
 
 	QDateTime time() const;
 
+	void setTime(const QDateTime &time);
 
 
 	Round *round() const;
@@ -38,6 +40,7 @@ public:
 	// END
 
 signals:
+	void timeChanged(QDateTime time);
 };
 
 class LivegamedrinksContext : public LBDatabase::Context

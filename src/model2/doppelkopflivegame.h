@@ -51,6 +51,23 @@ public:
 	bool doko_mitFleischlos() const;
 	bool doko_mitSchwarzsolo() const;
 
+	void setDoko_mitHochzeit(bool doko_mitHochzeit);
+	void setDoko_mitPflichtsolo(bool doko_mitPflichtsolo);
+	void setDoko_mitSchmeisserei(bool doko_mitSchmeisserei);
+	void setDoko_mitSchweinerei(bool doko_mitSchweinerei);
+	void setDoko_mitSolo(bool doko_mitSolo);
+	void setDoko_mitTrumpfabgabe(bool doko_mitTrumpfabgabe);
+	void setDoko_mitBubensolo(bool doko_mitBubensolo);
+	void setDoko_mitDamensolo(bool doko_mitDamensolo);
+	void setDoko_mitFarbsolo(bool doko_mitFarbsolo);
+	void setDoko_mitFleischloss(bool doko_mitFleischloss);
+	void setDoko_mitFuenfKoenige(bool doko_mitFuenfKoenige);
+	void setDoko_mitNeunzigPunkte(bool doko_mitNeunzigPunkte);
+	void setDoko_mitTrumpfabgabeSchmeisserei(bool doko_mitTrumpfabgabeSchmeisserei);
+	void setDoko_mitTrumpfsolo(bool doko_mitTrumpfsolo);
+	void setDoko_mitZuWenigTrumpf(bool doko_mitZuWenigTrumpf);
+	void setDoko_mitFleischlos(bool doko_mitFleischlos);
+	void setDoko_mitSchwarzsolo(bool doko_mitSchwarzsolo);
 
 
 
@@ -62,6 +79,23 @@ public:
 	// END
 
 signals:
+	void doko_mitHochzeitChanged(bool doko_mitHochzeit);
+	void doko_mitPflichtsoloChanged(bool doko_mitPflichtsolo);
+	void doko_mitSchmeissereiChanged(bool doko_mitSchmeisserei);
+	void doko_mitSchweinereiChanged(bool doko_mitSchweinerei);
+	void doko_mitSoloChanged(bool doko_mitSolo);
+	void doko_mitTrumpfabgabeChanged(bool doko_mitTrumpfabgabe);
+	void doko_mitBubensoloChanged(bool doko_mitBubensolo);
+	void doko_mitDamensoloChanged(bool doko_mitDamensolo);
+	void doko_mitFarbsoloChanged(bool doko_mitFarbsolo);
+	void doko_mitFleischlossChanged(bool doko_mitFleischloss);
+	void doko_mitFuenfKoenigeChanged(bool doko_mitFuenfKoenige);
+	void doko_mitNeunzigPunkteChanged(bool doko_mitNeunzigPunkte);
+	void doko_mitTrumpfabgabeSchmeissereiChanged(bool doko_mitTrumpfabgabeSchmeisserei);
+	void doko_mitTrumpfsoloChanged(bool doko_mitTrumpfsolo);
+	void doko_mitZuWenigTrumpfChanged(bool doko_mitZuWenigTrumpf);
+	void doko_mitFleischlosChanged(bool doko_mitFleischlos);
+	void doko_mitSchwarzsoloChanged(bool doko_mitSchwarzsolo);
 };
 
 #endif // DOPPELKOPFLIVEGAME_H

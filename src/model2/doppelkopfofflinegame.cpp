@@ -16,3 +16,4 @@ DoppelkopfOfflineGame::DoppelkopfOfflineGame(LBDatabase::Row *row, LBDatabase::C
 
 
 	// END
+

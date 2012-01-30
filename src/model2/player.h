@@ -3,6 +3,10 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QColor>
+#include <QPixmap>
+#include <QDateTime>
+#include <QDateTime>
 
 namespace PlayerProperties {
 const QString WeightAttribute("weight");
@@ -74,6 +78,10 @@ public:
 	QDateTime lastWin() const;
 	QDateTime lastGame() const;
 
+	void setWeight(int weight);
+	void setSize(int size);
+	void setGender(const QString &gender);
+	void setName(const QString &name);
 
 
 	QList<Schmeisserei *> schmeissereien() const;
@@ -100,6 +108,10 @@ public:
 	// END
 
 signals:
+	void weightChanged(int weight);
+	void sizeChanged(int size);
+	void genderChanged(QString gender);
+	void nameChanged(QString name);
 };
 
 class PlayersContext : public LBDatabase::Context

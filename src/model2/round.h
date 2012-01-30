@@ -3,6 +3,8 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QDateTime>
+#include <QTime>
 
 namespace RoundProperties {
 const QString NumberAttribute("number");
@@ -40,6 +42,11 @@ public:
 	QTime length() const;
 	State state() const;
 
+	void setNumber(int number);
+	void setComment(const QString &comment);
+	void setStartTime(const QDateTime &startTime);
+	void setLength(const QTime &length);
+	void setState(State state);
 
 	int points(const Player *player) const;
 
@@ -55,6 +62,11 @@ public:
 	// END
 
 signals:
+	void numberChanged(int number);
+	void commentChanged(QString comment);
+	void startTimeChanged(QDateTime startTime);
+	void lengthChanged(QTime length);
+	void stateChanged(State state);
 };
 
 class RoundsContext : public LBDatabase::Context

@@ -61,24 +61,28 @@ void EntityTypeWriter::writeNeededHeaders(QString &source) const
         }
     }
 
+    source.append(QLatin1String("\n"));
+}
+
+void EntityTypeWriter::writeNeededQtHeaders(QString &header) const
+{
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->type() == Attribute::Pixmap) {
-            source.append(QLatin1String("#include <QPixmap>\n"));
+            header.append(QLatin1String("#include <QPixmap>\n"));
         }
         else if(attribute->type() == Attribute::Icon) {
-            source.append(QLatin1String("#include <QIcon>\n"));
+            header.append(QLatin1String("#include <QIcon>\n"));
         }
         else if(attribute->type() == Attribute::DateTime) {
-            source.append(QLatin1String("#include <QDateTime>\n"));
+            header.append(QLatin1String("#include <QDateTime>\n"));
         }
         else if(attribute->type() == Attribute::Time) {
-            source.append(QLatin1String("#include <QTime>\n"));
+            header.append(QLatin1String("#include <QTime>\n"));
         }
         else if(attribute->type() == Attribute::Color) {
-            source.append(QLatin1String("#include <QColor>\n"));
+            header.append(QLatin1String("#include <QColor>\n"));
         }
     }
-    source.append(QLatin1String("\n"));
 }
 
 void EntityTypeWriter::writePropertyNameStrings(QString &header) const
@@ -140,6 +144,8 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
 {
     QString oldContent = readFromFile(makeHeaderFilename(m_classname));
     QString extraContent = extractExtraContent(oldContent);
+
+    writeNeededQtHeaders(header);
 
     QString baseClass = "LBDatabase::Entity";
     if(m_entityType->parentEntityType()) {
@@ -316,11 +322,16 @@ void EntityTypeWriter::writeAttributeSetterImplementation(Attribute *attribute, 
     QString attributeType = attribute->qtType();
     QString attributeName = attribute->name();
     if(attribute->type() == Attribute::Enum) {
-        source.append(m_classname+QLatin1String("::")+makeClassname(attributeType)+QLatin1String(" ")+m_classname+QLatin1String("::")+makeMethodName(attributeName)+
-                      QLatin1String("() const\n"
+        source.append(QLatin1String("void ")+m_classname+QLatin1String("::set")+makeClassname(attribute->name()) + QLatin1String("(")+attribute->qtType()+QLatin1String(" ")+makeMethodName(attribute->name())+QLatin1String(")\n"
                                     "{\n"
-                                    "\treturn static_cast<")+makeClassname(attributeType)+QLatin1String(">(value(")+m_classname+
-                      QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute).value<int>());\n"
+                                    "\tif(")+makeMethodName(attribute->name())+QLatin1String(" == this->")+makeMethodName(attribute->name())+QLatin1String("())\n"
+                                    "\t\treturn;\n"
+                                    "\tsetValue(")+m_classname+
+                      QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute,"
+                                                  "QVariant::fromValue<int>(") +
+                      makeMethodName(attribute->name())+QLatin1String("));\n"
+                                                  "\temit ")+makeMethodName(attribute->name())+QLatin1String("Changed(")+
+                     makeMethodName(attribute->name())+QLatin1String(");\n"
                                                   "}\n\n"));
     }
     else {

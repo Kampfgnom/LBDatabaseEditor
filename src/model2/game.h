@@ -3,6 +3,8 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QDateTime>
+#include <QTime>
 
 namespace GameProperties {
 const QString NameAttribute("name");
@@ -34,6 +36,10 @@ public:
 	QTime length() const;
 	QString comment() const;
 
+	void setName(const QString &name);
+	void setDate(const QDateTime &date);
+	void setLength(const QTime &length);
+	void setComment(const QString &comment);
 
 	int position(const Player *player) const;
 	int placement(const Player *player) const;
@@ -51,6 +57,10 @@ public:
 	// END
 
 signals:
+	void nameChanged(QString name);
+	void dateChanged(QDateTime date);
+	void lengthChanged(QTime length);
+	void commentChanged(QString comment);
 };
 
 class GamesContext : public LBDatabase::Context
