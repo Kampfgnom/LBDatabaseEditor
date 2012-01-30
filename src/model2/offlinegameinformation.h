@@ -39,6 +39,7 @@ public:
 	int doko_trumpfabgaben() const;
 
 
+
 	Player *player() const;
 	Game *game() const;
 
@@ -48,6 +49,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class OfflinegameinformationsContext : public LBDatabase::Context

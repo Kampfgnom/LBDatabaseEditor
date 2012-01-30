@@ -35,6 +35,7 @@ public:
 	int gameCount() const;
 
 
+
 	QList<Game *> games() const;
 	QList<Player *> player() const;
 
@@ -44,6 +45,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class PlacesContext : public LBDatabase::Context

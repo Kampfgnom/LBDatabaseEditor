@@ -29,6 +29,7 @@ public:
 	QString doko_soloType() const;
 
 
+
 	Player *hochzeitPlayer() const;
 	Player *rePlayer1() const;
 	Player *rePlayer2() const;
@@ -42,6 +43,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 #endif // DOPPELKOPFROUND_H

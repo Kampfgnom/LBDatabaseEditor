@@ -21,12 +21,15 @@ public:
 
 
 
+
 	// Write anything you want to remain unchanged between these comments: 
 	//START
 
 
 
 	// END
+
+signals:
 };
 
 #endif // OFFLINEGAME_H

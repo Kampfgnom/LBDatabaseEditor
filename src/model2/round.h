@@ -40,6 +40,7 @@ public:
 	QTime length() const;
 	State state() const;
 
+
 	int points(const Player *player) const;
 
 	QList<Livegamedrink *> drinks() const;
@@ -52,6 +53,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class RoundsContext : public LBDatabase::Context

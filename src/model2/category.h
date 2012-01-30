@@ -29,6 +29,7 @@ public:
 	int type() const;
 
 
+
 	Category *parentCategory() const;
 
 	// Write anything you want to remain unchanged between these comments: 
@@ -37,6 +38,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class CategoriesContext : public LBDatabase::Context

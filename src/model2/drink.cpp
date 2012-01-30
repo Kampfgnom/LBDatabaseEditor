@@ -50,6 +50,38 @@ QString Drink::mostDrinks() const
 	return value(DrinkProperties::MostDrinksAttribute).value<QString>();
 }
 
+void Drink::setName(const QString &name)
+{
+	if(name == this->name())
+		return;
+	setValue(DrinkProperties::NameAttribute,QVariant::fromValue<QString>(name));
+	emit nameChanged(name);
+}
+
+void Drink::setType(const QString &type)
+{
+	if(type == this->type())
+		return;
+	setValue(DrinkProperties::TypeAttribute,QVariant::fromValue<QString>(type));
+	emit typeChanged(type);
+}
+
+void Drink::setSize(double size)
+{
+	if(size == this->size())
+		return;
+	setValue(DrinkProperties::SizeAttribute,QVariant::fromValue<double>(size));
+	emit sizeChanged(size);
+}
+
+void Drink::setAlc(double alc)
+{
+	if(alc == this->alc())
+		return;
+	setValue(DrinkProperties::AlcAttribute,QVariant::fromValue<double>(alc));
+	emit alcChanged(alc);
+}
+
 QList<Livegamedrink *> Drink::liveDrinks() const
 {
 	return relation<Livegamedrink>(DrinkProperties::LiveDrinksRelation)->entities();

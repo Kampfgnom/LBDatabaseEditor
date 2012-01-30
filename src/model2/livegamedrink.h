@@ -25,6 +25,7 @@ public:
 	QDateTime time() const;
 
 
+
 	Round *round() const;
 	Player *player() const;
 	Drink *drink() const;
@@ -35,6 +36,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class LivegamedrinksContext : public LBDatabase::Context

@@ -35,6 +35,11 @@ public:
 	int drinkCount() const;
 	QString mostDrinks() const;
 
+	void setName(const QString &name);
+	void setType(const QString &type);
+	void setSize(double size);
+	void setAlc(double alc);
+
 	int countPerPlayer(const Player *player) const;
 
 	QList<Livegamedrink *> liveDrinks() const;
@@ -46,6 +51,12 @@ public:
 
 
 	// END
+
+signals:
+	void nameChanged(QString name);
+	void typeChanged(QString type);
+	void sizeChanged(double size);
+	void alcChanged(double alc);
 };
 
 class DrinksContext : public LBDatabase::Context

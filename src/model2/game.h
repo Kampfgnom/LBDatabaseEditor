@@ -34,6 +34,7 @@ public:
 	QTime length() const;
 	QString comment() const;
 
+
 	int position(const Player *player) const;
 	int placement(const Player *player) const;
 
@@ -48,6 +49,8 @@ public:
     virtual int points(const Player *player) const;
 
 	// END
+
+signals:
 };
 
 class GamesContext : public LBDatabase::Context

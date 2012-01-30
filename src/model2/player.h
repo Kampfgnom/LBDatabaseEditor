@@ -75,6 +75,7 @@ public:
 	QDateTime lastGame() const;
 
 
+
 	QList<Schmeisserei *> schmeissereien() const;
 	QList<Livegamedrink *> liveDrinks() const;
 	QList<DoppelkopfRound *> hochzeiten() const;
@@ -97,6 +98,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class PlayersContext : public LBDatabase::Context

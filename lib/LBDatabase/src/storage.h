@@ -32,6 +32,7 @@ public:
     QString name() const;
     void setName(const QString &name);
     QString fileName() const;
+    QString sourcePath() const;
 
     QList<Context *> contexts() const;
     QList<EntityType *> entityTypes() const;

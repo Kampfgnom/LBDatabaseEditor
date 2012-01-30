@@ -30,6 +30,7 @@ public:
 
 	State state() const;
 
+
 	int points(const Player *player) const;
 	int placement(const Player *player) const;
 
@@ -41,6 +42,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 #endif // LIVEGAME_H

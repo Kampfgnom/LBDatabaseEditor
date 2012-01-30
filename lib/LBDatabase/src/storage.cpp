@@ -34,6 +34,7 @@ const QString RelationsTableName("lbmeta_relations");
 const QString FunctionsTableName("lbmeta_functions");
 
 const QString NameColumn("name");
+const QString SourcePathColumn("cpppath");
 }
 
 class StoragePrivate {
@@ -55,6 +56,7 @@ class StoragePrivate {
     Table *functionsTable;
 
     QString name;
+    QString sourcePath;
     QString fileName;
     Database *database;
 
@@ -120,6 +122,7 @@ bool StoragePrivate::open()
 
     Row *metaDataRow = metaDataTable->rowAt(0);
     name = metaDataRow->data(NameColumn).toString();
+    sourcePath = metaDataRow->data(SourcePathColumn).toString();
 
     contexts.reserve(contextsTable->rows().size());
     entityTypes.reserve(entityTypesTable->rows().size());
@@ -375,6 +378,12 @@ QString Storage::fileName() const
 {
     Q_D(const Storage);
     return d->fileName;
+}
+
+QString Storage::sourcePath() const
+{
+    Q_D(const Storage);
+    return d->sourcePath;
 }
 
 /*!

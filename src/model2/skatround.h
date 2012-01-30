@@ -24,6 +24,7 @@ public:
 	QString skat_trumpfColor() const;
 
 
+
 	Player *skatSoloPlayer() const;
 
 	// Write anything you want to remain unchanged between these comments: 
@@ -32,6 +33,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 #endif // SKATROUND_H

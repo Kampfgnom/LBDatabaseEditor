@@ -23,6 +23,7 @@ public:
 	int type() const;
 
 
+
 	Player *player() const;
 	Round *round() const;
 
@@ -32,6 +33,8 @@ public:
 
 
 	// END
+
+signals:
 };
 
 class SchmeissereisContext : public LBDatabase::Context
