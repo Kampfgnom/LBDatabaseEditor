@@ -20,6 +20,7 @@ public:
     static const QString CalculatedColumn;
     static const QString CacheDataColumn;
     static const QString TypeColumn;
+    static const QString EditableColumn;
 
     enum Type {
         Unkown,     // 0
@@ -46,6 +47,7 @@ public:
 
     bool isCalculated() const;
     bool cacheData() const;
+    bool isEditable() const;
 
     Type type() const;
     virtual QString typeName() const;

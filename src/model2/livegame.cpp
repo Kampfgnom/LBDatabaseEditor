@@ -31,3 +31,10 @@ int LiveGame::placement(const Player *player) const
 	return function(LiveGameProperties::PlacementFunction)->value(player).value<int>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END

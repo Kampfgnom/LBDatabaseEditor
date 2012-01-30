@@ -40,7 +40,8 @@ public:
     Context *context() const;
     QList<PropertyValue *> propertyValues() const;
     PropertyValue *propertyValue(Property *property) const;
-    QVariant value(const QString & name) const;
+    QVariant value(const QString &name) const;
+    void setValue(const QString &name, const QVariant &data);
 
     Row *row() const;
 

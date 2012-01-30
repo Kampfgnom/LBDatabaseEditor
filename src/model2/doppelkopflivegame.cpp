@@ -94,3 +94,10 @@ bool DoppelkopfLiveGame::doko_mitSchwarzsolo() const
 	return value(DoppelkopfLiveGameProperties::Doko_mitSchwarzsoloAttribute).value<bool>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END

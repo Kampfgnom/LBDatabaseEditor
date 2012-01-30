@@ -21,6 +21,13 @@ public:
 	int elementId() const;
 
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 class CategorieassignmentsContext : public LBDatabase::Context

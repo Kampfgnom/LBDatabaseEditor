@@ -34,6 +34,9 @@ protected:
     void writeToFile(const QString &fileName, const QString &content) const;
     QString readFromFile(const QString &fileName) const;
 
+    QString extractExtraContent(const QString &content) const;
+    void writeExtraContent(const QString &content, QString &file) const;
+
     const CppExporter * const m_exporter;
 };
 

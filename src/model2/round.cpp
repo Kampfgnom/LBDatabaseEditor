@@ -64,6 +64,13 @@ int Round::points(const Player *player) const
 	return function(RoundProperties::PointsFunction)->value(player).value<int>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 RoundsContext::RoundsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

@@ -25,6 +25,13 @@ public:
 
 	Player *player() const;
 	Round *round() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 class SchmeissereisContext : public LBDatabase::Context

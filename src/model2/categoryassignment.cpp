@@ -21,6 +21,13 @@ int Categoryassignment::elementId() const
 	return value(CategoryassignmentProperties::ElementIdAttribute).value<int>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 CategorieassignmentsContext::CategorieassignmentsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

@@ -20,6 +20,13 @@ public:
 	QTime offline_length() const;
 
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 #endif // OFFLINEGAME_H

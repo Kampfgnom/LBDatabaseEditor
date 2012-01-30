@@ -42,6 +42,13 @@ Category *Category::parentCategory() const
 	return relation<Category>(CategoryProperties::ParentCategoryRelation)->firstEntity();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 CategoriesContext::CategoriesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

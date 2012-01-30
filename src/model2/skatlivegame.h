@@ -26,6 +26,13 @@ public:
 	bool skat_mitRamschen() const;
 
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 #endif // SKATLIVEGAME_H

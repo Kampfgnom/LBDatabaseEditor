@@ -24,6 +24,7 @@ void AttributePrivate::init()
     displayName = row->data(Attribute::DisplayNameColumn).toString();
     calculated = row->data(Attribute::CalculatedColumn).toBool();
     cacheData = row->data(Attribute::CacheDataColumn).toBool();
+    editable = row->data(Attribute::EditableColumn).toBool();
 
     type = static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt());
 
@@ -98,6 +99,7 @@ const QString Attribute::EntityTypeIdColumn("entityTypeId");
 const QString Attribute::CalculatedColumn("calculated");
 const QString Attribute::CacheDataColumn("cacheData");
 const QString Attribute::TypeColumn("type");
+const QString Attribute::EditableColumn("editable");
 
 /*!
   Creates an attribute, which contains the meta data from \a row in the given \a
@@ -186,6 +188,12 @@ bool Attribute::cacheData() const
 {
     Q_D(const Attribute);
     return d->cacheData;
+}
+
+bool Attribute::isEditable() const
+{
+    Q_D(const Attribute);
+    return d->editable;
 }
 
 /*!

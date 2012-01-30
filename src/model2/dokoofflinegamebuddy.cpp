@@ -38,6 +38,13 @@ Player *Dokoofflinegamebuddy::player2() const
 	return relation<Player>(DokoofflinegamebuddyProperties::Player2Relation)->firstEntity();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 DokoofflinegamebuddysContext::DokoofflinegamebuddysContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

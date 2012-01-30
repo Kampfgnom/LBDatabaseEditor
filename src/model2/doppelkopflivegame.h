@@ -52,6 +52,13 @@ public:
 	bool doko_mitSchwarzsolo() const;
 
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 #endif // DOPPELKOPFLIVEGAME_H

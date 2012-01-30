@@ -195,6 +195,16 @@ QVariant Entity::value(const QString &name) const
     return value->data();
 }
 
+void Entity::setValue(const QString &name, const QVariant &data)
+{
+    Q_D(const Entity);
+    PropertyValue *value = d->propertyValues.value(d->entityType->property(name), 0);
+    if(!value || !value->isEditable())
+        return;
+
+    value->setData(data);
+}
+
 /*!
   Returns the Row, which stores the property values of this entity.
   */

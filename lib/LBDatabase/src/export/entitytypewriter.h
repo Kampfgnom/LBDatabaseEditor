@@ -37,8 +37,13 @@ protected:
 
     void writeEnum(EnumAttribute *attribute, QString &header) const;
 
-    void writeAttributeDeclaration(Attribute *attribute, QString &header) const;
-    void writeAttributeImplementation(Attribute *attribute, QString &source) const;
+    void writeAttributeGetterDeclaration(Attribute *attribute, QString &header) const;
+    void writeAttributeGetterImplementation(Attribute *attribute, QString &source) const;
+
+    void writeAttributeSetterDeclaration(Attribute *attribute, QString &header) const;
+    void writeAttributeSetterImplementation(Attribute *attribute, QString &source) const;
+
+    void writeAttributeChangedSignal(Attribute *attribute, QString &header) const;
 
     void writeRelationDeclaration(Relation *relation, QString &header) const;
     void writeRelationImplementation(Relation *relation, QString &source) const;

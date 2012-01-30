@@ -138,6 +138,9 @@ void EntityTypeWriter::writeForwardDeclarations(QString &header) const
 
 void EntityTypeWriter::writeDeclaration(QString &header) const
 {
+    QString oldContent = readFromFile(makeHeaderFilename(m_classname));
+    QString extraContent = extractExtraContent(oldContent);
+
     QString baseClass = "LBDatabase::Entity";
     if(m_entityType->parentEntityType()) {
         baseClass = makeClassname(m_entityType->parentEntityType()->name());
@@ -163,7 +166,13 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
     }
 
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
-        writeAttributeDeclaration(attribute, header);
+        writeAttributeGetterDeclaration(attribute, header);
+    }
+
+    foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
+        if(attribute->isEditable()) {
+           writeAttributeSetterDeclaration(attribute, header);
+        }
     }
 
     header.append(QLatin1String("\n"));
@@ -182,27 +191,37 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
         }
     }
 
+    writeExtraContent(extraContent, header);
+
     header.append(QLatin1String("};\n\n"));
 }
 
 void EntityTypeWriter::writeImplementation(QString &source) const
 {
-    QString typeClass = makeClassname(m_entityType->name());
+    QString oldContent = readFromFile(makeSourceFilename(m_classname));
+    QString extraContent = extractExtraContent(oldContent);
+
     QString baseClass("Entity");
     if(m_entityType->parentEntityType())
         baseClass = makeClassname(m_entityType->parentEntityType()->name());
 
-    source.append(QLatin1String("const QString ") + typeClass + QLatin1String("::Name(\"") + m_entityType->name() + QLatin1String("\");\n\n"));
+    source.append(QLatin1String("const QString ") + m_classname + QLatin1String("::Name(\"") + m_entityType->name() + QLatin1String("\");\n\n"));
 
     source.append(
-         typeClass+QLatin1String("::")+typeClass+QLatin1String(
+         m_classname+QLatin1String("::")+m_classname+QLatin1String(
     "(LBDatabase::Row *row, LBDatabase::Context *context) :\n"
         "\t") + baseClass + QLatin1String("(row, context)\n"
     "{\n"
     "}\n\n"));
 
      foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
-         writeAttributeImplementation(attribute, source);
+         writeAttributeGetterImplementation(attribute, source);
+     }
+
+     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
+         if(attribute->isEditable()) {
+            writeAttributeSetterImplementation(attribute, source);
+         }
      }
 
      QList<Relation *> visitedRelations;
@@ -216,6 +235,8 @@ void EntityTypeWriter::writeImplementation(QString &source) const
      foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
          writeFunctionImplementation(function, source);
      }
+
+     writeExtraContent(extraContent, source);
 }
 
 void EntityTypeWriter::writeEnum(EnumAttribute *attribute, QString &header) const
@@ -234,13 +255,19 @@ void EntityTypeWriter::writeEnum(EnumAttribute *attribute, QString &header) cons
     header.append(QLatin1String("\n\t};\n\n"));
 }
 
-void EntityTypeWriter::writeAttributeDeclaration(Attribute *attribute, QString &header) const
+void EntityTypeWriter::writeAttributeGetterDeclaration(Attribute *attribute, QString &header) const
 {
     header.append(QLatin1String("\t") + attribute->qtType() + QLatin1String(" ") +
                   makeMethodName(attribute->name()) + QLatin1String("() const;\n"));
 }
 
-void EntityTypeWriter::writeAttributeImplementation(Attribute *attribute, QString &source) const
+void EntityTypeWriter::writeAttributeSetterDeclaration(Attribute *attribute, QString &header) const
+{
+    header.append(QLatin1String("\tvoid set") +
+                  makeClassname(attribute->name()) + QLatin1String("(")+attribute->qtType()+QLatin1String(" ")+makeMethodName(attribute->name())+QLatin1String(");\n"));
+}
+
+void EntityTypeWriter::writeAttributeGetterImplementation(Attribute *attribute, QString &source) const
 {
     QString attributeType = attribute->qtType();
     QString attributeName = attribute->name();
@@ -261,6 +288,34 @@ void EntityTypeWriter::writeAttributeImplementation(Attribute *attribute, QStrin
                       attributeType+QLatin1String(">();\n"
                                                   "}\n\n"));
     }
+}
+
+void EntityTypeWriter::writeAttributeSetterImplementation(Attribute *attribute, QString &source) const
+{
+    QString attributeType = attribute->qtType();
+    QString attributeName = attribute->name();
+    if(attribute->type() == Attribute::Enum) {
+        source.append(m_classname+QLatin1String("::")+makeClassname(attributeType)+QLatin1String(" ")+m_classname+QLatin1String("::")+makeMethodName(attributeName)+
+                      QLatin1String("() const\n"
+                                    "{\n"
+                                    "\treturn static_cast<")+makeClassname(attributeType)+QLatin1String(">(value(")+m_classname+
+                      QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute).value<int>());\n"
+                                                  "}\n\n"));
+    }
+    else {
+        source.append(attributeType+QLatin1String(" ")+m_classname+QLatin1String("::set")+makeClassname(attribute->name()) + QLatin1String("(")+attribute->qtType()+QLatin1String(" ")+makeMethodName(attribute->name())+QLatin1String(")\n"
+                                    "{\n"
+                                    "\tsetValue(")+m_classname+
+                      QLatin1String("Properties::")+attributeName.left(1).toUpper() + attributeName.mid(1) + QLatin1String("Attribute,"
+                                                  "QVariant::fromValue<") +
+                      attributeType+QLatin1String(">(") +
+                      makeMethodName(attribute->name())+QLatin1String("));\n"
+                                                  "}\n\n"));
+    }
+}
+
+void EntityTypeWriter::writeAttributeChangedSignal(Attribute *attribute, QString &header) const
+{
 }
 
 void EntityTypeWriter::writeRelationDeclaration(Relation *relation, QString &header) const

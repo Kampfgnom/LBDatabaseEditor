@@ -60,6 +60,13 @@ QList<Player *> Place::player() const
 	return relation<Player>(PlaceProperties::PlayerRelation)->entities();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 PlacesContext::PlacesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

@@ -148,7 +148,7 @@ bool AttributeValue::setData(const QVariant &data)
 bool AttributeValue::isEditable() const
 {
     Q_D(const AttributeValue);
-    return !d->attribute->isCalculated();
+    return !d->attribute->isCalculated() && d->attribute->isEditable();
 }
 
 /*!

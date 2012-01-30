@@ -45,6 +45,13 @@ public:
 	QList<Livegamedrink *> drinks() const;
 	QList<Schmeisserei *> schmeissereien() const;
 	LiveGame *game() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 class RoundsContext : public LBDatabase::Context

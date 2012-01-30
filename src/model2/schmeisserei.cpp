@@ -28,6 +28,13 @@ Round *Schmeisserei::round() const
 	return relation<Round>(SchmeissereiProperties::RoundRelation)->firstEntity();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 SchmeissereisContext::SchmeissereisContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

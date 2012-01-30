@@ -8,6 +8,11 @@
 
 namespace LBDatabase {
 
+namespace {
+const QString ExtraContentBegin("\t// Write anything you want to remain unchanged between these comments: \n\t//START");
+const QString ExtraContentEnd("\t// END");
+}
+
 Writer::Writer(const CppExporter *const exporter) :
     m_exporter(exporter)
 {
@@ -117,6 +122,26 @@ QString Writer::readFromFile(const QString &fileName) const
         content += in.readLine()+"\n";
     }
     return content;
+}
+
+QString Writer::extractExtraContent(const QString &content) const
+{
+    int start = content.indexOf(ExtraContentBegin) + ExtraContentBegin.size();
+    int length = content.indexOf(ExtraContentEnd) - start;
+
+    if(start < 0 || length < 0)
+        return QString();
+
+    return content.mid(start, length);
+}
+
+void Writer::writeExtraContent(const QString &content, QString &file) const
+{
+    file.append(QLatin1String("\n"));
+    file.append(ExtraContentBegin);
+    file.append(content);
+    file.append(ExtraContentEnd);
+    file.append(QLatin1String("\n"));
 }
 
 } // namespace LBDatabase

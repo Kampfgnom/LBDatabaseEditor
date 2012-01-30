@@ -75,8 +75,12 @@ int Game::position(const Player *player) const
 
 int Game::placement(const Player *player) const
 {
-    return function(GameProperties::PlacementFunction)->value(player).value<int>();
+	return function(GameProperties::PlacementFunction)->value(player).value<int>();
 }
+
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
 
 int Game::points(const Player *player) const
 {
@@ -84,6 +88,7 @@ int Game::points(const Player *player) const
     return 0;
 }
 
+	// END
 GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

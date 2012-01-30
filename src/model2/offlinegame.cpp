@@ -15,3 +15,10 @@ QTime Offlinegame::offline_length() const
 	return value(OfflinegameProperties::Offline_lengthAttribute).value<QTime>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END

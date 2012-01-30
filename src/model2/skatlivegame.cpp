@@ -29,3 +29,10 @@ bool SkatLiveGame::skat_mitRamschen() const
 	return value(SkatLiveGameProperties::Skat_mitRamschenAttribute).value<bool>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END

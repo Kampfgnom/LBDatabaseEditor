@@ -9,3 +9,10 @@ SkatOfflineGame::SkatOfflineGame(LBDatabase::Row *row, LBDatabase::Context *cont
 {
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END

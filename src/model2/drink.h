@@ -9,7 +9,7 @@ const QString NameAttribute("name");
 const QString TypeAttribute("type");
 const QString SizeAttribute("size");
 const QString AlcAttribute("alc");
-const QString IconPathAttribute("iconPath");
+const QString IconAttribute("icon");
 const QString DrinkCountAttribute("drinkCount");
 const QString MostDrinksAttribute("mostDrinks");
 const QString LiveDrinksRelation("LiveDrinksPerDrink");
@@ -31,7 +31,7 @@ public:
 	QString type() const;
 	double size() const;
 	double alc() const;
-	QIcon iconPath() const;
+	QIcon icon() const;
 	int drinkCount() const;
 	QString mostDrinks() const;
 
@@ -39,6 +39,13 @@ public:
 
 	QList<Livegamedrink *> liveDrinks() const;
 	QList<Player *> players() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 class DrinksContext : public LBDatabase::Context

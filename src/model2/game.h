@@ -37,12 +37,17 @@ public:
 	int position(const Player *player) const;
 	int placement(const Player *player) const;
 
-    virtual int points(const Player *player) const;
-
 	Place *site() const;
 	QList<Dokoofflinegamebuddy *> dokoBuddies() const;
 	QList<Offlinegameinformation *> offlineInformation() const;
 	QList<Player *> players() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+    virtual int points(const Player *player) const;
+
+	// END
 };
 
 class GamesContext : public LBDatabase::Context

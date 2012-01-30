@@ -35,6 +35,13 @@ Drink *Livegamedrink::drink() const
 	return relation<Drink>(LivegamedrinkProperties::DrinkRelation)->firstEntity();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 LivegamedrinksContext::LivegamedrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

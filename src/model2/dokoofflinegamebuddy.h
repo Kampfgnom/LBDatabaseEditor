@@ -29,6 +29,13 @@ public:
 	Game *game() const;
 	Player *player1() const;
 	Player *player2() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 class DokoofflinegamebuddysContext : public LBDatabase::Context

@@ -35,6 +35,13 @@ public:
 	Player *schweinereiPlayer() const;
 	Player *trumpfabgabePlayer() const;
 	Player *dokoSoloPlayer() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 #endif // DOPPELKOPFROUND_H

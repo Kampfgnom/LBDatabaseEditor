@@ -9,3 +9,10 @@ HeartsOfflineGame::HeartsOfflineGame(LBDatabase::Row *row, LBDatabase::Context *
 {
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END

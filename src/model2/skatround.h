@@ -25,6 +25,13 @@ public:
 
 
 	Player *skatSoloPlayer() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 #endif // SKATROUND_H

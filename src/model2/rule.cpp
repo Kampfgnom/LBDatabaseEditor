@@ -36,6 +36,13 @@ int Rule::type() const
 	return value(RuleProperties::TypeAttribute).value<int>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 RulesContext::RulesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

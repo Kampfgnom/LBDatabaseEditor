@@ -21,6 +21,7 @@ protected:
     EntityType *entityType;
     bool calculated;
     bool cacheData;
+    bool editable;
 
     Attribute::Type type;
 

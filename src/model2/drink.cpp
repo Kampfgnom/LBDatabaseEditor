@@ -35,9 +35,9 @@ double Drink::alc() const
 	return value(DrinkProperties::AlcAttribute).value<double>();
 }
 
-QIcon Drink::iconPath() const
+QIcon Drink::icon() const
 {
-	return value(DrinkProperties::IconPathAttribute).value<QIcon>();
+	return value(DrinkProperties::IconAttribute).value<QIcon>();
 }
 
 int Drink::drinkCount() const
@@ -65,6 +65,13 @@ int Drink::countPerPlayer(const Player *player) const
 	return function(DrinkProperties::CountPerPlayerFunction)->value(player).value<int>();
 }
 
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 DrinksContext::DrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)
 {

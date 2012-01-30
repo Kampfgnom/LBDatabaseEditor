@@ -37,6 +37,13 @@ public:
 
 	QList<Game *> games() const;
 	QList<Player *> player() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+
+
+
+	// END
 };
 
 class PlacesContext : public LBDatabase::Context
