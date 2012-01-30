@@ -7,6 +7,8 @@
 #include "relation.h"
 #include "row.h"
 
+#include <QDebug>
+
 namespace LBDatabase {
 
 /******************************************************************************
@@ -14,17 +16,16 @@ namespace LBDatabase {
 */
 
 //! \cond PRIVATE
-void RelationValuePrivate::init()
+void RelationValueBasePrivate::init()
 {
-    Q_Q(RelationValue);
+    Q_Q(RelationValueBase);
     QObject::connect(q, SIGNAL(dataChanged(QVariant)), entity->context(), SLOT(onPropertyValueDataChanged(QVariant)));
 }
 
-void RelationValuePrivate::addOtherEntity(Entity *entity)
+void RelationValueBasePrivate::fetchValue()
 {
-    if(!otherEntities.contains(entity))
-        otherEntities.append(entity);
 }
+
 //! \endcond
 
 /******************************************************************************
@@ -48,11 +49,11 @@ void RelationValuePrivate::addOtherEntity(Entity *entity)
 /*!
   Creates a RelationValue.
   */
-RelationValue::RelationValue(RelationValuePrivate &dd, Relation *relation, Entity *parent) :
+RelationValueBase::RelationValueBase(Relation *relation, Entity *parent) :
     PropertyValue(parent),
-    d_ptr(&dd)
+    d_ptr(new RelationValueBasePrivate)
 {
-    Q_D(RelationValue);
+    Q_D(RelationValueBase);
     d->q_ptr = this;
     d->relation = relation;
     d->entity = parent;
@@ -62,32 +63,32 @@ RelationValue::RelationValue(RelationValuePrivate &dd, Relation *relation, Entit
 /*!
   Destroys the relation value.
   */
-RelationValue::~RelationValue()
+RelationValueBase::~RelationValueBase()
 {
 }
 
 /*!
   Returns the entity of this relation value.
   */
-Entity *RelationValue::entity() const
+Entity *RelationValueBase::entity() const
 {
-    Q_D(const RelationValue);
+    Q_D(const RelationValueBase);
     return d->entity;
 }
 
 /*!
-  Returns the entities to which this relation maps.
+  Does nothing.
   */
-QList<Entity *> RelationValue::entities() const
+bool RelationValueBase::setData(const QVariant &data)
 {
-    Q_D(const RelationValue);
-    return d->otherEntities;
+    Q_UNUSED(data);
+    return false;
 }
 
 /*!
   Returns false
   */
-bool RelationValue::isEditable() const
+bool RelationValueBase::isEditable() const
 {
     return false;
 }
@@ -95,19 +96,23 @@ bool RelationValue::isEditable() const
 /*!
   Returns the relation, that describes this value.
   */
-Property *RelationValue::property() const
+Property *RelationValueBase::property() const
 {
-    Q_D(const RelationValue);
+    Q_D(const RelationValueBase);
     return d->relation;
 }
 
 /*!
   Initializes the content of the relation value.
   */
-void RelationValue::fetchValue()
+void RelationValueBase::fetchValue()
 {
-    Q_D(RelationValue);
+    Q_D(RelationValueBase);
     d->fetchValue();
+}
+
+void RelationValueBase::calculate()
+{
 }
 
 } // namespace LBDatabase

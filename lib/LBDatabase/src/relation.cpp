@@ -6,12 +6,13 @@
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "relationvalue.h"
 #include "relationvalue_p.h"
-#include "relationvalueleft.h"
-#include "relationvalueright.h"
 #include "row.h"
 #include "storage.h"
 #include "table.h"
+
+#include <QDebug>
 
 namespace LBDatabase {
 
@@ -25,6 +26,7 @@ const QString Relation::DisplayNameRightColumn("displaynameright");
 const QString Relation::EntityTypeLeftColumn("entitytypeleft");
 const QString Relation::EntityTypeRightColumn("entitytyperight");
 const QString Relation::CardinalityColumn("cardinality");
+const QString Relation::ColumnOrTableNameColumn("columnOrTableName");
 
 class RelationPrivate {
     RelationPrivate() :
@@ -36,12 +38,15 @@ class RelationPrivate {
     void init();
     void addPropertyValueToEntities();
     void initializeManyToManyRelation();
+    void initializeOneToXRelation();
     void addPropertyValue(Entity *entity);
+    void fetchValues();
 
     Row *row;
     Storage *storage;
 
     QString name;
+    QString columnOrTableName;
     QString displayNameLeft;
     QString displayNameRight;
     EntityType *entityTypeLeft;
@@ -49,8 +54,6 @@ class RelationPrivate {
     Relation::Cardinality cardinality;
 
     Table *relationTable;
-
-    int rightColumnIndex;
 
     Relation * q_ptr;
     Q_DECLARE_PUBLIC(Relation)
@@ -61,13 +64,14 @@ void RelationPrivate::init()
     Q_Q(Relation);
 
     name = row->data(Relation::NameColumn).toString();
+    columnOrTableName = row->data(Relation::ColumnOrTableNameColumn).toString();
     displayNameLeft = row->data(Relation::DisplayNameLeftColumn).toString();
     displayNameRight = row->data(Relation::DisplayNameRightColumn).toString();
     entityTypeLeft = storage->entityType(row->data(Relation::EntityTypeLeftColumn).toInt());
     entityTypeRight = storage->entityType(row->data(Relation::EntityTypeRightColumn).toInt());
     cardinality = static_cast<Relation::Cardinality>(row->data(Relation::CardinalityColumn).toInt());
 
-    relationTable = storage->database()->table(name);
+    relationTable = storage->database()->table(columnOrTableName);
 
     if(entityTypeLeft) {
         entityTypeLeft->addRelation(q);
@@ -76,8 +80,6 @@ void RelationPrivate::init()
     if(entityTypeRight) {
         entityTypeRight->addRelation(q);
         entityTypeRight->context()->addRelation(q);
-        if(cardinality == Relation::OneToOne || cardinality == Relation::OneToMany)
-            rightColumnIndex = entityTypeRight->context()->table()->column(name)->index();
     }
 }
 
@@ -85,24 +87,72 @@ void RelationPrivate::addPropertyValueToEntities()
 {
     Q_Q(Relation);
     foreach(Entity *entity, entityTypeLeft->entities()) {
-        entity->addRelationValue(new RelationValueLeft(q, entity));
+        entity->addRelationValue(q->createLeftValue(entity));
     }
     foreach(Entity *entity, entityTypeRight->entities()) {
-        entity->addRelationValue(new RelationValueRight(q, entity));
+        entity->addRelationValue(q->createRightValue(entity));
+    }
+}
+
+void RelationPrivate::fetchValues()
+{
+    switch(cardinality) {
+    case Relation::OneToOne:
+    case Relation::OneToMany:
+        initializeOneToXRelation();
+        break;
+    case Relation::ManyToMany:
+        initializeManyToManyRelation();
+        break;
     }
 }
 
 void RelationPrivate::initializeManyToManyRelation()
 {
     Q_Q(Relation);
+    Column *c1 = relationTable->column(entityTypeLeft->name());
+    int entityTypeLeftColumn = -1;
+    if(c1)
+        entityTypeLeftColumn = c1->index();
+
+    Column *c2 = relationTable->column(entityTypeRight->name());
+    int entityTypeRightColumn = -1;
+    if(c2)
+        entityTypeRightColumn = c2->index();
+
+    if(entityTypeLeftColumn >= 0 && entityTypeRightColumn >= 0) {
     foreach(Row *row, relationTable->rows()) {
-        int leftId = row->data(entityTypeLeft->name()).toInt();
-        int rightId = row->data(entityTypeRight->name()).toInt();
-        if(leftId > 0 && rightId > 0) {
-            Entity *leftEntity = entityTypeLeft->context()->entity(leftId);
-            Entity *rightEntity = entityTypeRight->context()->entity(rightId);
-            RelationValuePrivate *leftValue = qobject_cast<RelationValue *>(leftEntity->propertyValue(q))->d_func();
-            RelationValuePrivate *rightValue = qobject_cast<RelationValue *>(rightEntity->propertyValue(q))->d_func();
+            int leftId = row->data(entityTypeLeftColumn).toInt();
+            int rightId = row->data(entityTypeRightColumn).toInt();
+            if(leftId > 0 && rightId > 0) {
+                Entity *leftEntity = entityTypeLeft->context()->entity(leftId);
+                Entity *rightEntity = entityTypeRight->context()->entity(rightId);
+                RelationValueBase *leftValue = static_cast<RelationValueBase *>(leftEntity->propertyValue(q));
+                RelationValueBase *rightValue = static_cast<RelationValueBase *>(rightEntity->propertyValue(q));
+                leftValue->addOtherEntity(rightEntity);
+                rightValue->addOtherEntity(leftEntity);
+            }
+        }
+    }
+}
+
+void RelationPrivate::initializeOneToXRelation()
+{
+    Q_Q(Relation);
+
+    int rightColumnIndex = entityTypeRight->context()->table()->column(columnOrTableName)->index();
+
+    int leftId;
+    Entity *leftEntity;
+    RelationValueBase *leftValue;
+    RelationValueBase *rightValue;
+    foreach(Entity *rightEntity, entityTypeRight->entities()) {
+        leftId = rightEntity->row()->data(rightColumnIndex).toInt();
+        leftEntity = entityTypeLeft->context()->entity(leftId);
+
+        if(leftEntity) {
+            leftValue = static_cast<RelationValueBase *>(leftEntity->propertyValue(q));
+            rightValue = static_cast<RelationValueBase *>(rightEntity->propertyValue(q));
             leftValue->addOtherEntity(rightEntity);
             rightValue->addOtherEntity(leftEntity);
         }
@@ -113,12 +163,13 @@ void RelationPrivate::addPropertyValue(Entity *entity)
 {
     Q_Q(Relation);
     if(entity->entityType() == entityTypeLeft) {
-        entity->addRelationValue(new RelationValueLeft(q, entity));
+        entity->addRelationValue(q->createLeftValue(entity));
     }
-    else if(entity->entityType() == entityTypeLeft) {
-        entity->addRelationValue(new RelationValueRight(q, entity));
+    else {
+        entity->addRelationValue(q->createRightValue(entity));
     }
 }
+
 //! \endcond
 
 /******************************************************************************
@@ -204,6 +255,18 @@ QString Relation::displayName(const Context *context) const
     return d->name;
 }
 
+QString Relation::displayNameLeft() const
+{
+    Q_D(const Relation);
+    return d->displayNameLeft;
+}
+
+QString Relation::displayNameRight() const
+{
+    Q_D(const Relation);
+    return d->displayNameRight;
+}
+
 /*!
   Sets the display name in the given \a context.
 
@@ -277,21 +340,26 @@ void Relation::addPropertyValue(Entity *entity)
     return d->addPropertyValue(entity);
 }
 
-/*!
-  \internal
-
-  Initializes the values of a N:M relation.
-  */
-void Relation::initializeManyToManyRelation()
+void Relation::fetchValues()
 {
     Q_D(Relation);
-    return d->initializeManyToManyRelation();
+    return d->fetchValues();
 }
 
-int Relation::rightColumnIndex() const
+RelationValueBase *Relation::createLeftValue(Entity *entity)
+{
+    return new RelationValue<Entity>(this, entity);
+}
+
+RelationValueBase *Relation::createRightValue(Entity *entity)
+{
+    return new RelationValue<Entity>(this, entity);
+}
+
+Storage* Relation::storage() const
 {
     Q_D(const Relation);
-    return d->rightColumnIndex;
+    return d->storage;
 }
 
 } // namespace LBDatabase

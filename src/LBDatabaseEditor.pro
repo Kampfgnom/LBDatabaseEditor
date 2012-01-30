@@ -20,7 +20,40 @@ SOURCES += main.cpp\
     contextview.cpp \
     addentitytypedialog.cpp \
     entitytypecombobox.cpp \
-    createcontextdialog.cpp
+    createcontextdialog.cpp \
+    editentitytypesdialog.cpp \
+    editattributewidget.cpp \
+    editrelationwidget.cpp \
+    propertycombobox.cpp \
+    model2/skatround.cpp \
+    model2/skatofflinegame.cpp \
+    model2/skatlivegame.cpp \
+    model2/schmeisserei.cpp \
+    model2/rule.cpp \
+    model2/round.cpp \
+    model2/projectstatsstorage.cpp \
+    model2/prognoseofflinegame.cpp \
+    model2/pokerofflinegame.cpp \
+    model2/player.cpp \
+    model2/place.cpp \
+    model2/offlinegameinformation.cpp \
+    model2/offlinegame.cpp \
+    model2/livegamedrink.cpp \
+    model2/livegame.cpp \
+    model2/heartsofflinegame.cpp \
+    model2/game.cpp \
+    model2/drink.cpp \
+    model2/doppelkopfround.cpp \
+    model2/doppelkopfofflinegame.cpp \
+    model2/doppelkopflivegame.cpp \
+    model2/dokoofflinegamebuddy.cpp \
+    model2/categoryassignment.cpp \
+    model2/category.cpp \
+    model2/drinkcalculator.cpp \
+    model2/livegamecalculator.cpp \
+    model2/gamecalculator.cpp \
+    model2/placecalculator.cpp \
+    model2/playercalculator.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -38,7 +71,40 @@ HEADERS  += \
     contextview.h \
     addentitytypedialog.h \
     entitytypecombobox.h \
-    createcontextdialog.h
+    createcontextdialog.h \
+    editentitytypesdialog.h \
+    editattributewidget.h \
+    editrelationwidget.h \
+    propertycombobox.h \
+    model2/skatround.h \
+    model2/skatofflinegame.h \
+    model2/skatlivegame.h \
+    model2/schmeisserei.h \
+    model2/rule.h \
+    model2/round.h \
+    model2/projectstatsstorage.h \
+    model2/prognoseofflinegame.h \
+    model2/pokerofflinegame.h \
+    model2/player.h \
+    model2/place.h \
+    model2/offlinegameinformation.h \
+    model2/offlinegame.h \
+    model2/livegamedrink.h \
+    model2/livegamecalculator.h \
+    model2/livegame.h \
+    model2/heartsofflinegame.h \
+    model2/game.h \
+    model2/drink.h \
+    model2/doppelkopfround.h \
+    model2/doppelkopfofflinegame.h \
+    model2/doppelkopflivegame.h \
+    model2/dokoofflinegamebuddy.h \
+    model2/categoryassignment.h \
+    model2/category.h \
+    model2/drinkcalculator.h \
+    model2/gamecalculator.h \
+    model2/placecalculator.h \
+    model2/playercalculator.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include
@@ -51,10 +117,24 @@ PRE_TARGETDEPS += $$PWD/../lib/LBGui/lib/liblbgui.a
 FORMS += \
     createtabledialog.ui \
     addentitytypedialog.ui \
-    createcontextdialog.ui
+    createcontextdialog.ui \
+    editentitytypesdialog.ui \
+    editattributewidget.ui \
+    editrelationwidget.ui
 
 RESOURCES += \
     resources/databaseeditor/databaseeditor.qrc
+
+
+
+
+
+
+
+
+
+
+
 
 
 

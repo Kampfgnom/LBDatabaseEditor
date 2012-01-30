@@ -23,9 +23,19 @@ HEADERS += \
     propertyvalue.h \
     relationvalue.h \
     relationvalue_p.h \
-    relationvalueright.h \
-    relationvalueleft.h \
-    function.h
+    function.h \
+    functionvalue.h \
+    calculator.h \
+    concreterelation.h \
+    export/graphvizexporter.h \
+    export/cppexporter.h \
+    export/storagewriter.h \
+    export/writer.h \
+    export/contextwriter.h \
+    export/entitytypewriter.h \
+    export/calculatorwriter.h \
+    enumattribute.h \
+    attribute_p.h
 
 SOURCES += \
     column.cpp \
@@ -42,9 +52,17 @@ SOURCES += \
     property.cpp \
     propertyvalue.cpp \
     relationvalue.cpp \
-    relationvalueright.cpp \
-    relationvalueleft.cpp \
-    function.cpp
+    function.cpp \
+    functionvalue.cpp \
+    calculator.cpp \
+    export/graphvizexporter.cpp \
+    export/cppexporter.cpp \
+    export/storagewriter.cpp \
+    export/writer.cpp \
+    export/contextwriter.cpp \
+    export/entitytypewriter.cpp \
+    export/calculatorwriter.cpp \
+    enumattribute.cpp
 
 OTHER_FILES +=
 

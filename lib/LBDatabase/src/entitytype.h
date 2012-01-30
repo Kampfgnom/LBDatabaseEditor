@@ -9,8 +9,10 @@
 namespace LBDatabase {
 
 class Attribute;
+class Calculator;
 class Context;
 class Entity;
+class Function;
 class Property;
 class Row;
 class Storage;
@@ -30,6 +32,7 @@ public:
 
     int id() const;
     QString name() const;
+    QString simplifiedName() const;
     void setName(const QString &name);
     Context *context() const;
     EntityType *parentEntityType() const;
@@ -37,9 +40,17 @@ public:
 
     QList<EntityType *> childEntityTypes() const;
 
+    Property *property(const QString &name) const;
+
     QList<Property *> properties() const;
     QList<Attribute *> attributes() const;
     QList<Relation *> relations() const;
+    QList<Function *> functions() const;
+
+    QList<Property *> nonInhertitedProperties() const;
+    QList<Attribute *> nonInhertitedAttributes() const;
+    QList<Relation *> nonInhertitedRelations() const;
+    QList<Function *> nonInhertitedFunctions() const;
 
     Attribute *addAttribute(const QString &name, Attribute::Type type);
     Relation *addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality);
@@ -47,6 +58,8 @@ public:
     QList<Entity *> entities() const;
 
     bool inherits(EntityType *entityType) const;
+
+    Calculator *calculator() const;
 
 Q_SIGNALS:
     void nameChanged(QString name);
@@ -57,6 +70,7 @@ private:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class EntityPrivate;
+    friend class FunctionPrivate;
 
     explicit EntityType(LBDatabase::Row *row, Storage *parent);
 
@@ -65,8 +79,11 @@ private:
     void setParentEntityType(EntityType *type);
     void addAttribute(Attribute *attribute);
     void addRelation(Relation *relation);
-    void addInheritedProperties(EntityType *parent);
+    void addFunction(Function *function);
+    void inheritProperties(EntityType *parent);
+    void inheritCalculator(EntityType *parent);
     void addEntity(Entity *entity);
+    void setCalculator(Calculator *calculator);
 
     QScopedPointer<EntityTypePrivate> d_ptr;
     Q_DECLARE_PRIVATE(EntityType)

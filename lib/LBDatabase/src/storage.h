@@ -11,6 +11,7 @@ class Attribute;
 class Context;
 class Database;
 class EntityType;
+class Function;
 class Relation;
 class Table;
 
@@ -31,6 +32,7 @@ public:
     QString name() const;
     void setName(const QString &name);
     QString fileName() const;
+    QString sourcePath() const;
 
     QList<Context *> contexts() const;
     QList<EntityType *> entityTypes() const;
@@ -40,31 +42,49 @@ public:
 Q_SIGNALS:
     void nameChanged(QString name);
 
+protected:
+    explicit Storage(const QString &fileName, QObject *parent = 0);
+
+    template<class ContextClass>
+    void registerContextType();
+
+    Context *context(int id) const;
+    Context *context(const QString name) const;
+    EntityType *entityType(int id) const;
+    Attribute *attribute(int id) const;
+
 private:
     friend class EntityTypePrivate;
     friend class ContextPrivate;
     friend class EntityPrivate;
     friend class AttributePrivate;
     friend class RelationPrivate;
-
-    explicit Storage(const QString &fileName, QObject *parent = 0);
-
-    Context *context(int id) const;
-    EntityType *entityType(int id) const;
-    Attribute *attribute(int id) const;
+    friend class FunctionPrivate;
+    friend class GraphvizExporter;
 
     void insertEntityType(EntityType *type);
     void insertAttribute(Attribute *attribute);
     void insertRelation(Relation *relation);
+    void insertFunction(Function *function);
+
+    QList<Relation *> relations() const;
 
     Table *contextsTable() const;
     Table *entityTypesTable() const;
     Table *attributesTable() const;
 
+    void registerContextType(const QString &contextName, QMetaObject metaObject);
+
     QScopedPointer<StoragePrivate> d_ptr;
     Q_DECLARE_PRIVATE(Storage)
     Q_DISABLE_COPY(Storage)
 };
+
+template<class ContextClass>
+void Storage::registerContextType()
+{
+    registerContextType(ContextClass::Name, ContextClass::staticMetaObject);
+}
 
 } // namespace LBDatabase
 

@@ -1,4 +1,5 @@
 #include "attribute.h"
+#include "attribute_p.h"
 
 #include "attributevalue.h"
 #include "column.h"
@@ -9,41 +10,28 @@
 #include "storage.h"
 #include "table.h"
 
+#include <QStringList>
+
 namespace LBDatabase {
 
 /******************************************************************************
 ** AttributePrivate
 */
-class AttributePrivate {
-    AttributePrivate() : prefetchStrategy(Attribute::PrefetchOnStartup) {}
-
-    void init();
-    void addPropertyValueToEntities();
-    void addPropertyValue(Entity *entity);
-
-    Row *row;
-    Storage *storage;
-    QString name;
-    QString displayName;
-    EntityType *entityType;
-
-    int columnIndex;
-
-    Attribute::PrefetchStrategy prefetchStrategy;
-
-    Attribute * q_ptr;
-    Q_DECLARE_PUBLIC(Attribute)
-};
-
 void AttributePrivate::init()
 {
     Q_Q(Attribute);
     name = row->data(Attribute::NameColumn).toString();
     displayName = row->data(Attribute::DisplayNameColumn).toString();
-    prefetchStrategy = static_cast<Attribute::PrefetchStrategy>(row->data(Attribute::PrefetchStrategyColumn).toInt());
+    calculated = row->data(Attribute::CalculatedColumn).toBool();
+    cacheData = row->data(Attribute::CacheDataColumn).toBool();
+    editable = row->data(Attribute::EditableColumn).toBool();
+
+    type = static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt());
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
-    columnIndex = entityType->context()->table()->column(name)->index();
+    columnIndex = -1;
+    if(!calculated)
+        columnIndex = entityType->context()->table()->column(name)->index();
     entityType->addAttribute(q);
     entityType->context()->addAttribute(q);
 }
@@ -59,6 +47,10 @@ void AttributePrivate::addPropertyValue(Entity *entity)
 {
     Q_Q(Attribute);
     entity->addAttributeValue(new AttributeValue(q, entity));
+}
+
+void AttributePrivate::fetchValues()
+{
 }
 
 /******************************************************************************
@@ -104,10 +96,10 @@ const QString Attribute::DisplayNameColumn("displayName");
   The name of 'entityTypeId' column.
   */
 const QString Attribute::EntityTypeIdColumn("entityTypeId");
-/*!
-  The name of 'prefetchStrategy' column.
-  */
-const QString Attribute::PrefetchStrategyColumn("prefetchStrategy");
+const QString Attribute::CalculatedColumn("calculated");
+const QString Attribute::CacheDataColumn("cacheData");
+const QString Attribute::TypeColumn("type");
+const QString Attribute::EditableColumn("editable");
 
 /*!
   Creates an attribute, which contains the meta data from \a row in the given \a
@@ -116,6 +108,17 @@ const QString Attribute::PrefetchStrategyColumn("prefetchStrategy");
 Attribute::Attribute(Row *row, Storage *parent) :
     Property(parent),
     d_ptr(new AttributePrivate)
+{
+    Q_D(Attribute);
+    d->q_ptr = this;
+    d->row = row;
+    d->storage = parent;
+    d->init();
+}
+
+Attribute::Attribute(AttributePrivate &dd, Row *row, Storage *parent) :
+    Property(parent),
+    d_ptr(&dd)
 {
     Q_D(Attribute);
     d->q_ptr = this;
@@ -143,6 +146,12 @@ void Attribute::addPropertyValue(Entity *entity)
     d->addPropertyValue(entity);
 }
 
+void Attribute::fetchValues()
+{
+    Q_D(Attribute);
+    d->fetchValues();
+}
+
 /*!
   Destroys the attribute.
   */
@@ -167,6 +176,24 @@ QString Attribute::name() const
 {
     Q_D(const Attribute);
     return d->name;
+}
+
+bool Attribute::isCalculated() const
+{
+    Q_D(const Attribute);
+    return d->calculated;
+}
+
+bool Attribute::cacheData() const
+{
+    Q_D(const Attribute);
+    return d->cacheData;
+}
+
+bool Attribute::isEditable() const
+{
+    Q_D(const Attribute);
+    return d->editable;
 }
 
 /*!
@@ -205,14 +232,66 @@ int Attribute::columnIndex() const
     return d->columnIndex;
 }
 
-/*!
-  Returns the prefetch strategy of the attribute. Currently every attribute is
-  being prefetched when the storage is loaded.
-  */
-Attribute::PrefetchStrategy Attribute::prefetchStrategy() const
+Attribute::Type Attribute::type() const
 {
     Q_D(const Attribute);
-    return d->prefetchStrategy;
+    return d->type;
+}
+
+QString Attribute::typeName() const
+{
+    Q_D(const Attribute);
+    return Attribute::typeToName(d->type);
+}
+
+QString Attribute::typeToName(Type type)
+{
+    return Attribute::typeNames().at(static_cast<int>(type));
+}
+
+QStringList Attribute::typeNames()
+{
+    QStringList names;
+    names << "Unkown" <<
+    "Text" <<
+    "Integer" <<
+    "Real" <<
+    "Icon" <<
+    "Pixmap" <<
+    "DateTime" <<
+    "Time" <<
+    "Bool" <<
+    "Color" <<
+    "Enum";
+    return names;
+}
+
+QString Attribute::qtType() const
+{
+    Q_D(const Attribute);
+    return Attribute::typeToQtType(d->type);
+}
+
+QString Attribute::typeToQtType(Type type)
+{
+    return Attribute::qtTypeNames().at(static_cast<int>(type));
+}
+
+QStringList Attribute::qtTypeNames()
+{
+    QStringList names;
+    names << "QVariant" << //Unknown
+    "QString" << //Text
+    "int" << //Integer
+    "double" << //Real
+    "QIcon" << //Icon
+    "QPixmap" << //Pixmap
+    "QDateTime" << //DateTime
+    "QTime" << //Time
+    "bool" << //Bool
+    "QColor" << //Color
+    "Enum"; //Enum
+    return names;
 }
 
 } // namespace LBDatabase

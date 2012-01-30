@@ -4,9 +4,8 @@
 #include "attributevalue.h"
 #include "context.h"
 #include "entitytype.h"
+#include "functionvalue.h"
 #include "relation.h"
-#include "relationvalueleft.h"
-#include "relationvalueright.h"
 #include "relationvalue.h"
 #include "row.h"
 #include "storage.h"
@@ -36,7 +35,8 @@ class EntityPrivate {
     QMultiHash<Property *, PropertyValue *> propertyValues;
 
     QList<AttributeValue *> attributeValues;
-    QList<RelationValue *> relationValues;
+    QList<RelationValueBase *> relationValues;
+    QList<FunctionValue *> functionValues;
 
     Entity * q_ptr;
     Q_DECLARE_PUBLIC(Entity)
@@ -185,6 +185,26 @@ PropertyValue *Entity::propertyValue(Property *property) const
     return d->propertyValues.value(property, 0);
 }
 
+QVariant Entity::value(const QString &name) const
+{
+    Q_D(const Entity);
+    PropertyValue *value = d->propertyValues.value(d->entityType->property(name), 0);
+    if(!value)
+        return QVariant();
+
+    return value->data();
+}
+
+void Entity::setValue(const QString &name, const QVariant &data)
+{
+    Q_D(const Entity);
+    PropertyValue *value = d->propertyValues.value(d->entityType->property(name), 0);
+    if(!value || !value->isEditable())
+        return;
+
+    value->setData(data);
+}
+
 /*!
   Returns the Row, which stores the property values of this entity.
   */
@@ -192,6 +212,11 @@ Row *Entity::row() const
 {
     Q_D(const Entity);
     return d->row;
+}
+
+FunctionValue *Entity::function(const QString &name) const
+{
+    return static_cast<LBDatabase::FunctionValue *>(propertyValue(entityType()->property(name)));
 }
 
 /*!
@@ -209,52 +234,18 @@ void Entity::addAttributeValue(AttributeValue *value)
   \internal
   Adds the RelationValue \a value to this entity. This is done when loading the storage.
   */
-void Entity::addRelationValue(RelationValue *value)
+void Entity::addRelationValue(RelationValueBase *value)
 {
     Q_D(Entity);
     d->propertyValues.insert(value->property(), value);
     d->relationValues.append(value);
 }
 
-RelationValueLeft *Entity::relationValueLeft(Relation *relation) const
+void Entity::addFunctionValue(FunctionValue *value)
 {
-    Q_D(const Entity);
-
-    QList<PropertyValue *> values = d->propertyValues.values(relation);
-    if(values.size() > 0)
-    {
-        RelationValueLeft *leftValue = qobject_cast<RelationValueLeft *>(values.at(0));
-        if(leftValue) {
-            return leftValue;
-        }
-        else if(values.size() > 1) {
-            leftValue = qobject_cast<RelationValueLeft *>(values.at(1));
-            if(leftValue) {
-                return leftValue;
-            }
-        }
-    }
-    return 0;
-}
-
-RelationValueRight *Entity::relationValueRight(Relation *relation) const
-{    Q_D(const Entity);
-
-     QList<PropertyValue *> values = d->propertyValues.values(relation);
-     if(values.size() > 0)
-     {
-         RelationValueRight *leftValue = qobject_cast<RelationValueRight *>(values.at(0));
-         if(leftValue) {
-             return leftValue;
-         }
-         else if(values.size() > 1) {
-             leftValue = qobject_cast<RelationValueRight *>(values.at(1));
-             if(leftValue) {
-                 return leftValue;
-             }
-         }
-     }
-     return 0;
+    Q_D(Entity);
+    d->propertyValues.insert(value->property(), value);
+    d->functionValues.append(value);
 }
 
 } // namespace LBDatabase

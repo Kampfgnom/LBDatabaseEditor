@@ -31,4 +31,13 @@ QString getSaveFileName(const QString &windowTitle, const QString &fileDesc)
     return QFileDialog::getSaveFileName(0,windowTitle, lastOpenFolder, fileDesc);
 }
 
+QString getSaveDirName(const QString &windowTitle)
+{
+    QSettings settings;
+    QString lastOpenFolder = settings.value("lastOpenFolder",
+                                            QDesktopServices::storageLocation(QDesktopServices::HomeLocation)).toString();
+    return QFileDialog::getExistingDirectory(0,windowTitle, lastOpenFolder, QFileDialog::ShowDirsOnly
+                                             | QFileDialog::DontResolveSymlinks);
+}
+
 } // namespace LBGui

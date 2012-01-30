@@ -10,6 +10,7 @@ namespace LBDatabase {
 class Attribute;
 class Entity;
 class EntityType;
+class Function;
 class Relation;
 class Row;
 class Storage;
@@ -28,6 +29,7 @@ public:
 
     int id() const;
     QString name() const;
+    QString simplifiedName() const;
 //    void setName(const QString &name);
     Storage *storage() const;
     Table *table() const;
@@ -56,26 +58,50 @@ private Q_SLOTS:
     void onPropertyDisplayNameChanged(QString displayName, Context* context);
     void onPropertyValueDataChanged(QVariant data);
 
-private:
+protected:
     friend class StoragePrivate;
     friend class EntityTypePrivate;
     friend class AttributePrivate;
     friend class RelationPrivate;
+    friend class FunctionPrivate;
 
     explicit Context(Row *row, Storage *parent);
 
+    template<class EntityClass>
+    void registerEntityClass();
+
+    template<class EntityClass, class CalculatorClass>
+    void registerCalculatorClass();
+
+private:
     void createBaseEntityType(const QString &name);
     void addEntityType(EntityType *type);
     void addAttribute(Attribute *attribute);
+    void addFunction(Function *function);
     void addRelation(Relation *relation);
 
     void initializeEntityHierarchy();
     void loadEntities();
 
+    void registerEntityClass(const QString &entityTypeName, QMetaObject metaObject);
+    void registerCalculatorClass(const QString &entityTypeName, QMetaObject metaObject);
+
     QScopedPointer<ContextPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Context)
     Q_DISABLE_COPY(Context)
 };
+
+template<class EntityClass>
+void Context::registerEntityClass()
+{
+    registerEntityClass(EntityClass::Name, EntityClass::staticMetaObject);
+}
+
+template<class EntityClass, class CalculatorClass>
+void Context::registerCalculatorClass()
+{
+    registerCalculatorClass(EntityClass::Name, CalculatorClass::staticMetaObject);
+}
 
 } // namespace LBDatabase
 

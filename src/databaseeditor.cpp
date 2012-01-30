@@ -146,6 +146,8 @@ void DatabaseEditor::createMenuBar()
 {
     m_menuBar->addAction(tr("File"),m_actions->openDatabaseAction());
     m_menuBar->addAction(tr("File"),m_actions->importDatabaseAction());
+    m_menuBar->addAction(tr("File/Export..."),m_actions->exportCppAction());
+    m_menuBar->addAction(tr("File/Export..."),m_actions->exportUmlGraphvizAction());
     m_menuBar->addMenu(tr("File"), m_recentFiles->recentFilesMenu());
     m_menuBar->addSeparator(tr("File"));
     m_menuBar->addAction(tr("File"),m_actions->closeDatabaseAction());
@@ -158,6 +160,7 @@ void DatabaseEditor::createMenuBar()
 
     m_menuBar->addAction(tr("Context"), m_actions->createContextAction());
     m_menuBar->addAction(tr("Context"), m_actions->addEntityTypeAction());
+    m_menuBar->addAction(tr("Context"), m_actions->editEntityTypesAction());
 
     m_menuBar->addMenu(m_menuBar->windowMenu());
     m_menuBar->addMenu(m_menuBar->helpMenu());

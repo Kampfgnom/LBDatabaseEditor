@@ -17,17 +17,23 @@ public:
     static const QString NameColumn;
     static const QString DisplayNameColumn;
     static const QString EntityTypeIdColumn;
-    static const QString PrefetchStrategyColumn;
-
-    enum PrefetchStrategy {
-        PrefetchOnStartup
-    };
+    static const QString CalculatedColumn;
+    static const QString CacheDataColumn;
+    static const QString TypeColumn;
+    static const QString EditableColumn;
 
     enum Type {
-        Unkown,
-        Text,
-        Integer,
-        Real
+        Unkown,     // 0
+        Text,       // 1
+        Integer,    // 2
+        Real,       // 3
+        Icon,       // 4
+        Pixmap,     // 5
+        DateTime,   // 6
+        Time,       // 7
+        Bool,       // 8
+        Color,      // 9
+        Enum        //10
     };
 
     ~Attribute();
@@ -38,16 +44,31 @@ public:
     int columnIndex() const;
 
     QString name() const;
-    PrefetchStrategy prefetchStrategy() const;
 
-private:
+    bool isCalculated() const;
+    bool cacheData() const;
+    bool isEditable() const;
+
+    Type type() const;
+    virtual QString typeName() const;
+    static QString typeToName(Type type);
+    static QStringList typeNames();
+
+    virtual QString qtType() const;
+    static QStringList qtTypeNames();
+    static QString typeToQtType(Type type);
+
+protected:
     friend class StoragePrivate;
     friend class EntityTypePrivate;
 
     explicit Attribute(Row *row, Storage *parent);
+    explicit Attribute(AttributePrivate &dd, Row *row, Storage *parent);
 
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
+
+    void fetchValues();
 
     QScopedPointer<AttributePrivate> d_ptr;
     Q_DECLARE_PRIVATE(Attribute)

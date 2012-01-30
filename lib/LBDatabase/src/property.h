@@ -18,6 +18,7 @@ public:
 
     virtual int id() const = 0;
     virtual QString displayName(const Context *context = 0) const = 0;
+    virtual QString name() const = 0;
     virtual void setDisplayName(const QString &displayName, const Context *context = 0) = 0;
 
 Q_SIGNALS:
@@ -29,6 +30,8 @@ private:
 
     virtual void addPropertyValueToEntities() = 0;
     virtual void addPropertyValue(Entity *entity) = 0;
+
+    virtual void fetchValues() = 0;
 };
 //! \endcond
 

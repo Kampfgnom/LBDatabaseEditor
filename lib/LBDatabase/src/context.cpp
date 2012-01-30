@@ -2,9 +2,11 @@
 
 #include "attribute.h"
 #include "attributevalue.h"
+#include "calculator.h"
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "function.h"
 #include "relation.h"
 #include "row.h"
 #include "storage.h"
@@ -36,6 +38,8 @@ class ContextPrivate {
     EntityType *addEntityType(const QString &name, EntityType *parentEntityType);
     Entity *insertEntity(EntityType *type);
 
+    Entity *createEntityInstance(Row *row);
+    Calculator *createCalculatorInstance(const QString &entityTypeName);
 
     Row *row;
     Storage *storage;
@@ -46,6 +50,9 @@ class ContextPrivate {
     QList<Entity *> entities;
     QHash<int, Entity *> entitiesById;
     QList<Property *> properties;
+
+    QHash<QString, QMetaObject> entityMetaObjects;
+    QHash<QString, QMetaObject> calculatorMetaObjects;
 
     Context * q_ptr;
     Q_DECLARE_PUBLIC(Context)
@@ -61,6 +68,7 @@ void ContextPrivate::initializeEntityHierarchy()
 {
     EntityType *parentType;
     foreach(EntityType *type, entityTypes) {
+
         parentType = storage->entityType(type->parentEntityTypeId());
         if(parentType) {
             type->setParentEntityType(parentType);
@@ -70,21 +78,25 @@ void ContextPrivate::initializeEntityHierarchy()
             baseEntityType = type;
         }
     }
+    foreach(EntityType *type, entityTypes) {
+        type->setCalculator(createCalculatorInstance(type->name()));
+    }
+
     foreach(EntityType *child, baseEntityType->childEntityTypes()) {
-        child->addInheritedProperties(baseEntityType);
+        child->inheritProperties(baseEntityType);
+        child->inheritCalculator(baseEntityType);
     }
 }
 
 void ContextPrivate::loadEntities()
 {
-    Q_Q(Context);
     if(!contextTable)
         return;
 
     entities.reserve(contextTable->rows().size());
     entitiesById.reserve(contextTable->rows().size());
     foreach(Row *row, contextTable->rows()) {
-        Entity *entity = new Entity(row, q);
+        Entity *entity = createEntityInstance(row);
         entities.append(entity);
         entitiesById.insert(row->id(), entity);
     }
@@ -102,7 +114,7 @@ EntityType *ContextPrivate::addEntityType(const QString &name, EntityType *paren
     parentEntityType->addChildEntityType(type);
     storage->insertEntityType(type);
 
-    type->addInheritedProperties(parentEntityType);
+    type->inheritProperties(parentEntityType);
     return type;
 }
 
@@ -113,7 +125,7 @@ Entity *ContextPrivate::insertEntity(EntityType *type)
     row->setData(Entity::EntityTypeIdColumn, QVariant(type->id()));
 
     q->beginInsertRows(QModelIndex(), entities.size(), entities.size());
-    Entity *entity = new Entity(row, q);
+    Entity *entity =  createEntityInstance(row);
     entities.append(entity);
     entitiesById.insert(row->id(), entity);
 
@@ -138,6 +150,39 @@ void ContextPrivate::createBaseEntityType(const QString &name)
     baseEntityType = new EntityType(entityTypeRow, storage);
     storage->insertEntityType(baseEntityType);
 }
+
+Entity *ContextPrivate::createEntityInstance(Row *row)
+{
+    Q_Q(Context);
+    int typeId = row->data(Entity::EntityTypeIdColumn).toInt();
+    EntityType *type = storage->entityType(typeId);
+    QString entityTypeName = type->name();
+
+    while(!entityMetaObjects.contains(entityTypeName)) {
+        type = type->parentEntityType();
+        if(!type)
+            break;
+
+        entityTypeName = type->name();
+    }
+
+    if(!entityMetaObjects.contains(entityTypeName))
+        return new Entity(row, q);
+
+    QObject *object = entityMetaObjects.value(entityTypeName).newInstance(Q_ARG(::LBDatabase::Row*,row), Q_ARG(::LBDatabase::Context*, q));
+    return static_cast<Entity *>(object);
+}
+
+Calculator *ContextPrivate::createCalculatorInstance(const QString &entityTypeName)
+{
+    Q_Q(Context);
+    if(!calculatorMetaObjects.contains(entityTypeName))
+        return 0;
+
+    QObject *object = calculatorMetaObjects.value(entityTypeName).newInstance(Q_ARG(QObject*, q));
+    return static_cast<Calculator *>(object);
+}
+
 
 /******************************************************************************
 ** Context
@@ -213,6 +258,11 @@ QString Context::name() const
 {
     Q_D(const Context);
     return d->name;
+}
+
+QString Context::simplifiedName() const
+{
+    return name().simplified().remove(' ');
 }
 
 //void Context::setName(const QString &name)
@@ -343,6 +393,18 @@ void Context::addAttribute(Attribute *attribute)
     beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
     d->properties.append(attribute);
     connect(attribute, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
+    endInsertColumns();
+}
+
+void Context::addFunction(Function *function)
+{
+    Q_D(Context);
+    if(d->properties.contains(function))
+        return;
+
+    beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
+    d->properties.append(function);
+    connect(function, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
     endInsertColumns();
 }
 
@@ -526,6 +588,24 @@ Qt::ItemFlags Context::flags(const QModelIndex &index) const
     }
 
     return QAbstractItemModel::flags(index);
+}
+
+void Context::registerEntityClass(const QString &entityName, QMetaObject metaObject)
+{
+    Q_D(Context);
+    if(d->entityMetaObjects.contains(entityName))
+        return;
+
+    d->entityMetaObjects.insert(entityName, metaObject);
+}
+
+void Context::registerCalculatorClass(const QString &entityName, QMetaObject metaObject)
+{
+    Q_D(Context);
+    if(d->calculatorMetaObjects.contains(entityName))
+        return;
+
+    d->calculatorMetaObjects.insert(entityName, metaObject);
 }
 
 } // namespace LBDatabase

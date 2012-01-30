@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "entitytype.h"
+
 #include <QHash>
 
 namespace LBDatabase {
@@ -10,13 +12,13 @@ namespace LBDatabase {
 class Attribute;
 class AttributeValue;
 class Context;
-class EntityType;
+class FunctionValue;
 class Property;
 class PropertyValue;
 class Relation;
+template<class EntityClass>
 class RelationValue;
-class RelationValueLeft;
-class RelationValueRight;
+class RelationValueBase;
 class Row;
 class Storage;
 
@@ -38,15 +40,25 @@ public:
     Context *context() const;
     QList<PropertyValue *> propertyValues() const;
     PropertyValue *propertyValue(Property *property) const;
+    QVariant value(const QString &name) const;
+    void setValue(const QString &name, const QVariant &data);
 
     Row *row() const;
 
-private:
+    template<class EntityClass>
+    RelationValue<EntityClass> *relation(const QString &name) const
+    {
+        return static_cast<LBDatabase::RelationValue<EntityClass> *>(propertyValue(entityType()->property(name)));
+    }
+
+    FunctionValue *function(const QString &name) const;
+
+protected:
     friend class AttributePrivate;
     friend class ContextPrivate;
     friend class RelationPrivate;
     friend class Context;
-    friend class RelationValueRightPrivate;
+    friend class FunctionPrivate;
 
     explicit Entity(Row *row, Context *parent);
 
@@ -54,10 +66,8 @@ private:
     bool setData(const QVariant &data, Property *property);
 
     void addAttributeValue(AttributeValue *value);
-    void addRelationValue(RelationValue *value);
-
-    RelationValueLeft *relationValueLeft(Relation *relation) const;
-    RelationValueRight *relationValueRight(Relation *relation) const;
+    void addRelationValue(RelationValueBase *value);
+    void addFunctionValue(FunctionValue *value);
 
     QScopedPointer<EntityPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Entity)

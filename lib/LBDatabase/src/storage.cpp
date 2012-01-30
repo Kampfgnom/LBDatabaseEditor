@@ -2,10 +2,13 @@
 
 #include "attribute.h"
 #include "column.h"
+#include "concreterelation.h"
 #include "context.h"
 #include "database.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "enumattribute.h"
+#include "function.h"
 #include "propertyvalue.h"
 #include "relation.h"
 #include "row.h"
@@ -28,8 +31,10 @@ const QString ContextsTableName("lbmeta_contexts");
 const QString EntitiesTableName("lbmeta_entitytypes");
 const QString AttributesTableName("lbmeta_attributes");
 const QString RelationsTableName("lbmeta_relations");
+const QString FunctionsTableName("lbmeta_functions");
 
 const QString NameColumn("name");
+const QString SourcePathColumn("cpppath");
 }
 
 class StoragePrivate {
@@ -41,21 +46,29 @@ class StoragePrivate {
     bool open();
     Context *addContext(const QString &name, const QString &baseEntityTypeName);
 
+    Context *createContextInstance(Row *row);
+
     Table *attributesTable;
     Table *contextsTable;
     Table *entityTypesTable;
     Table *metaDataTable;
     Table *relationsTable;
+    Table *functionsTable;
 
     QString name;
+    QString sourcePath;
     QString fileName;
     Database *database;
 
     QHash<int, Context *> contexts;
+    QHash<QString, int> contextIds;
     QHash<int, EntityType *> entityTypes;
     QHash<int, Attribute *> attributes;
     QHash<int, Relation *> relations;
+    QHash<int, Function *> functions;
     QList<Property *> properties;
+
+    QHash<QString, QMetaObject> contextMetaObjects;
 
     Storage * q_ptr;
     Q_DECLARE_PUBLIC(Storage)
@@ -103,17 +116,23 @@ bool StoragePrivate::open()
     if(!relationsTable)
         return false;
 
+    functionsTable = database->table(FunctionsTableName);
+    if(!functionsTable)
+        return false;
+
     Row *metaDataRow = metaDataTable->rowAt(0);
     name = metaDataRow->data(NameColumn).toString();
+    sourcePath = metaDataRow->data(SourcePathColumn).toString();
 
     contexts.reserve(contextsTable->rows().size());
     entityTypes.reserve(entityTypesTable->rows().size());
     attributes.reserve(attributesTable->rows().size());
-    properties.reserve(attributesTable->rows().size() + relationsTable->rows().size());
+    properties.reserve(attributesTable->rows().size() + relationsTable->rows().size() + functionsTable->rows().size());
 
     foreach(Row *row, contextsTable->rows()) {
-        Context *context = new Context(row, q);
+        Context *context = createContextInstance(row);
         contexts.insert(row->id(), context);
+        contextIds.insert(context->name(), row->id());
     }
 
     foreach(Row *row, entityTypesTable->rows()) {
@@ -121,11 +140,32 @@ bool StoragePrivate::open()
     }
 
     foreach(Row *row, attributesTable->rows()) {
-        q->insertAttribute(new Attribute(row, q));
+        if(static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt()) == Attribute::Enum) {
+            q->insertAttribute(new EnumAttribute(row, q));
+        }
+        else {
+            q->insertAttribute(new Attribute(row, q));
+        }
+    }
+
+    foreach(Row *row, database->table(EnumAttribute::EnumsTable)->rows()) {
+        EnumAttribute *attribute = static_cast<EnumAttribute *>(attributes.value(row->data(EnumAttribute::AttributeColumn).toInt()));
+        attribute->addEnumValue(row->data(EnumAttribute::NameColumn).toString(),
+                                row->data(EnumAttribute::ValueColumn).toInt());
     }
 
     foreach(Row *row, relationsTable->rows()) {
-        q->insertRelation(new Relation(row, q));
+        q->insertRelation(new ConcreteRelation<Entity, Entity>(row, q));
+    }
+
+    foreach(Row *row, functionsTable->rows()) {
+        q->insertFunction(new Function(row, q));
+    }
+
+    foreach(Row *row, database->table(Function::FunctionReimplementationsTable)->rows()) {
+        Function *function = functions.value(row->data(Function::ReimplementedFunctionColumn).toInt());
+        EntityType *type = entityTypes.value(row->data(Function::ReimplementingEntityTypeColumn).toInt());
+        function->addReimplementingEntityType(type);
     }
 
     foreach(Context *context, contexts.values()) {
@@ -136,13 +176,8 @@ bool StoragePrivate::open()
     foreach(Property *property, properties) {
         property->addPropertyValueToEntities();
     }
-
-    foreach(Context *context, contexts.values()) {
-        foreach(Entity *entity, context->entities()) {
-            foreach(PropertyValue *value, entity->propertyValues()) {
-                value->fetchValue();
-            }
-        }
+    foreach(Property *property, properties) {
+        property->fetchValues();
     }
 
     return true;
@@ -150,17 +185,28 @@ bool StoragePrivate::open()
 
 Context *StoragePrivate::addContext(const QString &name, const QString &baseEntityTypeName)
 {
-    Q_Q(Storage);
     database->createTable(name);
     Row *row = contextsTable->appendRow();
     row->setData(Context::NameColumn, QVariant(name));
 
-    Context *context = new Context(row, q);
+    Context *context = createContextInstance(row);
     contexts.insert(row->id(), context);
 
     context->createBaseEntityType(baseEntityTypeName);
 
     return context;
+}
+
+Context *StoragePrivate::createContextInstance(Row *row)
+{
+    Q_Q(Storage);
+    const QString contextName = row->data(Context::NameColumn).toString();
+
+    if(!contextMetaObjects.contains(contextName))
+        return new Context(row, q);
+
+    QObject *object = contextMetaObjects.value(contextName).newInstance(Q_ARG(::LBDatabase::Row*,row), Q_ARG(::LBDatabase::Storage*, q));
+    return static_cast<Context *>(object);
 }
 
 /******************************************************************************
@@ -245,7 +291,6 @@ void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileN
     attributesTable->addColumn(Attribute::NameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::EntityTypeIdColumn,QLatin1String("INTERGER"));
-    attributesTable->addColumn(Attribute::PrefetchStrategyColumn,QLatin1String("INTERGER"));
 
     relationsTable->addColumn(Relation::NameColumn,QLatin1String("TEXT"));
     relationsTable->addColumn(Relation::DisplayNameLeftColumn,QLatin1String("TEXT"));
@@ -335,6 +380,12 @@ QString Storage::fileName() const
     return d->fileName;
 }
 
+QString Storage::sourcePath() const
+{
+    Q_D(const Storage);
+    return d->sourcePath;
+}
+
 /*!
   Returns the EntityType with the ID \a id.
   */
@@ -351,6 +402,12 @@ Context *Storage::context(int id) const
 {
     Q_D(const Storage);
     return d->contexts.value(id);
+}
+
+Context *Storage::context(const QString name) const
+{
+    Q_D(const Storage);
+    return d->contexts.value(d->contextIds.value(name));
 }
 
 /*!
@@ -428,6 +485,27 @@ void Storage::insertRelation(Relation *relation)
 }
 
 /*!
+  \internal
+
+  Inserts the function \a function into the storage-global list of functions.
+  */
+void Storage::insertFunction(Function *function)
+{
+    Q_D(Storage);
+    if(d->functions.contains(function->id()))
+        return;
+
+    d->functions.insert(function->id(), function);
+    d->properties.append(function);
+}
+
+QList<Relation *> Storage::relations() const
+{
+    Q_D(const Storage);
+    return d->relations.values();
+}
+
+/*!
   Returns the table, which defines all contexts.
   */
 Table *Storage::contextsTable() const
@@ -452,6 +530,15 @@ Table *Storage::attributesTable() const
 {
     Q_D(const Storage);
     return d->attributesTable;
+}
+
+void Storage::registerContextType(const QString &contextName, QMetaObject metaObject)
+{
+    Q_D(Storage);
+    if(d->contextMetaObjects.contains(contextName))
+        return;
+
+    d->contextMetaObjects.insert(contextName, metaObject);
 }
 
 /*!

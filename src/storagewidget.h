@@ -19,8 +19,13 @@ public:
 
     void setStorage(LBDatabase::Storage *storage);
 
+private slots:
+    void exportSource();
+
 private:
     QListWidget *m_contextListWidget;
+    QLineEdit *m_sourcePathLineEdit;
+    LBDatabase::Storage *m_storage;
 };
 
 } // namespace LBGui

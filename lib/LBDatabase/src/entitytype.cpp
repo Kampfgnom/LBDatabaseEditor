@@ -5,6 +5,7 @@
 #include "context.h"
 #include "database.h"
 #include "entity.h"
+#include "function.h"
 #include "property.h"
 #include "propertyvalue.h"
 #include "relation.h"
@@ -26,12 +27,13 @@ const QString EntityType::ParentEntityTypeIdColumn("parentEntityTypeId");
 //! \endcond
 
 class EntityTypePrivate {
-    EntityTypePrivate() : context(0), parentEntityType(0) {}
+    EntityTypePrivate() : context(0), parentEntityType(0), calculator(0) {}
 
     static QString typeToSql(Attribute::Type type);
 
     void init();
-    void addInheritedProperties(EntityType *parent);
+    void inheritProperties(EntityType *parent);
+    void inheritCalculator(EntityType *parent);
     Attribute *addAttribute(const QString &name, Attribute::Type type);
     Relation *addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality);
 
@@ -44,12 +46,15 @@ class EntityTypePrivate {
 
     QList<EntityType *> childEntityTypes;
 
+    QHash<QString, Property *> propertiesByName;
+
     QList<Property *> properties;
     QList<Attribute *> attributes;
     QList<Relation *> relations;
     QList<Entity *> entities;
+    QList<Function *> functions;
 
-    QObject *controller;
+    Calculator *calculator;
 
     EntityType * q_ptr;
     Q_DECLARE_PUBLIC(EntityType)
@@ -80,29 +85,49 @@ void EntityTypePrivate::init()
     context->addEntityType(q);
 }
 
-void EntityTypePrivate::addInheritedProperties(EntityType *parent)
+void EntityTypePrivate::inheritProperties(EntityType *parent)
 {
     Q_Q(EntityType);
 
     QList<Relation *> newRelations = parent->relations();
     QList<Attribute *> newAttributes = parent->attributes();
+    QList<Function *> newFunctions = parent->functions();
 
-    properties.reserve(newAttributes.size() + newRelations.size());
+    properties.reserve(newAttributes.size() + newRelations.size() + newFunctions.size());
     attributes.reserve(newAttributes.size());
     relations.reserve(newRelations.size());
+    functions.reserve(newFunctions.size());
 
     foreach(Attribute *attribute, newAttributes) {
         properties.append(attribute);
+        propertiesByName.insert(attribute->name(), attribute);
     }
     foreach(Relation *relation, newRelations) {
         properties.append(relation);
+        propertiesByName.insert(relation->name(), relation);
+    }
+    foreach(Function *function, newFunctions) {
+        properties.append(function);
+        propertiesByName.insert(function->name(), function);
     }
 
     relations.append(newRelations);
     attributes.append(newAttributes);
+    functions.append(newFunctions);
 
     foreach(EntityType *type, childEntityTypes) {
-        type->d_func()->addInheritedProperties(q);
+        type->d_func()->inheritProperties(q);
+    }
+}
+
+void EntityTypePrivate::inheritCalculator(EntityType *parent)
+{
+    Q_Q(EntityType);
+    if(!calculator)
+        calculator = parent->calculator();
+
+    foreach(EntityType *type, childEntityTypes) {
+        type->d_func()->inheritCalculator(q);
     }
 }
 
@@ -116,7 +141,6 @@ Attribute *EntityTypePrivate::addAttribute(const QString &name, Attribute::Type 
     row->setData(Attribute::NameColumn, QVariant(name));
     row->setData(Attribute::DisplayNameColumn, QVariant(name));
     row->setData(Attribute::EntityTypeIdColumn, QVariant(this->row->id()));
-    row->setData(Attribute::PrefetchStrategyColumn, QVariant(static_cast<int>(Attribute::PrefetchOnStartup)));
 
     Attribute *attribute = new Attribute(row, storage);
     storage->insertAttribute(attribute);
@@ -221,6 +245,11 @@ QString EntityType::name() const
     return d->name;
 }
 
+QString EntityType::simplifiedName() const
+{
+    return name().simplified().remove(' ');
+}
+
 /*!
   Sets the name of the type to \a name.
   */
@@ -315,6 +344,12 @@ QList<EntityType *> EntityType::childEntityTypes() const
     return d->childEntityTypes;
 }
 
+Property *EntityType::property(const QString &name) const
+{
+    Q_D(const EntityType);
+    return d->propertiesByName.value(name, 0);
+}
+
 /*!
   Returns the list of properties of the type.
 
@@ -342,6 +377,57 @@ QList<Relation *> EntityType::relations() const
 {
     Q_D(const EntityType);
     return d->relations;
+}
+
+QList<Function *> EntityType::functions() const
+{
+    Q_D(const EntityType);
+    return d->functions;
+}
+
+QList<Property *> EntityType::nonInhertitedProperties() const
+{
+    QList<Property *> list = properties();
+    if(parentEntityType()) {
+        foreach(Property *property, parentEntityType()->properties()) {
+            list.removeAll(property);
+        }
+    }
+    return list;
+}
+
+QList<Attribute *> EntityType::nonInhertitedAttributes() const
+{
+    QList<Attribute *> list = attributes();
+    if(parentEntityType()) {
+        foreach(Attribute *attribute, parentEntityType()->attributes()) {
+            list.removeAll(attribute);
+        }
+    }
+    return list;
+}
+
+QList<Relation *> EntityType::nonInhertitedRelations() const
+{
+    QList<Relation *> list = relations();
+    if(parentEntityType()) {
+        foreach(Relation *relation, parentEntityType()->relations()) {
+            list.removeAll(relation);
+        }
+    }
+    return list;
+}
+
+QList<Function *> EntityType::nonInhertitedFunctions() const
+{
+    QList<Function *> list = functions();
+    if(parentEntityType()) {
+        foreach(Function *function, parentEntityType()->functions()) {
+            if(!function->reimplementingEntityTypes().contains(const_cast<EntityType*>(this)))
+                list.removeAll(function);
+        }
+    }
+    return list;
 }
 
 /*!
@@ -390,6 +476,12 @@ bool EntityType::inherits(EntityType *entityType) const
     return d->parentEntityType->inherits(entityType);
 }
 
+Calculator *EntityType::calculator() const
+{
+    Q_D(const EntityType);
+    return d->calculator;
+}
+
 /*!
   \internal
 
@@ -399,6 +491,7 @@ void EntityType::addAttribute(Attribute *attribute)
 {
     Q_D(EntityType);
     d->properties.append(attribute);
+    d->propertiesByName.insert(attribute->name(), attribute);
     d->attributes.append(attribute);
 }
 
@@ -411,7 +504,16 @@ void EntityType::addRelation(Relation *relation)
 {
     Q_D(EntityType);
     d->properties.append(relation);
+    d->propertiesByName.insert(relation->name(), relation);
     d->relations.append(relation);
+}
+
+void EntityType::addFunction(Function *function)
+{
+    Q_D(EntityType);
+    d->properties.append(function);
+    d->propertiesByName.insert(function->name(), function);
+    d->functions.append(function);
 }
 
 /*!
@@ -419,10 +521,16 @@ void EntityType::addRelation(Relation *relation)
 
   Adds the properties of \a parent to this entity.
   */
-void EntityType::addInheritedProperties(EntityType *parent)
+void EntityType::inheritProperties(EntityType *parent)
 {
     Q_D(EntityType);
-    d->addInheritedProperties(parent);
+    d->inheritProperties(parent);
+}
+
+void EntityType::inheritCalculator(EntityType *parent)
+{
+    Q_D(EntityType);
+    d->inheritCalculator(parent);
 }
 
 /*!
@@ -437,6 +545,12 @@ void EntityType::addEntity(Entity *entity)
     d->entities.append(entity);
     if(d->parentEntityType)
         d->parentEntityType->addEntity(entity);
+}
+
+void EntityType::setCalculator(Calculator *calculator)
+{
+    Q_D(EntityType);
+    d->calculator = calculator;
 }
 
 } // namespace LBDatabase
