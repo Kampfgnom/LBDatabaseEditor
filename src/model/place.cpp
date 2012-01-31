@@ -101,7 +101,12 @@ QList<Player *> Place::player() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Place::displayName() const
+{
+    return strasse() + QLatin1String(" ") + QString::number(nummer()) + QLatin1String(", ") + QString::number(plz()) + QLatin1String(" ") + ort();
+}
+	// END
 
 PlacesContext::PlacesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

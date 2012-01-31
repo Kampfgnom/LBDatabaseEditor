@@ -33,7 +33,7 @@ public:
 
     ~Entity();
 
-    virtual QString displayName(int role = Qt::DisplayRole) const;
+    virtual QString displayName() const;
 
     EntityType *entityType() const;
     Storage *storage() const;

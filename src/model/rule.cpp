@@ -38,7 +38,12 @@ int Rule::type() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Rule::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 
 RulesContext::RulesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

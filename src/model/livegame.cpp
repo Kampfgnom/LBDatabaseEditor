@@ -33,5 +33,10 @@ int LiveGame::placement(const Player *player) const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString LiveGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

@@ -18,6 +18,8 @@ public:
 	Q_INVOKABLE OfflineGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QTime offline_length() const;
 
 	void setOffline_length(const QTime &offline_length);

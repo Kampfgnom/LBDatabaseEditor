@@ -24,6 +24,7 @@ public:
     //! \cond PRIVATE
     static const QString IdentifierColumn;
     static const QString DisplayNameColumn;
+    static const QString TableNameColumn;
     //! \endcond
 
     ~Context();

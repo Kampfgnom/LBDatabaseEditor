@@ -20,6 +20,8 @@ public:
 	Q_INVOKABLE SkatRound(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QString skat_gameType() const;
 	QString skat_trumpfColor() const;
 

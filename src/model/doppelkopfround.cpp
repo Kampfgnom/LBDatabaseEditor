@@ -68,5 +68,10 @@ Player *DoppelkopfRound::dokoSoloPlayer() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString DoppelkopfRound::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

@@ -25,6 +25,8 @@ public:
 	Q_INVOKABLE DoppelkopfRound(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	bool doko_soloPflicht() const;
 	QString doko_soloType() const;
 

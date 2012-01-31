@@ -30,6 +30,8 @@ public:
 	Q_INVOKABLE Round(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	enum State {
 		Running = 1,
 		Paused = 2,

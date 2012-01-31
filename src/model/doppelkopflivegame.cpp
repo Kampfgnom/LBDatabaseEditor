@@ -232,5 +232,10 @@ void DoppelkopfLiveGame::setDoko_mitSchwarzsolo(bool doko_mitSchwarzsolo)
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString DoppelkopfLiveGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

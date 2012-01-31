@@ -33,6 +33,8 @@ public:
 	Q_INVOKABLE DoppelkopfLiveGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	bool doko_mitHochzeit() const;
 	bool doko_mitPflichtsolo() const;
 	bool doko_mitSchmeisserei() const;

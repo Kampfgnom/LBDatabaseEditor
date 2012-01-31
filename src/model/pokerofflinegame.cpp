@@ -11,5 +11,10 @@ PokerOfflineGame::PokerOfflineGame(LBDatabase::Row *row, LBDatabase::Context *co
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString PokerOfflineGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

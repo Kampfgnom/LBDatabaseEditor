@@ -28,6 +28,8 @@ public:
 	Q_INVOKABLE Drink(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QString name() const;
 	QString type() const;
 	double size() const;

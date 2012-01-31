@@ -43,5 +43,10 @@ Player *SkatRound::skatSoloPlayer() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString SkatRound::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

@@ -20,6 +20,8 @@ public:
 	Q_INVOKABLE Rule(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QString attributeName() const;
 	int constraintId() const;
 	QString parameter() const;

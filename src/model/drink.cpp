@@ -98,7 +98,12 @@ int Drink::countPerPlayer(const Player *player) const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Drink::displayName() const
+{
+    return name();
+}
+	// END
 
 DrinksContext::DrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

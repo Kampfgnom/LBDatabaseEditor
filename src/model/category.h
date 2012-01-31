@@ -22,6 +22,8 @@ public:
 	Q_INVOKABLE Category(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	int contentType() const;
 	int orderIndicator() const;
 	QString name() const;

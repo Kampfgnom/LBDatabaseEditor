@@ -27,6 +27,8 @@ public:
 	Q_INVOKABLE Game(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QString name() const;
 	QDateTime date() const;
 	QTime length() const;
@@ -45,7 +47,9 @@ public:
 
 	// Write anything you want to remain unchanged between these comments: 
     //START
+
     virtual int points(const Player *player) const;
+
     // END
 
 signals:

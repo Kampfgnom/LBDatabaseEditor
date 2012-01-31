@@ -20,6 +20,8 @@ public:
 	Q_INVOKABLE Schmeisserei(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QString type() const;
 
 	void setType(const QString &type);

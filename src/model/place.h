@@ -27,6 +27,8 @@ public:
 	Q_INVOKABLE Place(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	int plz() const;
 	QString ort() const;
 	QString strasse() const;

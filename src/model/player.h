@@ -55,6 +55,8 @@ public:
 	Q_INVOKABLE Player(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	int weight() const;
 	int size() const;
 	QString gender() const;

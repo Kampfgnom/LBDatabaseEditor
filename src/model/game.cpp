@@ -98,13 +98,17 @@ int Game::placement(const Player *player) const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-    //START
+	//START
+QString Game::displayName() const
+{
+    return Entity::displayName();
+}
 int Game::points(const Player *player) const
 {
     Q_UNUSED(player);
     return 0;
 }
-    // END
+	// END
 
 GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

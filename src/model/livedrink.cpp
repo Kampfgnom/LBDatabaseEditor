@@ -44,7 +44,12 @@ Drink *LiveDrink::drink() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString LiveDrink::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 
 LiveDrinksContext::LiveDrinksContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

@@ -16,6 +16,8 @@ public:
 	Q_INVOKABLE SkatOfflineGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 
 
 

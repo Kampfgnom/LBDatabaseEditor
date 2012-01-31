@@ -63,5 +63,10 @@ void SkatLiveGame::setSkat_mitRamschen(bool skat_mitRamschen)
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString SkatLiveGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

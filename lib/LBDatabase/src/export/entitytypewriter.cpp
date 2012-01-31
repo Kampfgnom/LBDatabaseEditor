@@ -165,6 +165,8 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
         "\tQ_INVOKABLE ")+m_classname+QLatin1String("(::LBDatabase::Row *row, ::LBDatabase::Context *context);\n"
         "\tstatic const QString Name;\n\n"));
 
+    header.append(QLatin1String("\tQString displayName() const;\n\n"));
+
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->type() == Attribute::Enum) {
             writeEnum(static_cast<EnumAttribute *>(attribute), header);
@@ -218,6 +220,13 @@ void EntityTypeWriter::writeImplementation(QString &source) const
 {
     QString oldContent = readFromFile(makeSourceFilename(m_classname));
     QString extraContent = extractExtraContent(oldContent);
+
+    if(extraContent.isEmpty()) {
+        extraContent.append(QLatin1String("\nQString ")+m_classname+QLatin1String("::displayName() const\n"
+                                                                               "{\n"
+                                                                               "\treturn Entity::displayName();\n"
+                                                                               "}\n"));
+    }
 
     QString baseClass("Entity");
     if(m_entityType->parentEntityType())

@@ -38,7 +38,12 @@ Round *Schmeisserei::round() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Schmeisserei::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 
 SchmeissereienContext::SchmeissereienContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

@@ -104,7 +104,12 @@ int Round::points(const Player *player) const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Round::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 
 RoundsContext::RoundsContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

@@ -198,7 +198,12 @@ QList<Drink *> Player::drinks() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Player::displayName() const
+{
+    return name();
+}
+	// END
 
 PlayersContext::PlayersContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

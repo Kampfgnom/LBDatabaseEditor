@@ -24,5 +24,10 @@ void OfflineGame::setOffline_length(const QTime &offline_length)
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString OfflineGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

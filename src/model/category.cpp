@@ -44,7 +44,12 @@ Category *Category::parentCategory() const
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString Category::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 
 CategoriesContext::CategoriesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	Context(row, parent)

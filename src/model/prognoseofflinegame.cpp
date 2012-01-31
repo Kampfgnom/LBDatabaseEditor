@@ -11,5 +11,10 @@ PrognoseOfflineGame::PrognoseOfflineGame(LBDatabase::Row *row, LBDatabase::Conte
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString PrognoseOfflineGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 

@@ -20,6 +20,8 @@ public:
 	Q_INVOKABLE SkatLiveGame(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QString skat_gameEnd() const;
 	int skat_maxPoints() const;
 	int skat_maxRounds() const;

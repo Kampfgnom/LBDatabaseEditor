@@ -23,6 +23,8 @@ public:
 	Q_INVOKABLE LiveDrink(::LBDatabase::Row *row, ::LBDatabase::Context *context);
 	static const QString Name;
 
+	QString displayName() const;
+
 	QDateTime time() const;
 
 	void setTime(const QDateTime &time);

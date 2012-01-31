@@ -24,6 +24,7 @@ namespace LBDatabase {
 //! \cond PRIVATE
 const QString Context::IdentifierColumn("identifier");
 const QString Context::DisplayNameColumn("displayName");
+const QString Context::TableNameColumn("tableName");
 //! \endcond
 
 class ContextPrivate {
@@ -64,7 +65,10 @@ void ContextPrivate::init()
 {
     identifier = row->data(Context::IdentifierColumn).toString();
     displayName = row->data(Context::DisplayNameColumn).toString();
-    contextTable = storage->database()->table(identifier);
+    contextTable = storage->database()->table(row->data(Context::TableNameColumn).toString());
+
+    if(!contextTable)
+        qWarning() << "No such table" << row->data(Context::TableNameColumn).toString() << "for context" << identifier << "(ID" << row->id() << ")";
 }
 
 void ContextPrivate::initializeEntityHierarchy()

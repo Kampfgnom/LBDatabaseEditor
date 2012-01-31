@@ -11,5 +11,10 @@ DoppelkopfOfflineGame::DoppelkopfOfflineGame(LBDatabase::Row *row, LBDatabase::C
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+QString DoppelkopfOfflineGame::displayName() const
+{
+    return Entity::displayName();
+}
+	// END
 
