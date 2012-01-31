@@ -106,8 +106,10 @@ void ContextPrivate::loadEntities()
     entitiesById.reserve(contextTable->rows().size());
     foreach(Row *row, contextTable->rows()) {
         Entity *entity = createEntityInstance(row);
-        entities.append(entity);
-        entitiesById.insert(row->id(), entity);
+        if(entity) {
+            entities.append(entity);
+            entitiesById.insert(row->id(), entity);
+        }
     }
 }
 
@@ -165,6 +167,9 @@ Entity *ContextPrivate::createEntityInstance(Row *row)
     Q_Q(Context);
     int typeId = row->data(Entity::EntityTypeIdColumn).toInt();
     EntityType *type = storage->entityType(typeId);
+    if(!type)
+        return 0;
+
     QString entityTypeName = type->identifier();
 
     while(!entityMetaObjects.contains(entityTypeName)) {

@@ -148,6 +148,10 @@ void RelationPrivate::initializeManyToManyRelation()
         if(leftId > 0 && rightId > 0) {
             Entity *leftEntity = entityType->context()->entity(leftId);
             Entity *rightEntity = entityTypeOther->context()->entity(rightId);
+            if(!leftEntity  || !rightEntity) {
+                continue;
+            }
+
             RelationValueBase *leftValue = static_cast<RelationValueBase *>(leftEntity->propertyValue(q));
             RelationValueBase *rightValue = static_cast<RelationValueBase *>(rightEntity->propertyValue(transposeRelation));
             leftValue->addOtherEntity(rightEntity);
