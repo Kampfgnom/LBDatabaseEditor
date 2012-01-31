@@ -58,7 +58,7 @@ SidebarChildCategorie *DatabaseEditorSidebar::addEntityStorageCategorie(LBDataba
 
     int index = cat->index().row();
     foreach(LBDatabase::Context *context, storage->contexts()) {
-        SidebarChildCategorie *contextCat = addChildCategorie(1,index, context->name());
+        SidebarChildCategorie *contextCat = addChildCategorie(1,index, context->displayName());
         contextCat->setData(QVariant::fromValue<LBDatabase::Context*>(context), SidebarChildCategorie::CustomDataRole);
         contextCat->setIcon(QIcon(":/databaseeditor/table"));
     }

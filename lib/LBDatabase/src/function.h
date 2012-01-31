@@ -13,8 +13,12 @@ class FunctionPrivate;
 class Function : public Property
 {
 public:
-    static const QString NameColumn;
+    static const QString IdentifierColumn;
     static const QString DisplayNameColumn;
+    static const QString TableNameColumn;
+    static const QString EntityColumnNameColumn;
+    static const QString KeyEntityColumnNameColumn;
+    static const QString ValueColumnNameColumn;
     static const QString EntityTypeColumn;
     static const QString KeyEntityTypeRightColumn;
     static const QString CalculatedColumn;
@@ -28,9 +32,9 @@ public:
     ~Function();
 
     int id() const;
-    QString displayName(const Context *context = 0) const;
-    void setDisplayName(const QString &displayName, const Context *context = 0);
-    QString name() const;
+    QString displayName() const;
+    void setDisplayName(const QString &displayName);
+    QString identifier() const;
 
     EntityType *keyEntityType() const;
     QString qtTypeName() const;
@@ -39,6 +43,8 @@ public:
     bool cacheData() const;
 
     QList<EntityType *> reimplementingEntityTypes() const;
+
+    Property::Type propertyType() const;
 
 private:
     friend class StoragePrivate;

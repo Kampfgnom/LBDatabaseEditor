@@ -90,7 +90,8 @@ bool RelationValueBase::setData(const QVariant &data)
   */
 bool RelationValueBase::isEditable() const
 {
-    return false;
+    Q_D(const RelationValueBase);
+    return d->relation->isEditable();
 }
 
 /*!

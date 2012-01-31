@@ -11,8 +11,7 @@
 #include "createcontextdialog.h"
 #include "editentitytypesdialog.h"
 
-#include "model2/projectstatsstorage.h"
-#include "model2/game.h"
+#include "model/projectstatsstorage.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -148,16 +147,6 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     storage->open();
     qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
-
-//    LiveGame *game = static_cast<LiveGame *>(storage->gamesContext()->game(250));
-//    foreach(Player *player, game->playersByPlacement()) {
-//        qDebug() << player->displayName() << game->points(player) << game->placement(player);
-//    }
-
-//    LBDatabase::CppExporter exporter;
-//    exporter.setStorage(storage);
-//    exporter.setDirectory("/Users/niklas/Documents/Programming/LBDatabaseTest/LBDatabaseEditor/src/model2/");
-//    exporter.exportCpp();
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));

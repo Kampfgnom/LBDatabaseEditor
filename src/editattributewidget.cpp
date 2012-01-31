@@ -23,7 +23,7 @@ EditAttributeWidget::~EditAttributeWidget()
 void EditAttributeWidget::updateWidget()
 {
     ui->lineEditDisplayName->setText(m_attribute->displayName());
-    ui->labelName->setText(m_attribute->name());
+    ui->labelName->setText(m_attribute->identifier());
 
 }
 

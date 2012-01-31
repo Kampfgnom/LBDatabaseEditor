@@ -14,19 +14,23 @@ class EnumAttribute : public LBDatabase::Attribute
 public:
     static const QString EnumsTable;
     static const QString AttributeColumn;
-    static const QString NameColumn;
+    static const QString IdentifierColumn;
     static const QString ValueColumn;
+
+    QString stringValue(int value) const;
 
     QString typeName() const;
     QString qtType() const;
 
     QMap<int, QString> enumValues() const;
 
+    Property::Type propertyType() const;
+
 private:
     friend class StoragePrivate;
     EnumAttribute(Row *row, Storage *parent);
 
-    void addEnumValue(const QString &name, int value);
+    void addEnumValue(const QString &identifier, int value);
 
     Q_DECLARE_PRIVATE(EnumAttribute);
 };

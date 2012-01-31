@@ -16,13 +16,22 @@ class Property : public QObject
 public:
     explicit Property(QObject *parent = 0);
 
+    enum Type {
+        Attribute,
+        EnumAttribute,
+        Relation,
+        Function
+    };
+
     virtual int id() const = 0;
-    virtual QString displayName(const Context *context = 0) const = 0;
-    virtual QString name() const = 0;
-    virtual void setDisplayName(const QString &displayName, const Context *context = 0) = 0;
+    virtual QString identifier() const = 0;
+    virtual QString displayName() const = 0;
+    virtual void setDisplayName(const QString &displayName) = 0;
+
+    virtual Type propertyType() const = 0;
 
 Q_SIGNALS:
-    void displayNameChanged(QString displayName, Context *context);
+    void displayNameChanged(QString displayName);
 
 private:
     friend class StoragePrivate;

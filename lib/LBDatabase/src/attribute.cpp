@@ -11,6 +11,7 @@
 #include "table.h"
 
 #include <QStringList>
+#include <QDebug>
 
 namespace LBDatabase {
 
@@ -20,7 +21,7 @@ namespace LBDatabase {
 void AttributePrivate::init()
 {
     Q_Q(Attribute);
-    name = row->data(Attribute::NameColumn).toString();
+    identifier = row->data(Attribute::IdentifierColumn).toString();
     displayName = row->data(Attribute::DisplayNameColumn).toString();
     calculated = row->data(Attribute::CalculatedColumn).toBool();
     cacheData = row->data(Attribute::CacheDataColumn).toBool();
@@ -29,9 +30,19 @@ void AttributePrivate::init()
     type = static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt());
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
+    if(!entityType) {
+        qWarning() << "No such entity type:" << row->data(Attribute::EntityTypeIdColumn).toInt();
+        return;
+    }
+
+    if(!calculated && !entityType->context()->table()->column(identifier)) {
+        qWarning() << "No such column:" << identifier << "in table" << entityType->context()->table()->name();
+        return;
+    }
+
     columnIndex = -1;
     if(!calculated)
-        columnIndex = entityType->context()->table()->column(name)->index();
+        columnIndex = entityType->context()->table()->column(identifier)->index();
     entityType->addAttribute(q);
     entityType->context()->addAttribute(q);
 }
@@ -87,7 +98,7 @@ void AttributePrivate::fetchValues()
 /*!
   The name of 'name' column.
   */
-const QString Attribute::NameColumn("name");
+const QString Attribute::IdentifierColumn("identifier");
 /*!
   The name of 'displayName' column.
   */
@@ -172,10 +183,10 @@ int Attribute::id() const
   Returns the name of the attribute. if the attribute is stored in the database
   this name is the name of the column where it is stored.
   */
-QString Attribute::name() const
+QString Attribute::identifier() const
 {
     Q_D(const Attribute);
-    return d->name;
+    return d->identifier;
 }
 
 bool Attribute::isCalculated() const
@@ -196,13 +207,17 @@ bool Attribute::isEditable() const
     return d->editable;
 }
 
+Property::Type Attribute::propertyType() const
+{
+    return Property::Attribute;
+}
+
 /*!
   Returns the display name of the attribute. Since each Attribute can only be
   part of one Context, the \a context parameter will be ignored.
   */
-QString Attribute::displayName(const Context *context) const
+QString Attribute::displayName() const
 {
-    Q_UNUSED(context);
     Q_D(const Attribute);
     return d->displayName;
 }
@@ -211,16 +226,15 @@ QString Attribute::displayName(const Context *context) const
   Sets the display name of the attribute to \a displayName. Since each Attribute
   can only be part of one Context, the \a context parameter will be ignored.
   */
-void Attribute::setDisplayName(const QString &displayName, const Context *context)
+void Attribute::setDisplayName(const QString &displayName)
 {
     Q_D(Attribute);
-    Q_UNUSED(context);
     if(d->displayName == displayName)
         return;
 
     d->row->setData(Attribute::DisplayNameColumn, QVariant(displayName));
     d->displayName = displayName;
-    emit displayNameChanged(displayName, d->entityType->context());
+    emit displayNameChanged(displayName);
 }
 
 /*!

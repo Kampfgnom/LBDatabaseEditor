@@ -61,6 +61,7 @@ private:
     friend class RelationPrivate;
     friend class FunctionPrivate;
     friend class GraphvizExporter;
+    friend class TransposeRelationPrivate;
 
     void insertEntityType(EntityType *type);
     void insertAttribute(Attribute *attribute);

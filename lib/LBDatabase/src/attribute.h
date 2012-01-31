@@ -14,7 +14,7 @@ class Attribute : public Property
 {
     Q_OBJECT
 public:
-    static const QString NameColumn;
+    static const QString IdentifierColumn;
     static const QString DisplayNameColumn;
     static const QString EntityTypeIdColumn;
     static const QString CalculatedColumn;
@@ -39,15 +39,17 @@ public:
     ~Attribute();
 
     int id() const;
-    QString displayName(const Context *context = 0) const;
-    virtual void setDisplayName(const QString &displayName, const Context *context = 0);
+    QString displayName() const;
+    virtual void setDisplayName(const QString &displayName);
     int columnIndex() const;
 
-    QString name() const;
+    QString identifier() const;
 
     bool isCalculated() const;
     bool cacheData() const;
     bool isEditable() const;
+
+    Property::Type propertyType() const;
 
     Type type() const;
     virtual QString typeName() const;

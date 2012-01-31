@@ -37,7 +37,7 @@ void StorageWriter::exportStorageHeader() const
 
     QString contextName;
     foreach(Context *context, storage->contexts()) {
-        contextName = makeClassname(context->name() + QLatin1String("Context"));
+        contextName = makeClassname(context->identifier() + QLatin1String("Context"));
         header.append(QLatin1String("class ")+contextName+QLatin1String(";\n"));
     }
 
@@ -50,7 +50,7 @@ void StorageWriter::exportStorageHeader() const
 
     QString methodName;
     foreach(Context *context, storage->contexts()) {
-        contextName = makeClassname(context->name() + QLatin1String("Context"));
+        contextName = makeClassname(context->identifier() + QLatin1String("Context"));
         methodName = makeMethodName(contextName);
         header.append(QLatin1String("\t")+contextName+QLatin1String(" *")+methodName+QLatin1String("() const;\n"));
     }
@@ -73,7 +73,7 @@ void StorageWriter::exportStorageSource() const
     startNamespace(source);
 
     foreach(Context *context, storage->contexts()) {
-        writeInclude(makeClassname(context->baseEntityType()->name()), source);
+        writeInclude(makeClassname(context->baseEntityType()->identifier()), source);
     }
 
     source.append(QLatin1String("\n")+
@@ -84,14 +84,14 @@ void StorageWriter::exportStorageSource() const
 
     QString contextName;
     foreach(Context *context, storage->contexts()) {
-        contextName = makeClassname(context->name()) + QLatin1String("Context");
+        contextName = makeClassname(context->identifier()) + QLatin1String("Context");
         source.append(QLatin1String("\tregisterContextType<") + contextName + QLatin1String(">();\n"));
     }
     source.append(QLatin1String("}\n\n"));
 
     QString methodName;
     foreach(Context *context, storage->contexts()) {
-        contextName = makeClassname(context->name()) + QLatin1String("Context");
+        contextName = makeClassname(context->identifier()) + QLatin1String("Context");
         methodName = makeMethodName(contextName);
         source.append(
                     contextName+QLatin1String(" *")+storageClass+QLatin1String("::")+methodName+QLatin1String("() const\n"

@@ -101,9 +101,9 @@ public:
                 return QVariant();
 
             if(otherEntities.value(0).size() == 1)
-                return otherEntities.value(0).at(0)->displayName();
+                return static_cast<Entity *>(otherEntities.value(0).at(0))->displayName();
 
-            return QVariant(QString::number(entities().size())+QLatin1String(" ")+otherEntities.value(0).at(0)->entityType()->name()+QLatin1String("s"));
+            return QVariant(QString::number(entities().size())+QLatin1String(" ")+otherEntities.value(0).at(0)->entityType()->displayNamePlural());
         }
         else if(role == PropertyValue::PlainDataRole) {
             return QVariant::fromValue<QList<Entity *> >(otherEntities.value(0));

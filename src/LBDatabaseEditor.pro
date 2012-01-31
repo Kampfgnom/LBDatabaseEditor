@@ -25,35 +25,32 @@ SOURCES += main.cpp\
     editattributewidget.cpp \
     editrelationwidget.cpp \
     propertycombobox.cpp \
-    model2/skatround.cpp \
-    model2/skatofflinegame.cpp \
-    model2/skatlivegame.cpp \
-    model2/schmeisserei.cpp \
-    model2/rule.cpp \
-    model2/round.cpp \
-    model2/projectstatsstorage.cpp \
-    model2/prognoseofflinegame.cpp \
-    model2/pokerofflinegame.cpp \
-    model2/player.cpp \
-    model2/place.cpp \
-    model2/offlinegameinformation.cpp \
-    model2/offlinegame.cpp \
-    model2/livegamedrink.cpp \
-    model2/livegame.cpp \
-    model2/heartsofflinegame.cpp \
-    model2/game.cpp \
-    model2/drink.cpp \
-    model2/doppelkopfround.cpp \
-    model2/doppelkopfofflinegame.cpp \
-    model2/doppelkopflivegame.cpp \
-    model2/dokoofflinegamebuddy.cpp \
-    model2/categoryassignment.cpp \
-    model2/category.cpp \
-    model2/drinkcalculator.cpp \
-    model2/livegamecalculator.cpp \
-    model2/gamecalculator.cpp \
-    model2/placecalculator.cpp \
-    model2/playercalculator.cpp
+    model/skatround.cpp \
+    model/skatofflinegame.cpp \
+    model/skatlivegame.cpp \
+    model/schmeisserei.cpp \
+    model/rule.cpp \
+    model/round.cpp \
+    model/projectstatsstorage.cpp \
+    model/prognoseofflinegame.cpp \
+    model/pokerofflinegame.cpp \
+    model/playercalculator.cpp \
+    model/player.cpp \
+    model/placecalculator.cpp \
+    model/place.cpp \
+    model/offlinegame.cpp \
+    model/livegamecalculator.cpp \
+    model/livegame.cpp \
+    model/livedrink.cpp \
+    model/heartsofflinegame.cpp \
+    model/gamecalculator.cpp \
+    model/game.cpp \
+    model/drinkcalculator.cpp \
+    model/drink.cpp \
+    model/doppelkopfround.cpp \
+    model/doppelkopfofflinegame.cpp \
+    model/doppelkopflivegame.cpp \
+    model/category.cpp
 
 HEADERS  += \
     tablewidget.h \
@@ -76,35 +73,32 @@ HEADERS  += \
     editattributewidget.h \
     editrelationwidget.h \
     propertycombobox.h \
-    model2/skatround.h \
-    model2/skatofflinegame.h \
-    model2/skatlivegame.h \
-    model2/schmeisserei.h \
-    model2/rule.h \
-    model2/round.h \
-    model2/projectstatsstorage.h \
-    model2/prognoseofflinegame.h \
-    model2/pokerofflinegame.h \
-    model2/player.h \
-    model2/place.h \
-    model2/offlinegameinformation.h \
-    model2/offlinegame.h \
-    model2/livegamedrink.h \
-    model2/livegamecalculator.h \
-    model2/livegame.h \
-    model2/heartsofflinegame.h \
-    model2/game.h \
-    model2/drink.h \
-    model2/doppelkopfround.h \
-    model2/doppelkopfofflinegame.h \
-    model2/doppelkopflivegame.h \
-    model2/dokoofflinegamebuddy.h \
-    model2/categoryassignment.h \
-    model2/category.h \
-    model2/drinkcalculator.h \
-    model2/gamecalculator.h \
-    model2/placecalculator.h \
-    model2/playercalculator.h
+    model/skatround.h \
+    model/skatofflinegame.h \
+    model/skatlivegame.h \
+    model/schmeisserei.h \
+    model/rule.h \
+    model/round.h \
+    model/projectstatsstorage.h \
+    model/prognoseofflinegame.h \
+    model/pokerofflinegame.h \
+    model/playercalculator.h \
+    model/player.h \
+    model/placecalculator.h \
+    model/place.h \
+    model/offlinegame.h \
+    model/livegamecalculator.h \
+    model/livegame.h \
+    model/livedrink.h \
+    model/heartsofflinegame.h \
+    model/gamecalculator.h \
+    model/game.h \
+    model/drinkcalculator.h \
+    model/drink.h \
+    model/doppelkopfround.h \
+    model/doppelkopfofflinegame.h \
+    model/doppelkopflivegame.h \
+    model/category.h
 
 LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../lib/LBDatabase/include

@@ -6,6 +6,7 @@
 #include "context.h"
 #include "entity.h"
 #include "entitytype.h"
+#include "enumattribute.h"
 #include "row.h"
 #include "table.h"
 
@@ -111,19 +112,26 @@ QVariant AttributeValue::data(int role) const
 {
     Q_UNUSED(role);
     Q_D(const AttributeValue);
-    if(!d->attribute->isCalculated())
-        return d->entity->row()->data(d->attribute->columnIndex());
+    if(d->attribute->type() == Attribute::Enum) {
+        return static_cast<EnumAttribute *>(d->attribute)->stringValue(d->entity->row()->data(d->attribute->columnIndex()).toInt());
+    }
+    else {
+        if(!d->attribute->isCalculated())
+            return d->entity->row()->data(d->attribute->columnIndex());
 
-    if(d->attribute->cacheData()) {
-        if(!d->cached) {
-            d->cachedData = const_cast<AttributeValuePrivate*>(d)->calculate();
-            d->cached = true;
+        if(d->attribute->cacheData()) {
+            if(!d->cached) {
+                d->cachedData = const_cast<AttributeValuePrivate*>(d)->calculate();
+                d->cached = true;
+            }
+
+            return d->cachedData;
         }
 
-        return d->cachedData;
+        return const_cast<AttributeValuePrivate*>(d)->calculate();
     }
 
-    return const_cast<AttributeValuePrivate*>(d)->calculate();
+    return QVariant();
 }
 
 /*!
@@ -137,7 +145,7 @@ bool AttributeValue::setData(const QVariant &data)
     if(!isEditable())
         return false;
 
-    d->entity->row()->setData(d->attribute->name(), data);
+    d->entity->row()->setData(d->attribute->identifier(), data);
     emit dataChanged(data);
     return true;
 }

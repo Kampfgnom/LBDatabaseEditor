@@ -3,26 +3,79 @@
 
 #include <LBDatabase/LBDatabase.h>
 
+#include <QDateTime>
+#include <QTime>
+
+namespace RoundProperties {
+const QString NumberAttribute("number");
+const QString CommentAttribute("comment");
+const QString StartTimeAttribute("startTime");
+const QString LengthAttribute("length");
+const QString StateAttribute("state");
+const QString LiveDrinksRelation("liveDrinks");
+const QString SchmeissereienPerRoundRelation("SchmeissereienPerRound");
+const QString GameRelation("game");
+const QString PointsFunction("points");
+} // namespace RoundProperties
+
+class LiveDrink;
+class Schmeisserei;
+class LiveGame;
 class Player;
 
 class Round : public LBDatabase::Entity
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Q_INVOKABLE Round(::LBDatabase::Row *row, ::LBDatabase::Context *context);
+	Q_INVOKABLE Round(::LBDatabase::Row *row, ::LBDatabase::Context *context);
+	static const QString Name;
 
-    static const QString Name;
+	QString displayName() const;
 
-    int points(Player *player);
+	enum State {
+		Running = 1,
+		Paused = 2,
+		Finished = 3
+	};
+
+	int number() const;
+	QString comment() const;
+	QDateTime startTime() const;
+	QTime length() const;
+	State state() const;
+
+	void setNumber(int number);
+	void setComment(const QString &comment);
+	void setStartTime(const QDateTime &startTime);
+	void setLength(const QTime &length);
+	void setState(State state);
+
+	int points(const Player *player) const;
+
+	QList<LiveDrink *> liveDrinks() const;
+	QList<Schmeisserei *> schmeissereienPerRound() const;
+	LiveGame *game() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START
+	// END
+
+signals:
+	void numberChanged(int number);
+	void commentChanged(QString comment);
+	void startTimeChanged(QDateTime startTime);
+	void lengthChanged(QTime length);
+	void stateChanged(State state);
 };
 
 class RoundsContext : public LBDatabase::Context
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Q_INVOKABLE RoundsContext(::LBDatabase::Row *row, ::LBDatabase::Storage *parent);
+	Q_INVOKABLE RoundsContext(::LBDatabase::Row *row, ::LBDatabase::Storage *parent);
+	static const QString Name;
 
-    static const QString Name;
+	Round *round(int id) const;
 };
 
 #endif // ROUND_H

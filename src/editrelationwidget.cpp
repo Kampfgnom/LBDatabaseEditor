@@ -30,12 +30,12 @@ EditRelationWidget::~EditRelationWidget()
 
 void EditRelationWidget::updateWidget()
 {
-    ui->labelRelationName->setText(m_relation->name());
-    ui->lineEditDisplayLeft->setText(m_relation->displayNameLeft());
-    ui->lineEditDisplayRight->setText(m_relation->displayNameRight());
+    ui->labelRelationName->setText(m_relation->identifier());
+    ui->lineEditDisplayLeft->setText(m_relation->displayName());
+    ui->lineEditDisplayRight->setText(m_relation->displayName());
 
-    m_leftEntityBox->setCurrentEntityType(m_relation->entityTypeLeft());
-    m_rightEntityBox->setCurrentEntityType(m_relation->entityTypeRight());
+    m_leftEntityBox->setCurrentEntityType(m_relation->entityType());
+    m_rightEntityBox->setCurrentEntityType(m_relation->entityTypeOther());
 
     setCardinality(m_relation->cardinality());
 

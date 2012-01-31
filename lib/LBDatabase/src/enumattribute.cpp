@@ -11,7 +11,7 @@ namespace LBDatabase {
 
 const QString EnumAttribute::EnumsTable("lbmeta_enums");
 const QString EnumAttribute::AttributeColumn("attribute");
-const QString EnumAttribute::NameColumn("name");
+const QString EnumAttribute::IdentifierColumn("name");
 const QString EnumAttribute::ValueColumn("value");
 
 
@@ -33,10 +33,21 @@ EnumAttribute::EnumAttribute(Row *row, Storage *parent) :
 {
 }
 
+Property::Type EnumAttribute::propertyType() const
+{
+    return Property::EnumAttribute;
+}
+
+QString EnumAttribute::stringValue(int value) const
+{
+    Q_D(const EnumAttribute);
+    return d->enumValues.value(value);
+}
+
 QString EnumAttribute::typeName() const
 {
     Q_D(const EnumAttribute);
-    return d->name;
+    return d->identifier;
 }
 
 QString EnumAttribute::qtType() const

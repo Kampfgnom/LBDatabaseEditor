@@ -32,7 +32,7 @@ void CalculatorWriter::write() const
 bool CalculatorWriter::isNeeded() const
 {
     bool hasCalculatedProperties = false;
-    QString name = m_entityType->name();
+    QString name = m_entityType->identifier();
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->isCalculated()) {
             hasCalculatedProperties = true;
@@ -50,7 +50,7 @@ bool CalculatorWriter::isNeeded() const
 
 void CalculatorWriter::exportHeader() const
 {
-    QString calculatorClass = makeClassname(m_entityType->name() + QLatin1String("Calculator"));
+    QString calculatorClass = makeClassname(m_entityType->identifier() + QLatin1String("Calculator"));
     QString header;
 
     startHeader(calculatorClass, header);
@@ -66,13 +66,13 @@ void CalculatorWriter::exportHeader() const
 
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->isCalculated()) {
-            header.append(QLatin1String("\t\n\tQ_INVOKABLE QVariant ")+makeMethodName(attribute->name())+QLatin1String("(const LBDatabase::Entity *entity) const;\n"));
+            header.append(QLatin1String("\t\n\tQ_INVOKABLE QVariant ")+makeMethodName(attribute->identifier())+QLatin1String("(const LBDatabase::Entity *entity) const;\n"));
         }
     }
 
     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
         if(function->isCalculated()) {
-            header.append(QLatin1String("\t\n\tQ_INVOKABLE EntityVariantHash ")+makeMethodName(function->name())+QLatin1String("(const LBDatabase::Entity *entity) const;\n"));
+            header.append(QLatin1String("\t\n\tQ_INVOKABLE EntityVariantHash ")+makeMethodName(function->identifier())+QLatin1String("(const LBDatabase::Entity *entity) const;\n"));
         }
     }
 
@@ -86,8 +86,8 @@ void CalculatorWriter::exportHeader() const
 
 void CalculatorWriter::exportSource() const
 {
-    QString calculatorClass = makeClassname(m_entityType->name() + QLatin1String("Calculator"));
-    QString entityTypeClass = makeClassname(m_entityType->name());
+    QString calculatorClass = makeClassname(m_entityType->identifier() + QLatin1String("Calculator"));
+    QString entityTypeClass = makeClassname(m_entityType->identifier());
     QString fileName = makeSourceFilename(calculatorClass);
     QString source = readFromFile(fileName);
 
@@ -111,10 +111,10 @@ void CalculatorWriter::exportSource() const
     QString name;
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->isCalculated()) {
-            name = calculatorClass+QLatin1String("::")+makeMethodName(attribute->name());
+            name = calculatorClass+QLatin1String("::")+makeMethodName(attribute->identifier());
 
             if(!source.contains(name)) {
-                source.insert(insertionPoint, QLatin1String("QVariant ")+calculatorClass+QLatin1String("::")+makeMethodName(attribute->name())+QLatin1String("(const LBDatabase::Entity *entity) const\n"
+                source.insert(insertionPoint, QLatin1String("QVariant ")+calculatorClass+QLatin1String("::")+makeMethodName(attribute->identifier())+QLatin1String("(const LBDatabase::Entity *entity) const\n"
                 "{\n"
                      "\t//! \\todo IMPLEMENT ME\n\tconst ")+
                               entityTypeClass+QLatin1String(" *")+makeMethodName(entityTypeClass)+
@@ -127,10 +127,10 @@ void CalculatorWriter::exportSource() const
 
     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
         if(function->isCalculated()) {
-            name = calculatorClass+QLatin1String("::")+makeMethodName(function->name());
+            name = calculatorClass+QLatin1String("::")+makeMethodName(function->identifier());
 
             if(!source.contains(name)) {
-                source.insert(insertionPoint, QLatin1String("EntityVariantHash ")+calculatorClass+QLatin1String("::")+makeMethodName(function->name())+QLatin1String("(const LBDatabase::Entity *entity) const\n"
+                source.insert(insertionPoint, QLatin1String("EntityVariantHash ")+calculatorClass+QLatin1String("::")+makeMethodName(function->identifier())+QLatin1String("(const LBDatabase::Entity *entity) const\n"
                 "{\n"
                      "\t//! \\todo IMPLEMENT ME\n\tconst ")+
                               entityTypeClass+QLatin1String(" *")+makeMethodName(entityTypeClass)+

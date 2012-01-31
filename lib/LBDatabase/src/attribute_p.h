@@ -16,7 +16,7 @@ protected:
 
     Row *row;
     Storage *storage;
-    QString name;
+    QString identifier;
     QString displayName;
     EntityType *entityType;
     bool calculated;

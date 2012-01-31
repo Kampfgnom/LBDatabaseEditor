@@ -100,11 +100,10 @@ Entity::~Entity()
 /*!
   Returns a display name for the entity.
   */
-QString Entity::displayName(int role) const
+QString Entity::displayName() const
 {
-    Q_UNUSED(role);
     Q_D(const Entity);
-    return d->entityType->name()+QLatin1String(" ID: ")+QString::number(d->row->id());
+    return d->entityType->identifier()+QLatin1String(" ID: ")+QString::number(d->row->id());
 }
 
 /*!
