@@ -6,8 +6,8 @@
 
 namespace SchmeissereiProperties {
 const QString TypeAttribute("type");
-const QString PlayerRelation("PlayerSchmeisserein");
-const QString RoundRelation("SchmeissereienPerRound");
+const QString PlayerRelation("player");
+const QString RoundRelation("round");
 } // namespace SchmeissereiProperties
 
 class Player;

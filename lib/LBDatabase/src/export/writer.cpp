@@ -10,7 +10,7 @@ namespace LBDatabase {
 
 namespace {
 const QString ExtraContentBegin("\t// Write anything you want to remain unchanged between these comments: \n\t//START");
-const QString ExtraContentEnd("\t// END");
+const QString ExtraContentEnd("\n\t// END");
 }
 
 Writer::Writer(const CppExporter *const exporter) :

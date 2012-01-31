@@ -7,7 +7,7 @@
 
 namespace LiveGameProperties {
 const QString StateAttribute("state");
-const QString RoundsRelation("RoundsPerGame");
+const QString RoundsRelation("rounds");
 const QString PointsFunction("points");
 const QString PlacementFunction("placement");
 } // namespace LiveGameProperties

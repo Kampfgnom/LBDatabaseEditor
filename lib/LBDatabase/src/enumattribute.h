@@ -30,7 +30,7 @@ private:
     friend class StoragePrivate;
     EnumAttribute(Row *row, Storage *parent);
 
-    void addEnumValue(const QString &name, int value);
+    void addEnumValue(const QString &identifier, int value);
 
     Q_DECLARE_PRIVATE(EnumAttribute);
 };

@@ -7,9 +7,9 @@
 
 namespace LiveDrinkProperties {
 const QString TimeAttribute("time");
-const QString RoundRelation("DrinksPerRound");
-const QString PlayerRelation("LiveDrinksPerPlayer");
-const QString DrinkRelation("LiveDrinksPerDrink");
+const QString RoundRelation("round");
+const QString PlayerRelation("player");
+const QString DrinkRelation("drink");
 } // namespace LiveDrinkProperties
 
 class Round;

@@ -390,7 +390,7 @@ void Context::addAttribute(Attribute *attribute)
 
     beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
     d->properties.append(attribute);
-    connect(attribute, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
+    connect(attribute, SIGNAL(displayNameChanged(QString)), this, SLOT(onPropertyDisplayNameChanged(QString)));
     endInsertColumns();
 }
 
@@ -402,7 +402,7 @@ void Context::addFunction(Function *function)
 
     beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
     d->properties.append(function);
-    connect(function, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
+    connect(function, SIGNAL(displayNameChanged(QString)), this, SLOT(onPropertyDisplayNameChanged(QString)));
     endInsertColumns();
 }
 
@@ -419,7 +419,7 @@ void Context::addRelation(Relation *relation)
 
     beginInsertColumns(QModelIndex(), d->properties.size(), d->properties.size());
     d->properties.append(relation);
-    connect(relation, SIGNAL(displayNameChanged(QString,Context*)), this, SLOT(onPropertyDisplayNameChanged(QString,Context*)));
+    connect(relation, SIGNAL(displayNameChanged(QString)), this, SLOT(onPropertyDisplayNameChanged(QString)));
     endInsertColumns();
 }
 
@@ -500,7 +500,7 @@ QVariant Context::headerData(int section, Qt::Orientation orientation, int role)
             case 1:
                 return QLatin1String("Type");
             default:
-                return d->properties.at(section - 2)->displayName(this);
+                return d->properties.at(section - 2)->displayName();
             }
         }
         else if(role == Qt::TextAlignmentRole) {
@@ -551,15 +551,14 @@ void Context::onEntityTypeNameChanged(QString name)
   \internal
   Listens to name changes of Properties and updates the model accordingly.
   */
-void Context::onPropertyDisplayNameChanged(QString displayName, Context *context)
+void Context::onPropertyDisplayNameChanged(QString displayName)
 {
     Q_D(const Context);
     Q_UNUSED(displayName);
-    if(context == this) {
-        Property *p = static_cast<Property *>(sender());
-        int i =d->properties.indexOf(p);
-        emit headerDataChanged(Qt::Horizontal, i, i);
-    }
+
+    Property *p = static_cast<Property *>(sender());
+    int i =d->properties.indexOf(p);
+    emit headerDataChanged(Qt::Horizontal, i, i);
 }
 
 /*!

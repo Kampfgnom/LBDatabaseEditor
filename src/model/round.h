@@ -12,9 +12,9 @@ const QString CommentAttribute("comment");
 const QString StartTimeAttribute("startTime");
 const QString LengthAttribute("length");
 const QString StateAttribute("state");
-const QString DrinksRelation("DrinksPerRound");
-const QString SchmeissereienRelation("SchmeissereienPerRound");
-const QString GameRelation("RoundsPerGame");
+const QString LiveDrinksRelation("liveDrinks");
+const QString SchmeissereienPerRoundRelation("SchmeissereienPerRound");
+const QString GameRelation("game");
 const QString PointsFunction("points");
 } // namespace RoundProperties
 
@@ -52,8 +52,8 @@ public:
 
 	int points(const Player *player) const;
 
-	QList<LiveDrink *> drinks() const;
-	QList<Schmeisserei *> schmeissereien() const;
+	QList<LiveDrink *> liveDrinks() const;
+	QList<Schmeisserei *> schmeissereienPerRound() const;
 	LiveGame *game() const;
 
 	// Write anything you want to remain unchanged between these comments: 

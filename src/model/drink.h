@@ -13,8 +13,8 @@ const QString AlcAttribute("alc");
 const QString IconAttribute("icon");
 const QString DrinkCountAttribute("drinkCount");
 const QString MostDrinksAttribute("mostDrinks");
-const QString LiveDrinksRelation("LiveDrinksPerDrink");
-const QString PlayersRelation("DrinksPerPlayer");
+const QString LiveDrinksRelation("liveDrinks");
+const QString PlayersRelation("players");
 const QString CountPerPlayerFunction("countPerPlayer");
 } // namespace DrinkProperties
 

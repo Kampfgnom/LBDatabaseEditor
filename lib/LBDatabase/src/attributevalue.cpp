@@ -145,7 +145,7 @@ bool AttributeValue::setData(const QVariant &data)
     if(!isEditable())
         return false;
 
-    d->entity->row()->setData(d->attribute->name(), data);
+    d->entity->row()->setData(d->attribute->identifier(), data);
     emit dataChanged(data);
     return true;
 }

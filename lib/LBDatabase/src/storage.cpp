@@ -160,7 +160,7 @@ bool StoragePrivate::open()
     }
 
     foreach(Row *row, relationsTable->rows()) {
-        q->insertRelation(new ConcreteRelation<Entity, Entity>(row, q));
+        q->insertRelation(new Relation(row, q));
     }
 
     foreach(Row *row, functionsTable->rows()) {
@@ -297,12 +297,12 @@ void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileN
     attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::EntityTypeIdColumn,QLatin1String("INTERGER"));
 
-    relationsTable->addColumn(Relation::NameColumn,QLatin1String("TEXT"));
-    relationsTable->addColumn(Relation::DisplayNameLeftColumn,QLatin1String("TEXT"));
-    relationsTable->addColumn(Relation::DisplayNameRightColumn,QLatin1String("TEXT"));
-    relationsTable->addColumn(Relation::EntityTypeLeftColumn,QLatin1String("INTERGER"));
-    relationsTable->addColumn(Relation::EntityTypeRightColumn,QLatin1String("INTERGER"));
-    relationsTable->addColumn(Relation::CardinalityColumn,QLatin1String("INTERGER"));
+//    relationsTable->addColumn(Relation::NameColumn,QLatin1String("TEXT"));
+//    relationsTable->addColumn(Relation::DisplayNameLeftColumn,QLatin1String("TEXT"));
+//    relationsTable->addColumn(Relation::DisplayNameRightColumn,QLatin1String("TEXT"));
+//    relationsTable->addColumn(Relation::EntityTypeLeftColumn,QLatin1String("INTERGER"));
+//    relationsTable->addColumn(Relation::EntityTypeRightColumn,QLatin1String("INTERGER"));
+//    relationsTable->addColumn(Relation::CardinalityColumn,QLatin1String("INTERGER"));
 
     Storage *storage = Storage::instance(storageFileName);
     storage->open();

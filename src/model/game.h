@@ -11,9 +11,9 @@ const QString NameAttribute("name");
 const QString DateAttribute("date");
 const QString LengthAttribute("length");
 const QString CommentAttribute("comment");
-const QString SiteRelation("GameSite");
-const QString PlayersRelation("PlayersPerGame");
-const QString PositionFunction("position");
+const QString SiteRelation("site");
+const QString PlayersRelation("players");
+const QString PositionsFunction("positions");
 const QString PlacementFunction("placement");
 } // namespace GameProperties
 
@@ -39,7 +39,7 @@ public:
 	void setLength(const QTime &length);
 	void setComment(const QString &comment);
 
-	int position(const Player *player) const;
+	int positions(const Player *player) const;
 	int placement(const Player *player) const;
 
 	Place *site() const;

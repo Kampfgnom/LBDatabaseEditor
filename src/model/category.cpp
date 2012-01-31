@@ -32,14 +32,27 @@ QString Category::icon() const
 	return value(CategoryProperties::IconAttribute).value<QString>();
 }
 
-int Category::type() const
+Category::Type Category::type() const
 {
-	return value(CategoryProperties::TypeAttribute).value<int>();
+	return static_cast<Type>(value(CategoryProperties::TypeAttribute).value<int>());
+}
+
+void Category::setOrderIndicator(int orderIndicator)
+{
+	if(orderIndicator == this->orderIndicator())
+		return;
+	setValue(CategoryProperties::OrderIndicatorAttribute,QVariant::fromValue<int>(orderIndicator));
+	emit orderIndicatorChanged(orderIndicator);
 }
 
 Category *Category::parentCategory() const
 {
 	return relation<Category>(CategoryProperties::ParentCategoryRelation)->firstEntity();
+}
+
+QList<Category *> Category::childCategories() const
+{
+	return relation<Category>(CategoryProperties::ChildCategoriesRelation)->entities();
 }
 
 

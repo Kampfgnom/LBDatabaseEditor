@@ -94,9 +94,9 @@ QList<Game *> Place::games() const
 	return relation<Game>(PlaceProperties::GamesRelation)->entities();
 }
 
-QList<Player *> Place::player() const
+QList<Player *> Place::players() const
 {
-	return relation<Player>(PlaceProperties::PlayerRelation)->entities();
+	return relation<Player>(PlaceProperties::PlayersRelation)->entities();
 }
 
 

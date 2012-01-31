@@ -103,21 +103,23 @@ void FunctionPrivate::fetchValues()
 {
     Q_Q(Function);
     if(!calculated) {
-        int entityColumn = functionTable->column(entityType->identifier())->index();
-        int keyEntityColumn = functionTable->column(keyEntityType->identifier())->index();
-        int valueColumn = functionTable->column(name)->index();
-        Entity *entity;
-        Entity *keyEntity;
-        QVariant value;
-        FunctionValue *functionValue;
-        foreach(Row *row, functionTable->rows()) {
-            entity = entityType->context()->entity(row->data(entityColumn).toInt());
-            keyEntity = keyEntityType->context()->entity(row->data(keyEntityColumn).toInt());
-            value = row->data(valueColumn);
+//        if(!functionTable->column(entityType->identifier()))
+//            qWarning() << "No such column" <<
+//        int entityColumn = functionTable->column(entityType->identifier())->index();
+//        int keyEntityColumn = functionTable->column(keyEntityType->identifier())->index();
+//        int valueColumn = functionTable->column(name)->index();
+//        Entity *entity;
+//        Entity *keyEntity;
+//        QVariant value;
+//        FunctionValue *functionValue;
+//        foreach(Row *row, functionTable->rows()) {
+//            entity = entityType->context()->entity(row->data(entityColumn).toInt());
+//            keyEntity = keyEntityType->context()->entity(row->data(keyEntityColumn).toInt());
+//            value = row->data(valueColumn);
 
-            functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
-            functionValue->addValue(keyEntity, value);
-        }
+//            functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
+//            functionValue->addValue(keyEntity, value);
+//        }
     }
 }
 
@@ -156,26 +158,24 @@ Property::Type Function::propertyType() const
     return Property::Function;
 }
 
-QString Function::displayName(const Context *context) const
+QString Function::displayName() const
 {
     Q_D(const Function);
-    Q_UNUSED(context);
     return d->displayName;
 }
 
-void Function::setDisplayName(const QString &displayName, const Context *context)
+void Function::setDisplayName(const QString &displayName)
 {
     Q_D(Function);
-    Q_UNUSED(context);
     if(d->displayName == displayName)
         return;
 
     d->row->setData(Attribute::DisplayNameColumn, QVariant(displayName));
     d->displayName = displayName;
-    emit displayNameChanged(displayName, d->entityType->context());
+    emit displayNameChanged(displayName);
 }
 
-QString Function::name() const
+QString Function::identifier() const
 {
     Q_D(const Function);
     return d->name;

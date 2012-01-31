@@ -118,7 +118,7 @@ void GraphvizExporter::addEntityType(EntityType *type, QString &doc) const
 void GraphvizExporter::addAttribute(Attribute *attribute, QString &doc) const
 {
     doc.append(QLatin1String("+ "));
-    doc.append(attribute->name());
+    doc.append(attribute->identifier());
     doc.append(QLatin1String(" : QVariant"));
 //    doc.append(attribute->typeName());
     doc.append(QLatin1String("\\l"));
@@ -127,7 +127,7 @@ void GraphvizExporter::addAttribute(Attribute *attribute, QString &doc) const
 void GraphvizExporter::addFunction(Function *function, QString &doc) const
 {
     doc.append(QLatin1String("+ "));
-    doc.append(function->name());
+    doc.append(function->identifier());
     doc.append(QLatin1String("("));
     EntityType *type = function->keyEntityType();
     doc.append(simplifyName(type->identifier()));
@@ -162,10 +162,10 @@ void GraphvizExporter::startRelations(QString &doc) const
 
 void GraphvizExporter::addRelation(Relation *relation, QString &doc) const
 {
-    doc.append(simplifyName(relation->entityTypeLeft()->identifier()) + QLatin1String(" -> ") + simplifyName(relation->entityTypeRight()->identifier()));
+    doc.append(simplifyName(relation->entityType()->identifier()) + QLatin1String(" -> ") + simplifyName(relation->entityTypeOther()->identifier()));
 
     doc.append(QLatin1String("\t[ label = \""));
-    doc.append(relation->name());
+    doc.append(relation->identifier());
     doc.append(QLatin1String("\""));
     if(relation->cardinality() == Relation::OneToOne) {
         doc.append(QLatin1String(" taillabel = \"1\""));

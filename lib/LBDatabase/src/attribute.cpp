@@ -183,7 +183,7 @@ int Attribute::id() const
   Returns the name of the attribute. if the attribute is stored in the database
   this name is the name of the column where it is stored.
   */
-QString Attribute::name() const
+QString Attribute::identifier() const
 {
     Q_D(const Attribute);
     return d->identifier;
@@ -216,9 +216,8 @@ Property::Type Attribute::propertyType() const
   Returns the display name of the attribute. Since each Attribute can only be
   part of one Context, the \a context parameter will be ignored.
   */
-QString Attribute::displayName(const Context *context) const
+QString Attribute::displayName() const
 {
-    Q_UNUSED(context);
     Q_D(const Attribute);
     return d->displayName;
 }
@@ -227,16 +226,15 @@ QString Attribute::displayName(const Context *context) const
   Sets the display name of the attribute to \a displayName. Since each Attribute
   can only be part of one Context, the \a context parameter will be ignored.
   */
-void Attribute::setDisplayName(const QString &displayName, const Context *context)
+void Attribute::setDisplayName(const QString &displayName)
 {
     Q_D(Attribute);
-    Q_UNUSED(context);
     if(d->displayName == displayName)
         return;
 
     d->row->setData(Attribute::DisplayNameColumn, QVariant(displayName));
     d->displayName = displayName;
-    emit displayNameChanged(displayName, d->entityType->context());
+    emit displayNameChanged(displayName);
 }
 
 /*!

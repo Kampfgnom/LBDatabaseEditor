@@ -13,8 +13,8 @@ const QString NummerAttribute("nummer");
 const QString CommentAttribute("comment");
 const QString IconPathAttribute("iconPath");
 const QString GameCountAttribute("gameCount");
-const QString GamesRelation("GameSite");
-const QString PlayerRelation("PlayersAndPlaces");
+const QString GamesRelation("games");
+const QString PlayersRelation("players");
 } // namespace PlaceProperties
 
 class Game;
@@ -45,7 +45,7 @@ public:
 
 
 	QList<Game *> games() const;
-	QList<Player *> player() const;
+	QList<Player *> players() const;
 
 	// Write anything you want to remain unchanged between these comments: 
 	//START	// END

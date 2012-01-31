@@ -39,11 +39,11 @@ public:
     ~Attribute();
 
     int id() const;
-    QString displayName(const Context *context = 0) const;
-    virtual void setDisplayName(const QString &displayName, const Context *context = 0);
+    QString displayName() const;
+    virtual void setDisplayName(const QString &displayName);
     int columnIndex() const;
 
-    QString name() const;
+    QString identifier() const;
 
     bool isCalculated() const;
     bool cacheData() const;

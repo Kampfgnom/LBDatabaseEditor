@@ -54,7 +54,7 @@ public:
 
 private Q_SLOTS:
     void onEntityTypeNameChanged(QString identifier);
-    void onPropertyDisplayNameChanged(QString displayName, Context* context);
+    void onPropertyDisplayNameChanged(QString displayName);
     void onPropertyValueDataChanged(QVariant data);
 
 protected:
@@ -63,6 +63,7 @@ protected:
     friend class AttributePrivate;
     friend class RelationPrivate;
     friend class FunctionPrivate;
+    friend class TransposeRelationPrivate;
 
     explicit Context(Row *row, Storage *parent);
 

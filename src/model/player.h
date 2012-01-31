@@ -26,18 +26,18 @@ const QString LossesAttribute("losses");
 const QString AveragePlacementAttribute("averagePlacement");
 const QString LastWinAttribute("lastWin");
 const QString LastGameAttribute("lastGame");
-const QString SchmeissereienRelation("PlayerSchmeisserein");
-const QString LiveDrinksRelation("LiveDrinksPerPlayer");
-const QString HochzeitenRelation("DokoRoundHochzeitPlayer");
-const QString Re1RoundsRelation("DokoRoundRe1Player");
-const QString Re2RoundsRelation("DokoRoundRe2Player");
-const QString SchweiereiRoundsRelation("DokoRoundSchweinereiPlayer");
-const QString TrumpfabgabeRoundsRelation("DokoRoundTrumpfabgabePlayer");
-const QString DokoSoliRelation("DokoRoundSoloPlayer");
-const QString SkatSoliRelation("SkatRoundSolistPlayer");
-const QString PlaceRelation("PlayersAndPlaces");
-const QString GamesRelation("PlayersPerGame");
-const QString DrinksRelation("DrinksPerPlayer");
+const QString SchmeissereienRelation("schmeissereien");
+const QString LiveDrinksRelation("liveDrinks");
+const QString DokoHochzeitenRelation("dokoHochzeiten");
+const QString DokoReRounds1Relation("dokoReRounds1");
+const QString DokoReRounds2Relation("dokoReRounds2");
+const QString DokoSchweinereiRoundsRelation("dokoSchweinereiRounds");
+const QString DokoTrumpfabgabeRoundsRelation("dokoTrumpfabgabeRounds");
+const QString DokoRoundSoloPlayerRelation("DokoRoundSoloPlayer");
+const QString SkatSoloRoundsRelation("skatSoloRounds");
+const QString PlacesRelation("places");
+const QString GamesRelation("games");
+const QString DrinksRelation("drinks");
 } // namespace PlayerProperties
 
 class Schmeisserei;
@@ -83,14 +83,14 @@ public:
 
 	QList<Schmeisserei *> schmeissereien() const;
 	QList<LiveDrink *> liveDrinks() const;
-	QList<DoppelkopfRound *> hochzeiten() const;
-	QList<DoppelkopfRound *> re1Rounds() const;
-	QList<DoppelkopfRound *> re2Rounds() const;
-	QList<DoppelkopfRound *> schweiereiRounds() const;
-	QList<DoppelkopfRound *> trumpfabgabeRounds() const;
-	QList<DoppelkopfRound *> dokoSoli() const;
-	QList<SkatRound *> skatSoli() const;
-	QList<Place *> place() const;
+	QList<DoppelkopfRound *> dokoHochzeiten() const;
+	QList<DoppelkopfRound *> dokoReRounds1() const;
+	QList<DoppelkopfRound *> dokoReRounds2() const;
+	QList<DoppelkopfRound *> dokoSchweinereiRounds() const;
+	QList<DoppelkopfRound *> dokoTrumpfabgabeRounds() const;
+	QList<DoppelkopfRound *> dokoRoundSoloPlayer() const;
+	QList<SkatRound *> skatSoloRounds() const;
+	QList<Place *> places() const;
 	QList<Game *> games() const;
 	QList<Drink *> drinks() const;
 

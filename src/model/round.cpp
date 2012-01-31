@@ -82,14 +82,14 @@ void Round::setState(State state)
 	emit stateChanged(state);
 }
 
-QList<LiveDrink *> Round::drinks() const
+QList<LiveDrink *> Round::liveDrinks() const
 {
-	return relation<LiveDrink>(RoundProperties::DrinksRelation)->entities();
+	return relation<LiveDrink>(RoundProperties::LiveDrinksRelation)->entities();
 }
 
-QList<Schmeisserei *> Round::schmeissereien() const
+QList<Schmeisserei *> Round::schmeissereienPerRound() const
 {
-	return relation<Schmeisserei>(RoundProperties::SchmeissereienRelation)->entities();
+	return relation<Schmeisserei>(RoundProperties::SchmeissereienPerRoundRelation)->entities();
 }
 
 LiveGame *Round::game() const

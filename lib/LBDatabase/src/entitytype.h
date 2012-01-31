@@ -77,6 +77,7 @@ private:
     friend class RelationPrivate;
     friend class EntityPrivate;
     friend class FunctionPrivate;
+    friend class TransposeRelationPrivate;
 
     explicit EntityType(LBDatabase::Row *row, Storage *parent);
 

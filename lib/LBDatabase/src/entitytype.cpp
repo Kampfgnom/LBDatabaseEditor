@@ -110,15 +110,15 @@ void EntityTypePrivate::inheritProperties(EntityType *parent)
 
     foreach(Attribute *attribute, newAttributes) {
         properties.append(attribute);
-        propertiesByName.insert(attribute->name(), attribute);
+        propertiesByName.insert(attribute->identifier(), attribute);
     }
     foreach(Relation *relation, newRelations) {
         properties.append(relation);
-        propertiesByName.insert(relation->name(), relation);
+        propertiesByName.insert(relation->identifier(), relation);
     }
     foreach(Function *function, newFunctions) {
         properties.append(function);
-        propertiesByName.insert(function->name(), function);
+        propertiesByName.insert(function->identifier(), function);
     }
 
     relations.append(newRelations);
@@ -164,32 +164,32 @@ Attribute *EntityTypePrivate::addAttribute(const QString &name, Attribute::Type 
 
 Relation *EntityTypePrivate::addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality)
 {
-    Q_Q(EntityType);
-    Row *row = storage->contextsTable()->appendRow();
-    row->setData(Relation::NameColumn, QVariant(name));
-    row->setData(Relation::EntityTypeLeftColumn, QVariant(q->id()));
-    row->setData(Relation::EntityTypeRightColumn, QVariant(otherType->id()));
-    row->setData(Relation::DisplayNameLeftColumn, QVariant(name));
-    row->setData(Relation::DisplayNameRightColumn, QVariant(name));
-    row->setData(Relation::CardinalityColumn, QVariant(static_cast<int>(cardinality)));
+//    Q_Q(EntityType);
+//    Row *row = storage->contextsTable()->appendRow();
+//    row->setData(Relation::NameColumn, QVariant(name));
+//    row->setData(Relation::EntityTypeLeftColumn, QVariant(q->id()));
+//    row->setData(Relation::EntityTypeRightColumn, QVariant(otherType->id()));
+//    row->setData(Relation::DisplayNameLeftColumn, QVariant(name));
+//    row->setData(Relation::DisplayNameRightColumn, QVariant(name));
+//    row->setData(Relation::CardinalityColumn, QVariant(static_cast<int>(cardinality)));
 
-    if(cardinality == Relation::OneToMany || cardinality == Relation::OneToOne) {
-        storage->database()->table(otherType->identifier())->addColumn(name, Column::typeToName(Column::Integer));
-    }
-    else if(cardinality == Relation::ManyToMany) {
-        Table *table = storage->database()->createTable(name);
-        table->addColumn(q->identifier(), Column::typeToName(Column::Integer));
-        table->addColumn(otherType->identifier(), Column::typeToName(Column::Integer));
-    }
+//    if(cardinality == Relation::OneToMany || cardinality == Relation::OneToOne) {
+//        storage->database()->table(otherType->identifier())->addColumn(name, Column::typeToName(Column::Integer));
+//    }
+//    else if(cardinality == Relation::ManyToMany) {
+//        Table *table = storage->database()->createTable(name);
+//        table->addColumn(q->identifier(), Column::typeToName(Column::Integer));
+//        table->addColumn(otherType->identifier(), Column::typeToName(Column::Integer));
+//    }
 
-    Relation *relation = new Relation(row, storage);
-    storage->insertRelation(relation);
-    relation->addPropertyValueToEntities();
-    foreach(Entity *entity, entities) {
-        entity->propertyValue(relation)->fetchValue();
-    }
+//    Relation *relation = new Relation(row, storage);
+//    storage->insertRelation(relation);
+//    relation->addPropertyValueToEntities();
+//    foreach(Entity *entity, entities) {
+//        entity->propertyValue(relation)->fetchValue();
+//    }
 
-    return relation;
+//    return relation;
 }
 
 /******************************************************************************
@@ -530,7 +530,7 @@ void EntityType::addAttribute(Attribute *attribute)
 {
     Q_D(EntityType);
     d->properties.append(attribute);
-    d->propertiesByName.insert(attribute->name(), attribute);
+    d->propertiesByName.insert(attribute->identifier(), attribute);
     d->attributes.append(attribute);
 }
 
@@ -543,7 +543,7 @@ void EntityType::addRelation(Relation *relation)
 {
     Q_D(EntityType);
     d->properties.append(relation);
-    d->propertiesByName.insert(relation->name(), relation);
+    d->propertiesByName.insert(relation->identifier(), relation);
     d->relations.append(relation);
 }
 
@@ -551,7 +551,7 @@ void EntityType::addFunction(Function *function)
 {
     Q_D(EntityType);
     d->properties.append(function);
-    d->propertiesByName.insert(function->name(), function);
+    d->propertiesByName.insert(function->identifier(), function);
     d->functions.append(function);
 }
 

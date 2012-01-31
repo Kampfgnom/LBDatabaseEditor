@@ -146,44 +146,44 @@ QList<LiveDrink *> Player::liveDrinks() const
 	return relation<LiveDrink>(PlayerProperties::LiveDrinksRelation)->entities();
 }
 
-QList<DoppelkopfRound *> Player::hochzeiten() const
+QList<DoppelkopfRound *> Player::dokoHochzeiten() const
 {
-	return relation<DoppelkopfRound>(PlayerProperties::HochzeitenRelation)->entities();
+	return relation<DoppelkopfRound>(PlayerProperties::DokoHochzeitenRelation)->entities();
 }
 
-QList<DoppelkopfRound *> Player::re1Rounds() const
+QList<DoppelkopfRound *> Player::dokoReRounds1() const
 {
-	return relation<DoppelkopfRound>(PlayerProperties::Re1RoundsRelation)->entities();
+	return relation<DoppelkopfRound>(PlayerProperties::DokoReRounds1Relation)->entities();
 }
 
-QList<DoppelkopfRound *> Player::re2Rounds() const
+QList<DoppelkopfRound *> Player::dokoReRounds2() const
 {
-	return relation<DoppelkopfRound>(PlayerProperties::Re2RoundsRelation)->entities();
+	return relation<DoppelkopfRound>(PlayerProperties::DokoReRounds2Relation)->entities();
 }
 
-QList<DoppelkopfRound *> Player::schweiereiRounds() const
+QList<DoppelkopfRound *> Player::dokoSchweinereiRounds() const
 {
-	return relation<DoppelkopfRound>(PlayerProperties::SchweiereiRoundsRelation)->entities();
+	return relation<DoppelkopfRound>(PlayerProperties::DokoSchweinereiRoundsRelation)->entities();
 }
 
-QList<DoppelkopfRound *> Player::trumpfabgabeRounds() const
+QList<DoppelkopfRound *> Player::dokoTrumpfabgabeRounds() const
 {
-	return relation<DoppelkopfRound>(PlayerProperties::TrumpfabgabeRoundsRelation)->entities();
+	return relation<DoppelkopfRound>(PlayerProperties::DokoTrumpfabgabeRoundsRelation)->entities();
 }
 
-QList<DoppelkopfRound *> Player::dokoSoli() const
+QList<DoppelkopfRound *> Player::dokoRoundSoloPlayer() const
 {
-	return relation<DoppelkopfRound>(PlayerProperties::DokoSoliRelation)->entities();
+	return relation<DoppelkopfRound>(PlayerProperties::DokoRoundSoloPlayerRelation)->entities();
 }
 
-QList<SkatRound *> Player::skatSoli() const
+QList<SkatRound *> Player::skatSoloRounds() const
 {
-	return relation<SkatRound>(PlayerProperties::SkatSoliRelation)->entities();
+	return relation<SkatRound>(PlayerProperties::SkatSoloRoundsRelation)->entities();
 }
 
-QList<Place *> Player::place() const
+QList<Place *> Player::places() const
 {
-	return relation<Place>(PlayerProperties::PlaceRelation)->entities();
+	return relation<Place>(PlayerProperties::PlacesRelation)->entities();
 }
 
 QList<Game *> Player::games() const

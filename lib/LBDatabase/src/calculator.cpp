@@ -18,7 +18,7 @@ Calculator::Calculator(QObject *parent) :
 
 QVariant Calculator::calculate(const Entity *entity, AttributeValue *attributeValue)
 {
-    QString methodName = attributeValue->property()->name() + QLatin1String("(const LBDatabase::Entity*)");
+    QString methodName = attributeValue->property()->identifier() + QLatin1String("(const LBDatabase::Entity*)");
 
     int methodIndex = metaObject()->indexOfMethod(methodName.toLocal8Bit().data());
     if(methodIndex == -1)
@@ -32,7 +32,7 @@ QVariant Calculator::calculate(const Entity *entity, AttributeValue *attributeVa
 
 QHash<const Entity *, QVariant> Calculator::calculate(const Entity *entity, FunctionValue *functionValue)
 {
-    QString methodName = functionValue->property()->name() + QLatin1String("(const LBDatabase::Entity*)");
+    QString methodName = functionValue->property()->identifier() + QLatin1String("(const LBDatabase::Entity*)");
 
     int methodIndex = metaObject()->indexOfMethod(methodName.toLocal8Bit().data());
     if(methodIndex == -1)
@@ -47,7 +47,7 @@ QHash<const Entity *, QVariant> Calculator::calculate(const Entity *entity, Func
 
 QVariant Calculator::calculate(const Entity *entity, FunctionValue *functionValue, const Entity *key)
 {
-    QString methodName = functionValue->property()->name() + QLatin1String("Value(const LBDatabase::Entity*,const LBDatabase::Entity*)");
+    QString methodName = functionValue->property()->identifier() + QLatin1String("Value(const LBDatabase::Entity*,const LBDatabase::Entity*)");
 
     int methodIndex = metaObject()->indexOfMethod(methodName.toLocal8Bit().data());
     if(methodIndex == -1)

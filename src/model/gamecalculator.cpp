@@ -13,7 +13,7 @@ EntityVariantHash GameCalculator::placement(const LBDatabase::Entity *entity) co
     const Game *game = static_cast<const Game *>(entity);
     EntityVariantHash result;
     foreach(Player *p, game->players()) {
-        result.insert(p, game->position(p));
+        result.insert(p, game->positions(p));
     }
     return result;
 }

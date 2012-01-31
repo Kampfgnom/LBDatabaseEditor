@@ -8,12 +8,12 @@
 namespace DoppelkopfRoundProperties {
 const QString Doko_soloPflichtAttribute("doko_soloPflicht");
 const QString Doko_soloTypeAttribute("doko_soloType");
-const QString HochzeitPlayerRelation("DokoRoundHochzeitPlayer");
-const QString RePlayer1Relation("DokoRoundRe1Player");
-const QString RePlayer2Relation("DokoRoundRe2Player");
-const QString SchweinereiPlayerRelation("DokoRoundSchweinereiPlayer");
-const QString TrumpfabgabePlayerRelation("DokoRoundTrumpfabgabePlayer");
-const QString DokoSoloPlayerRelation("DokoRoundSoloPlayer");
+const QString HochzeitPlayerRelation("hochzeitPlayer");
+const QString RePlayer1Relation("rePlayer1");
+const QString RePlayer2Relation("rePlayer2");
+const QString SchweinereiPlayerRelation("schweinereiPlayer");
+const QString TrumpfabgabePlayerRelation("trumpfabgabePlayer");
+const QString DokoSoloPlayerRelation("dokoSoloPlayer");
 } // namespace DoppelkopfRoundProperties
 
 class Player;

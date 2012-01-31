@@ -32,7 +32,7 @@ void PropertyComboBox::updateComboBox(){
     this->clear();
 
     foreach(LBDatabase::Property* prop, m_properties){
-        this->addItem(prop->name());
+        this->addItem(prop->identifier());
     }
 }
 
