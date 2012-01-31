@@ -27,6 +27,7 @@ const QString Relation::EntityTypeLeftColumn("entitytypeleft");
 const QString Relation::EntityTypeRightColumn("entitytyperight");
 const QString Relation::CardinalityColumn("cardinality");
 const QString Relation::ColumnOrTableNameColumn("columnOrTableName");
+const QString Relation::EditableColumn("editable");
 
 class RelationPrivate {
     RelationPrivate() :
@@ -52,6 +53,7 @@ class RelationPrivate {
     EntityType *entityTypeLeft;
     EntityType *entityTypeRight;
     Relation::Cardinality cardinality;
+    bool editable;
 
     Table *relationTable;
 
@@ -70,6 +72,7 @@ void RelationPrivate::init()
     entityTypeLeft = storage->entityType(row->data(Relation::EntityTypeLeftColumn).toInt());
     entityTypeRight = storage->entityType(row->data(Relation::EntityTypeRightColumn).toInt());
     cardinality = static_cast<Relation::Cardinality>(row->data(Relation::CardinalityColumn).toInt());
+    editable = row->data(Relation::EditableColumn).toBool();
 
     relationTable = storage->database()->table(columnOrTableName);
 
@@ -312,6 +315,12 @@ Relation::Cardinality Relation::cardinality() const
 {
     Q_D(const Relation);
     return d->cardinality;
+}
+
+bool Relation::isEditable() const
+{
+    Q_D(const Relation);
+    return d->editable;
 }
 
 /*!

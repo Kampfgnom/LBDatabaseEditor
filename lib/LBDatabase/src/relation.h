@@ -25,6 +25,7 @@ public:
     static const QString EntityTypeRightColumn;
     static const QString CardinalityColumn;
     static const QString ColumnOrTableNameColumn;
+    static const QString EditableColumn;
     //! \endcond
 
     enum Cardinality {
@@ -45,6 +46,8 @@ public:
     EntityType *entityTypeLeft() const;
     EntityType *entityTypeRight() const;
     Cardinality cardinality() const;
+
+    bool isEditable() const;
 
     Storage* storage() const;
 
