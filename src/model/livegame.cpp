@@ -1,33 +1,37 @@
 #include "livegame.h"
 
-#include "player.h"
 #include "round.h"
+#include "player.h"
 
-#include <QDebug>
 
-const QString LiveGame::Name("Live Game");
+const QString LiveGame::Name("liveGame");
 
 LiveGame::LiveGame(LBDatabase::Row *row, LBDatabase::Context *context) :
-    Game(row, context)
+	Game(row, context)
 {
+}
+
+LiveGame::State LiveGame::state() const
+{
+	return static_cast<State>(value(LiveGameProperties::StateAttribute).value<int>());
 }
 
 QList<Round *> LiveGame::rounds() const
 {
-    return relation<Round>(LiveGameProperties::RoundRelation)->entities();
+	return relation<Round>(LiveGameProperties::RoundsRelation)->entities();
 }
 
-int LiveGame::points(Player *player) const
+int LiveGame::points(const Player *player) const
 {
-    return function(LiveGameProperties::PointsFunction)->value(player).toInt();
+	return function(LiveGameProperties::PointsFunction)->value(player).value<int>();
 }
 
-int LiveGame::placement(Player *player) const
+int LiveGame::placement(const Player *player) const
 {
-    return playersByPlacement().indexOf(player) + 1;
+	return function(LiveGameProperties::PlacementFunction)->value(player).value<int>();
 }
 
-QList<Player *> LiveGame::playersByPlacement() const
-{
-    return relation<Player>(GameProperties::PlayersRelation)->sort<int>(function(LiveGameProperties::PointsFunction), LBDatabase::SortDescending);
-}
+
+	// Write anything you want to remain unchanged between these comments: 
+	//START	// END
+

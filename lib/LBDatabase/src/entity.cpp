@@ -104,7 +104,7 @@ QString Entity::displayName(int role) const
 {
     Q_UNUSED(role);
     Q_D(const Entity);
-    return d->entityType->name()+QLatin1String(" ID: ")+QString::number(d->row->id());
+    return d->entityType->identifier()+QLatin1String(" ID: ")+QString::number(d->row->id());
 }
 
 /*!

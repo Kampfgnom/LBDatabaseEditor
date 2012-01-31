@@ -71,7 +71,7 @@ ContextWidget::ContextWidget(QWidget *parent) :
 void ContextWidget::setContext(LBDatabase::Context *context)
 {
     m_context = context;
-    setWindowTitle(context->name()+ QString::fromUtf8(" \u2013 ")+context->storage()->name());
+    setWindowTitle(context->displayName()+ QString::fromUtf8(" \u2013 ")+context->storage()->name());
     m_plainContentsContextView->setContext(context);
 }
 

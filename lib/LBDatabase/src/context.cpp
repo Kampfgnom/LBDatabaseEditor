@@ -22,7 +22,8 @@ namespace LBDatabase {
 ** ContextPrivate
 */
 //! \cond PRIVATE
-const QString Context::NameColumn("name");
+const QString Context::IdentifierColumn("identifier");
+const QString Context::DisplayNameColumn("displayName");
 //! \endcond
 
 class ContextPrivate {
@@ -33,9 +34,9 @@ class ContextPrivate {
     void loadEntities();
     void initializeRelations();
     void fillRelations();
-    void createBaseEntityType(const QString &name);
+    void createBaseEntityType(const QString &identifier);
 
-    EntityType *addEntityType(const QString &name, EntityType *parentEntityType);
+    EntityType *addEntityType(const QString &identifier, EntityType *parentEntityType);
     Entity *insertEntity(EntityType *type);
 
     Entity *createEntityInstance(Row *row);
@@ -43,7 +44,8 @@ class ContextPrivate {
 
     Row *row;
     Storage *storage;
-    QString name;
+    QString identifier;
+    QString displayName;
     QList<EntityType *> entityTypes;
     EntityType *baseEntityType;
     Table *contextTable;
@@ -60,8 +62,9 @@ class ContextPrivate {
 
 void ContextPrivate::init()
 {
-    name = row->data(Context::NameColumn).toString();
-    contextTable = storage->database()->table(name);
+    identifier = row->data(Context::IdentifierColumn).toString();
+    displayName = row->data(Context::DisplayNameColumn).toString();
+    contextTable = storage->database()->table(identifier);
 }
 
 void ContextPrivate::initializeEntityHierarchy()
@@ -79,7 +82,7 @@ void ContextPrivate::initializeEntityHierarchy()
         }
     }
     foreach(EntityType *type, entityTypes) {
-        type->setCalculator(createCalculatorInstance(type->name()));
+        type->setCalculator(createCalculatorInstance(type->identifier()));
     }
 
     foreach(EntityType *child, baseEntityType->childEntityTypes()) {
@@ -105,8 +108,8 @@ void ContextPrivate::loadEntities()
 EntityType *ContextPrivate::addEntityType(const QString &name, EntityType *parentEntityType)
 {
     Row *entityTypeRow = storage->entityTypesTable()->appendRow();
-    entityTypeRow->setData(EntityType::NameColumn, QVariant(name));
-    entityTypeRow->setData(EntityType::ParentEntityTypeIdColumn, QVariant(parentEntityType->id()));
+    entityTypeRow->setData(EntityType::IdentifierColumn, QVariant(name));
+    entityTypeRow->setData(EntityType::ParentEntityTypeColumn, QVariant(parentEntityType->id()));
     entityTypeRow->setData(EntityType::ContextColumn, QVariant(row->id()));
 
     EntityType *type = new EntityType(entityTypeRow, storage);
@@ -143,8 +146,8 @@ Entity *ContextPrivate::insertEntity(EntityType *type)
 void ContextPrivate::createBaseEntityType(const QString &name)
 {
     Row *entityTypeRow = storage->entityTypesTable()->appendRow();
-    entityTypeRow->setData(EntityType::NameColumn, QVariant(name));
-    entityTypeRow->setData(EntityType::ParentEntityTypeIdColumn, QVariant());
+    entityTypeRow->setData(EntityType::IdentifierColumn, QVariant(name));
+    entityTypeRow->setData(EntityType::ParentEntityTypeColumn, QVariant());
     entityTypeRow->setData(EntityType::ContextColumn, QVariant(row->id()));
 
     baseEntityType = new EntityType(entityTypeRow, storage);
@@ -156,14 +159,14 @@ Entity *ContextPrivate::createEntityInstance(Row *row)
     Q_Q(Context);
     int typeId = row->data(Entity::EntityTypeIdColumn).toInt();
     EntityType *type = storage->entityType(typeId);
-    QString entityTypeName = type->name();
+    QString entityTypeName = type->identifier();
 
     while(!entityMetaObjects.contains(entityTypeName)) {
         type = type->parentEntityType();
         if(!type)
             break;
 
-        entityTypeName = type->name();
+        entityTypeName = type->identifier();
     }
 
     if(!entityMetaObjects.contains(entityTypeName))
@@ -254,28 +257,17 @@ int Context::id() const
   Returns the name of the context. This name is also the name of the Sqlite
   table, which contains the Entity instances of the context.
   */
-QString Context::name() const
+QString Context::identifier() const
 {
     Q_D(const Context);
-    return d->name;
+    return d->identifier;
 }
 
-QString Context::simplifiedName() const
+QString Context::displayName() const
 {
-    return name().simplified().remove(' ');
+    Q_D(const Context);
+    return d->displayName;
 }
-
-//void Context::setName(const QString &name)
-//{
-//    Q_D(Context);
-//    if(d->name == name)
-//        return;
-
-//    d->storage->database()->
-//    d->row->setData(Context::NameColumn, QVariant(name));
-//    d->name = name;
-//    emit nameChanged(name);
-//}
 
 /*!
   Returns the storage, which contains the context.
@@ -375,7 +367,7 @@ void Context::addEntityType(EntityType *type)
     if(d->entityTypes.contains(type))
         return;
 
-    connect(type, SIGNAL(nameChanged(QString)), this, SLOT(onEntityTypeNameChanged(QString)));
+    connect(type, SIGNAL(displayNameChanged(QString)), this, SLOT(onEntityTypeNameChanged(QString)));
     d->entityTypes.append(type);
 }
 
@@ -459,7 +451,7 @@ QVariant Context::data(const QModelIndex &index, int role) const
         case 0:
             return entity->row()->id();
         case 1:
-            return entity->entityType()->name();
+            return entity->entityType()->displayName();
         default:
             return entity->data(d->properties.at(index.column() - 2));
         }

@@ -10,7 +10,7 @@ EntityTypeComboBox::EntityTypeComboBox(QList<LBDatabase::EntityType*> types, QWi
     m_selectedType(0)
 {
     foreach(LBDatabase::EntityType* type, types){
-        this->addItem(type->name());
+        this->addItem(type->displayName());
     }
 
     connect(this,SIGNAL(currentIndexChanged(int)),this,SLOT(onCurrentEntityTypeChanged(int)));
@@ -22,7 +22,7 @@ EntityTypeComboBox::EntityTypeComboBox(QList<LBDatabase::Context*> contexts, QWi
 {
     foreach(LBDatabase::Context* context, contexts){
         foreach(LBDatabase::EntityType* type, context->entityTypes()){
-            this->addItem(type->name());
+            this->addItem(type->displayName());
             m_types.append(type);
         }
         //this->insertSeparator(this->count());
@@ -49,7 +49,7 @@ void EntityTypeComboBox::updateComboBox(){
     this->clear();
 
     foreach(LBDatabase::EntityType* type, m_types){
-        this->addItem(type->name());
+        this->addItem(type->displayName());
     }
 }
 
@@ -63,9 +63,9 @@ void EntityTypeComboBox::setEntityTypes(QList<LBDatabase::EntityType*> types)
 void EntityTypeComboBox::setCurrentEntityType(LBDatabase::EntityType* type)
 {
     if(m_types.contains(type)){
-        this->setCurrentIndex(this->findText(type->name()));
+        this->setCurrentIndex(this->findText(type->displayName()));
     }
     else{
-        qWarning() << "EntityTypeComboBox::setCurrentEntityType: Type with name " << type->name() << " couldn't found in list!";
+        qWarning() << "EntityTypeComboBox::setCurrentEntityType: Type with name " << type->displayName() << " couldn't found in list!";
     }
 }

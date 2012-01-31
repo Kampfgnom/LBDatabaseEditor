@@ -3,15 +3,15 @@
 
 #include <LBDatabase/LBDatabase.h>
 
-#include <QVariant>
-
-class Game;
 
 class GameCalculator : public LBDatabase::Calculator
 {
-    Q_OBJECT
+Q_OBJECT
 public:
-    Q_INVOKABLE explicit GameCalculator(QObject *parent = 0);
+	Q_INVOKABLE explicit GameCalculator(QObject *parent = 0);
+
+	
+	Q_INVOKABLE EntityVariantHash placement(const LBDatabase::Entity *entity) const;
 };
 
 #endif // GAMECALCULATOR_H

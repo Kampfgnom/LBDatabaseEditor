@@ -55,7 +55,7 @@ void EditEntityTypesDialog::fillDialogWithEntityType(LBDatabase::EntityType* typ
 {
     m_entityType = type;
 
-    ui->lineEdit->setText(m_entityType->name());
+    ui->lineEdit->setText(m_entityType->displayName());
 
     if(m_entityType->parentEntityType()){
         QList<LBDatabase::EntityType*> list = m_context->entityTypes();

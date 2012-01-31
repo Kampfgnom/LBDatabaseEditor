@@ -32,7 +32,7 @@ void CalculatorWriter::write() const
 bool CalculatorWriter::isNeeded() const
 {
     bool hasCalculatedProperties = false;
-    QString name = m_entityType->name();
+    QString name = m_entityType->identifier();
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->isCalculated()) {
             hasCalculatedProperties = true;
@@ -50,7 +50,7 @@ bool CalculatorWriter::isNeeded() const
 
 void CalculatorWriter::exportHeader() const
 {
-    QString calculatorClass = makeClassname(m_entityType->name() + QLatin1String("Calculator"));
+    QString calculatorClass = makeClassname(m_entityType->identifier() + QLatin1String("Calculator"));
     QString header;
 
     startHeader(calculatorClass, header);
@@ -86,8 +86,8 @@ void CalculatorWriter::exportHeader() const
 
 void CalculatorWriter::exportSource() const
 {
-    QString calculatorClass = makeClassname(m_entityType->name() + QLatin1String("Calculator"));
-    QString entityTypeClass = makeClassname(m_entityType->name());
+    QString calculatorClass = makeClassname(m_entityType->identifier() + QLatin1String("Calculator"));
+    QString entityTypeClass = makeClassname(m_entityType->identifier());
     QString fileName = makeSourceFilename(calculatorClass);
     QString source = readFromFile(fileName);
 

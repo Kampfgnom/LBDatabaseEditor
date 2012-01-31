@@ -37,8 +37,8 @@ void ContextWriter::writeDeclaration(QString &header) const
 {
     EntityTypeWriter::writeDeclaration(header);
 
-    QString contextName = makeClassname(m_context->name() + QLatin1String("Context"));
-    QString baseEntityTypeName = makeClassname(m_entityType->name());
+    QString contextName = makeClassname(m_context->identifier() + QLatin1String("Context"));
+    QString baseEntityTypeName = makeClassname(m_entityType->identifier());
 
     header.append(QLatin1String("class ")+contextName+QLatin1String(" : public LBDatabase::Context\n"
                                                                     "{\n"
@@ -54,21 +54,21 @@ void ContextWriter::writeDeclaration(QString &header) const
 
 void ContextWriter::writeImplementation(QString &source) const
 {
-    QString contextName = makeClassname(m_context->name() + QLatin1String("Context"));
-    QString baseEntityTypeName = makeClassname(m_entityType->name());
+    QString contextName = makeClassname(m_context->identifier() + QLatin1String("Context"));
+    QString baseEntityTypeName = makeClassname(m_entityType->identifier());
 
     CalculatorWriter writer(m_exporter);
     foreach(EntityType *type, m_context->entityTypes()) {
         if(type != m_context->baseEntityType()) {
-            writeInclude(makeClassname(type->name()), source);
+            writeInclude(makeClassname(type->identifier()), source);
         }
         writer.setEntityType(type);
         if(writer.isNeeded()) {
-            writeInclude(makeClassname(type->name() + QLatin1String("Calculator")),source);
+            writeInclude(makeClassname(type->identifier() + QLatin1String("Calculator")),source);
         }
     }
 
-    source.append(QLatin1String("\nconst QString ") + contextName + QLatin1String("::Name(\"") + m_context->name() + QLatin1String("\");\n"));
+    source.append(QLatin1String("\nconst QString ") + contextName + QLatin1String("::Name(\"") + m_context->identifier() + QLatin1String("\");\n"));
 
     EntityTypeWriter::writeImplementation(source);
 
@@ -79,10 +79,10 @@ void ContextWriter::writeImplementation(QString &source) const
     "{\n"));
 
     foreach(EntityType *type, m_context->entityTypes()) {
-        source.append(QLatin1String("\tregisterEntityClass<") + makeClassname(type->name()) + QLatin1String(">();\n"));
+        source.append(QLatin1String("\tregisterEntityClass<") + makeClassname(type->identifier()) + QLatin1String(">();\n"));
         writer.setEntityType(type);
         if(writer.isNeeded()) {
-            source.append(QLatin1String("\tregisterCalculatorClass<") + makeClassname(type->name()) + QLatin1String(",") + makeClassname(type->name()) + QLatin1String("Calculator>();\n\n"));
+            source.append(QLatin1String("\tregisterCalculatorClass<") + makeClassname(type->identifier()) + QLatin1String(",") + makeClassname(type->identifier()) + QLatin1String("Calculator>();\n\n"));
         }
     }
     source.append(QLatin1String("}\n\n"));

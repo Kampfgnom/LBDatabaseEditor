@@ -85,10 +85,10 @@ void GraphvizExporter::endDocument(QString &doc) const
 
 void GraphvizExporter::addEntityType(EntityType *type, QString &doc) const
 {
-    doc.append(simplifyName(type->name()));
+    doc.append(simplifyName(type->identifier()));
     doc.append(QLatin1String(" [\n"
                              "\tlabel = \"{"));
-    doc.append(simplifyName(type->name()));
+    doc.append(simplifyName(type->identifier()));
 
     doc.append(QLatin1String("|"));
     QList<Attribute *> attributes = type->attributes();
@@ -130,7 +130,7 @@ void GraphvizExporter::addFunction(Function *function, QString &doc) const
     doc.append(function->name());
     doc.append(QLatin1String("("));
     EntityType *type = function->keyEntityType();
-    doc.append(simplifyName(type->name()));
+    doc.append(simplifyName(type->identifier()));
     doc.append(QLatin1String(" *) : QVariant"));
 //    doc.append(attribute->typeName());
     doc.append(QLatin1String("\\l"));
@@ -147,7 +147,7 @@ void GraphvizExporter::startInheritance(QString &doc) const
 void GraphvizExporter::addInheritances(EntityType *base, QString &doc) const
 {
     foreach(EntityType *derived, base->childEntityTypes()) {
-        doc.append(simplifyName(derived->name()) + QLatin1String(" -> ") + simplifyName(base->name()) + QLatin1String("\n"));
+        doc.append(simplifyName(derived->identifier()) + QLatin1String(" -> ") + simplifyName(base->identifier()) + QLatin1String("\n"));
         addInheritances(derived, doc);
     }
 }
@@ -162,7 +162,7 @@ void GraphvizExporter::startRelations(QString &doc) const
 
 void GraphvizExporter::addRelation(Relation *relation, QString &doc) const
 {
-    doc.append(simplifyName(relation->entityTypeLeft()->name()) + QLatin1String(" -> ") + simplifyName(relation->entityTypeRight()->name()));
+    doc.append(simplifyName(relation->entityTypeLeft()->identifier()) + QLatin1String(" -> ") + simplifyName(relation->entityTypeRight()->identifier()));
 
     doc.append(QLatin1String("\t[ label = \""));
     doc.append(relation->name());

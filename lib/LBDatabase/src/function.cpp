@@ -75,6 +75,10 @@ void FunctionPrivate::init()
 
     if(!calculated) {
         functionTable = storage->database()->table(name);
+
+        if(!functionTable) {
+            qWarning() << "No such table:" << name << "for function" << row->id();
+        }
     }
 
     entityType->addFunction(q);
@@ -99,8 +103,8 @@ void FunctionPrivate::fetchValues()
 {
     Q_Q(Function);
     if(!calculated) {
-        int entityColumn = functionTable->column(entityType->name())->index();
-        int keyEntityColumn = functionTable->column(keyEntityType->name())->index();
+        int entityColumn = functionTable->column(entityType->identifier())->index();
+        int keyEntityColumn = functionTable->column(keyEntityType->identifier())->index();
         int valueColumn = functionTable->column(name)->index();
         Entity *entity;
         Entity *keyEntity;

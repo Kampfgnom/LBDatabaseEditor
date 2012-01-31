@@ -21,9 +21,11 @@ namespace LBDatabase {
 ** EntityTypePrivate
 */
 //! \cond PRIVATE
-const QString EntityType::ContextColumn("contextId");
-const QString EntityType::NameColumn("name");
-const QString EntityType::ParentEntityTypeIdColumn("parentEntityTypeId");
+const QString EntityType::ContextColumn("context");
+const QString EntityType::IdentifierColumn("identifier");
+const QString EntityType::ParentEntityTypeColumn("parentEntityType");
+const QString EntityType::DisplayNameColumn("displayName");
+const QString EntityType::DisplayNamePluralColumn("displayNamePlural");
 //! \endcond
 
 class EntityTypePrivate {
@@ -34,11 +36,13 @@ class EntityTypePrivate {
     void init();
     void inheritProperties(EntityType *parent);
     void inheritCalculator(EntityType *parent);
-    Attribute *addAttribute(const QString &name, Attribute::Type type);
-    Relation *addRelation(const QString &name, EntityType *otherType, Relation::Cardinality cardinality);
+    Attribute *addAttribute(const QString &identifier, Attribute::Type type);
+    Relation *addRelation(const QString &identifier, EntityType *otherType, Relation::Cardinality cardinality);
 
     Row *row;
-    QString name;
+    QString identifier;
+    QString displayName;
+    QString displayNamePlural;
     Context *context;
     Storage *storage;
     EntityType *parentEntityType;
@@ -78,10 +82,16 @@ QString EntityTypePrivate::typeToSql(Attribute::Type type)
 void EntityTypePrivate::init()
 {
     Q_Q(EntityType);
-    name = row->data(EntityType::NameColumn).toString();
-    parentEntityTypeId = row->data(EntityType::ParentEntityTypeIdColumn).toInt();
+    identifier = row->data(EntityType::IdentifierColumn).toString();
+    displayName = row->data(EntityType::DisplayNameColumn).toString();
+    displayNamePlural = row->data(EntityType::DisplayNamePluralColumn).toString();
+    parentEntityTypeId = row->data(EntityType::ParentEntityTypeColumn).toInt();
     int contextId = row->data(EntityType::ContextColumn).toInt();
     context = storage->context(contextId);
+    if(!context) {
+        qWarning() << "No such context:" << contextId << "for entity type" << identifier;
+        return;
+    }
     context->addEntityType(q);
 }
 
@@ -133,7 +143,7 @@ void EntityTypePrivate::inheritCalculator(EntityType *parent)
 
 Attribute *EntityTypePrivate::addAttribute(const QString &name, Attribute::Type type)
 {
-    Table *contextTable = storage->database()->table(context->name());
+    Table *contextTable = storage->database()->table(context->identifier());
     contextTable->addColumn(name, EntityTypePrivate::typeToSql(type));
 
     Table *entitiesTable = storage->attributesTable();
@@ -164,12 +174,12 @@ Relation *EntityTypePrivate::addRelation(const QString &name, EntityType *otherT
     row->setData(Relation::CardinalityColumn, QVariant(static_cast<int>(cardinality)));
 
     if(cardinality == Relation::OneToMany || cardinality == Relation::OneToOne) {
-        storage->database()->table(otherType->name())->addColumn(name, Column::typeToName(Column::Integer));
+        storage->database()->table(otherType->identifier())->addColumn(name, Column::typeToName(Column::Integer));
     }
     else if(cardinality == Relation::ManyToMany) {
         Table *table = storage->database()->createTable(name);
-        table->addColumn(q->name(), Column::typeToName(Column::Integer));
-        table->addColumn(otherType->name(), Column::typeToName(Column::Integer));
+        table->addColumn(q->identifier(), Column::typeToName(Column::Integer));
+        table->addColumn(otherType->identifier(), Column::typeToName(Column::Integer));
     }
 
     Relation *relation = new Relation(row, storage);
@@ -239,29 +249,58 @@ int EntityType::id() const
 /*!
   Returns the name of the type.
   */
-QString EntityType::name() const
+QString EntityType::identifier() const
 {
     Q_D(const EntityType);
-    return d->name;
-}
-
-QString EntityType::simplifiedName() const
-{
-    return name().simplified().remove(' ');
+    return d->identifier;
 }
 
 /*!
   Sets the name of the type to \a name.
   */
-void EntityType::setName(const QString &name)
+void EntityType::setIdentifier(const QString &identifier)
 {
     Q_D(EntityType);
-    if(d->name == name)
+    if(d->identifier == identifier)
         return;
 
-    d->row->setData(EntityType::NameColumn, QVariant(name));
-    d->name = name;
-    emit nameChanged(name);
+    d->row->setData(EntityType::IdentifierColumn, QVariant(identifier));
+    d->identifier = identifier;
+    emit identifierChanged(identifier);
+}
+
+QString EntityType::displayName() const
+{
+    Q_D(const EntityType);
+    return d->displayName;
+}
+
+void EntityType::setDisplayName(const QString &displayName)
+{
+    Q_D(EntityType);
+    if(d->displayName == displayName)
+        return;
+
+    d->row->setData(EntityType::DisplayNameColumn, QVariant(displayName));
+    d->displayName = displayName;
+    emit displayNameChanged(displayName);
+}
+
+QString EntityType::displayNamePlural() const
+{
+    Q_D(const EntityType);
+    return d->displayNamePlural;
+}
+
+void EntityType::setDisplayNamePlural(const QString &displayNamePlural)
+{
+    Q_D(EntityType);
+    if(d->displayNamePlural == displayNamePlural)
+        return;
+
+    d->row->setData(EntityType::DisplayNamePluralColumn, QVariant(displayNamePlural));
+    d->displayNamePlural = displayNamePlural;
+    emit displayNameChanged(displayNamePlural);
 }
 
 /*!

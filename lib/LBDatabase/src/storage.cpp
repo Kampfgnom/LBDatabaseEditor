@@ -81,6 +81,11 @@ void StoragePrivate::init()
     database = Database::instance(fileName);
 }
 
+bool sortContextByName(const Context *c1, const Context *c2)
+{
+    return c1->identifier() < c2->identifier();
+}
+
 bool StoragePrivate::open()
 {
     Q_Q(Storage);
@@ -132,7 +137,7 @@ bool StoragePrivate::open()
     foreach(Row *row, contextsTable->rows()) {
         Context *context = createContextInstance(row);
         contexts.insert(row->id(), context);
-        contextIds.insert(context->name(), row->id());
+        contextIds.insert(context->identifier(), row->id());
     }
 
     foreach(Row *row, entityTypesTable->rows()) {
@@ -187,7 +192,7 @@ Context *StoragePrivate::addContext(const QString &name, const QString &baseEnti
 {
     database->createTable(name);
     Row *row = contextsTable->appendRow();
-    row->setData(Context::NameColumn, QVariant(name));
+    row->setData(Context::IdentifierColumn, QVariant(name));
 
     Context *context = createContextInstance(row);
     contexts.insert(row->id(), context);
@@ -200,7 +205,7 @@ Context *StoragePrivate::addContext(const QString &name, const QString &baseEnti
 Context *StoragePrivate::createContextInstance(Row *row)
 {
     Q_Q(Storage);
-    const QString contextName = row->data(Context::NameColumn).toString();
+    const QString contextName = row->data(Context::IdentifierColumn).toString();
 
     if(!contextMetaObjects.contains(contextName))
         return new Context(row, q);
@@ -282,11 +287,11 @@ void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileN
     metaDataTable->addColumn(NameColumn,QLatin1String("TEXT"));
     metaDataTable->appendRow();
 
-    contextsTable->addColumn(Context::NameColumn,QLatin1String("TEXT"));
+    contextsTable->addColumn(Context::IdentifierColumn,QLatin1String("TEXT"));
 
     entityTypesTable->addColumn(EntityType::ContextColumn,QLatin1String("INTERGER"));
-    entityTypesTable->addColumn(EntityType::NameColumn,QLatin1String("TEXT"));
-    entityTypesTable->addColumn(EntityType::ParentEntityTypeIdColumn,QLatin1String("INTERGER"));
+    entityTypesTable->addColumn(EntityType::IdentifierColumn,QLatin1String("TEXT"));
+    entityTypesTable->addColumn(EntityType::ParentEntityTypeColumn,QLatin1String("INTERGER"));
 
     attributesTable->addColumn(Attribute::NameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
@@ -401,7 +406,7 @@ EntityType *Storage::entityType(int id) const
 Context *Storage::context(int id) const
 {
     Q_D(const Storage);
-    return d->contexts.value(id);
+    return d->contexts.value(id, 0);
 }
 
 Context *Storage::context(const QString name) const
@@ -416,7 +421,9 @@ Context *Storage::context(const QString name) const
 QList<Context *> Storage::contexts() const
 {
     Q_D(const Storage);
-    return d->contexts.values();
+    QList<Context *> contexts = d->contexts.values();
+    qSort(contexts.begin(), contexts.end(), sortContextByName);
+    return contexts;
 }
 
 /*!

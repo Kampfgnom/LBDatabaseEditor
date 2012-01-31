@@ -76,7 +76,7 @@ void StorageWidget::setStorage(LBDatabase::Storage *storage)
     m_contextListWidget->clear();
     m_sourcePathLineEdit->setText(storage->sourcePath());
     foreach(LBDatabase::Context *context, storage->contexts()) {
-        m_contextListWidget->addItem(context->name());
+        m_contextListWidget->addItem(context->displayName());
     }
 }
 

@@ -11,6 +11,7 @@
 #include "table.h"
 
 #include <QStringList>
+#include <QDebug>
 
 namespace LBDatabase {
 
@@ -29,6 +30,11 @@ void AttributePrivate::init()
     type = static_cast<Attribute::Type>(row->data(Attribute::TypeColumn).toInt());
 
     entityType = storage->entityType(row->data(Attribute::EntityTypeIdColumn).toInt());
+    if(!entityType) {
+        qWarning() << "No such entity type:" << row->data(Attribute::EntityTypeIdColumn).toInt();
+        return;
+    }
+
     columnIndex = -1;
     if(!calculated)
         columnIndex = entityType->context()->table()->column(name)->index();

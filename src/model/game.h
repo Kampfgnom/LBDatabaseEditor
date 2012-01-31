@@ -4,46 +4,65 @@
 #include <LBDatabase/LBDatabase.h>
 
 #include <QDateTime>
-
-class Player;
+#include <QTime>
 
 namespace GameProperties {
 const QString NameAttribute("name");
 const QString DateAttribute("date");
+const QString LengthAttribute("length");
 const QString CommentAttribute("comment");
-const QString SiteRelation("siteId");
-const QString TestAttribute("testAttribute");
-const QString PlayersRelation("playersByPosition");
+const QString SiteRelation("GameSite");
+const QString PlayersRelation("PlayersPerGame");
 const QString PositionFunction("position");
-}
+const QString PlacementFunction("placement");
+} // namespace GameProperties
+
+class Place;
+class Player;
 
 class Game : public LBDatabase::Entity
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Q_INVOKABLE Game(::LBDatabase::Row *row, ::LBDatabase::Context *context);
+	Q_INVOKABLE Game(::LBDatabase::Row *row, ::LBDatabase::Context *context);
+	static const QString Name;
 
-    static const QString Name;
+	QString name() const;
+	QDateTime date() const;
+	QTime length() const;
+	QString comment() const;
 
-    QString name() const;
-    QDateTime date() const;
-    QString comment() const;
-    Entity *site() const;
+	void setName(const QString &name);
+	void setDate(const QDateTime &date);
+	void setLength(const QTime &length);
+	void setComment(const QString &comment);
 
-    QList<Player *> players() const;
-    QList<Player *> playersByPosition() const;
-    virtual QList<Player *> playersByPlacement() const;
+	int position(const Player *player) const;
+	int placement(const Player *player) const;
+
+	Place *site() const;
+	QList<Player *> players() const;
+
+	// Write anything you want to remain unchanged between these comments: 
+    //START
+    virtual int points(const Player *player) const;
+    // END
+
+signals:
+	void nameChanged(QString name);
+	void dateChanged(QDateTime date);
+	void lengthChanged(QTime length);
+	void commentChanged(QString comment);
 };
 
 class GamesContext : public LBDatabase::Context
 {
-    Q_OBJECT
+	Q_OBJECT
 public:
-    Q_INVOKABLE GamesContext(::LBDatabase::Row *row, ::LBDatabase::Storage *parent);
+	Q_INVOKABLE GamesContext(::LBDatabase::Row *row, ::LBDatabase::Storage *parent);
+	static const QString Name;
 
-    static const QString Name;
-
-    Game *game(int id) const;
+	Game *game(int id) const;
 };
 
 #endif // GAME_H

@@ -19,7 +19,7 @@ EntityTypeWriter::EntityTypeWriter(const CppExporter *exporter) :
 void EntityTypeWriter::setEntityType(EntityType *type)
 {
     m_entityType = type;
-    m_classname = makeClassname(m_entityType->name());
+    m_classname = makeClassname(m_entityType->identifier());
 }
 
 void EntityTypeWriter::write() const
@@ -41,10 +41,10 @@ void EntityTypeWriter::writeNeededHeaders(QString &source) const
 
     foreach(Relation *relation, m_entityType->nonInhertitedRelations()) {
         if(relation->entityTypeLeft() == m_entityType) {
-            name = makeClassname(relation->entityTypeRight()->name());
+            name = makeClassname(relation->entityTypeRight()->identifier());
         }
         else {
-            name = makeClassname(relation->entityTypeLeft()->name());
+            name = makeClassname(relation->entityTypeLeft()->identifier());
         }
 
         if(!declaredTypes.contains(name)) {
@@ -54,7 +54,7 @@ void EntityTypeWriter::writeNeededHeaders(QString &source) const
     }
 
     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
-        name = makeClassname(function->keyEntityType()->name());
+        name = makeClassname(function->keyEntityType()->identifier());
         if(!declaredTypes.contains(name)) {
             declaredTypes << name;
             writeInclude(name, source);
@@ -119,10 +119,10 @@ void EntityTypeWriter::writeForwardDeclarations(QString &header) const
     QString name;
     foreach(Relation *relation, m_entityType->nonInhertitedRelations()) {
         if(relation->entityTypeLeft() == m_entityType) {
-            name = makeClassname(relation->entityTypeRight()->name());
+            name = makeClassname(relation->entityTypeRight()->identifier());
         }
         else {
-            name = makeClassname(relation->entityTypeLeft()->name());
+            name = makeClassname(relation->entityTypeLeft()->identifier());
         }
 
         if(!declaredTypes.contains(name)) {
@@ -132,7 +132,7 @@ void EntityTypeWriter::writeForwardDeclarations(QString &header) const
     }
 
     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
-        name = makeClassname(function->keyEntityType()->name());
+        name = makeClassname(function->keyEntityType()->identifier());
         if(!declaredTypes.contains(name)) {
             declaredTypes << name;
             header.append(QLatin1String("class ") + name + QLatin1String(";\n"));
@@ -149,7 +149,7 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
 
     QString baseClass = "LBDatabase::Entity";
     if(m_entityType->parentEntityType()) {
-        baseClass = makeClassname(m_entityType->parentEntityType()->name());
+        baseClass = makeClassname(m_entityType->parentEntityType()->identifier());
         writeInclude(baseClass,header);
     }
 
@@ -221,9 +221,9 @@ void EntityTypeWriter::writeImplementation(QString &source) const
 
     QString baseClass("Entity");
     if(m_entityType->parentEntityType())
-        baseClass = makeClassname(m_entityType->parentEntityType()->name());
+        baseClass = makeClassname(m_entityType->parentEntityType()->identifier());
 
-    source.append(QLatin1String("const QString ") + m_classname + QLatin1String("::Name(\"") + m_entityType->name() + QLatin1String("\");\n\n"));
+    source.append(QLatin1String("const QString ") + m_classname + QLatin1String("::Name(\"") + m_entityType->identifier() + QLatin1String("\");\n\n"));
 
     source.append(
          m_classname+QLatin1String("::")+m_classname+QLatin1String(
@@ -415,19 +415,19 @@ void EntityTypeWriter::writeRelationImplementation(Relation *relation, QString &
 void EntityTypeWriter::writeFunctionDeclaration(Function *function, QString &header) const
 {
     header.append(QLatin1String("\t") + function->qtTypeName() + QLatin1String(" ") +
-                  makeMethodName(function->name()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->name())+
-                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->name())+QLatin1String(") const;\n"));
+                  makeMethodName(function->name()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->identifier())+
+                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->identifier())+QLatin1String(") const;\n"));
 }
 
 void EntityTypeWriter::writeFunctionImplementation(Function *function, QString &source) const
 {
     source.append(function->qtTypeName() + QLatin1String(" ") +m_classname+QLatin1String("::")+
-                  makeMethodName(function->name()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->name())+
-                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->name())+QLatin1String(") const\n"
+                  makeMethodName(function->name()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->identifier())+
+                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->identifier())+QLatin1String(") const\n"
                                 "{\n"
                                 "\treturn function(")+m_classname+
                   QLatin1String("Properties::")+makeClassname(function->name()) + QLatin1String("Function)->value(")+
-                  makeMethodName(function->keyEntityType()->name())+QLatin1String(").value<") +
+                  makeMethodName(function->keyEntityType()->identifier())+QLatin1String(").value<") +
                   function->qtTypeName()+QLatin1String(">();\n"
                                               "}\n\n"));
 }
@@ -479,10 +479,10 @@ QString EntityTypeWriter::makeRelationName(Relation *relation) const
 QString EntityTypeWriter::makeRelationType(Relation *relation) const
 {
     if(relation->entityTypeLeft() == m_entityType) {
-        return makeClassname(relation->entityTypeRight()->name());
+        return makeClassname(relation->entityTypeRight()->identifier());
     }
     else {
-        return makeClassname(relation->entityTypeLeft()->name());
+        return makeClassname(relation->entityTypeLeft()->identifier());
     }
 }
 

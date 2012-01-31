@@ -76,13 +76,23 @@ void RelationPrivate::init()
 
     relationTable = storage->database()->table(columnOrTableName);
 
+    if(!relationTable && cardinality == Relation::ManyToMany) {
+        qWarning() << "No such table:" << columnOrTableName << "for relation" << name;
+    }
+
     if(entityTypeLeft) {
         entityTypeLeft->addRelation(q);
         entityTypeLeft->context()->addRelation(q);
     }
+    else {
+        qWarning() << "No such entity type:" << row->data(Relation::EntityTypeLeftColumn).toInt() << "for relation" << name;
+    }
     if(entityTypeRight) {
         entityTypeRight->addRelation(q);
         entityTypeRight->context()->addRelation(q);
+    }
+    else {
+        qWarning() << "No such entity type:" << row->data(Relation::EntityTypeRightColumn).toInt() << "for relation" << name;
     }
 }
 
@@ -113,12 +123,12 @@ void RelationPrivate::fetchValues()
 void RelationPrivate::initializeManyToManyRelation()
 {
     Q_Q(Relation);
-    Column *c1 = relationTable->column(entityTypeLeft->name());
+    Column *c1 = relationTable->column(entityTypeLeft->identifier());
     int entityTypeLeftColumn = -1;
     if(c1)
         entityTypeLeftColumn = c1->index();
 
-    Column *c2 = relationTable->column(entityTypeRight->name());
+    Column *c2 = relationTable->column(entityTypeRight->identifier());
     int entityTypeRightColumn = -1;
     if(c2)
         entityTypeRightColumn = c2->index();

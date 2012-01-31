@@ -22,21 +22,21 @@ class Context : public QAbstractTableModel
     Q_OBJECT
 public:
     //! \cond PRIVATE
-    static const QString NameColumn;
+    static const QString IdentifierColumn;
+    static const QString DisplayNameColumn;
     //! \endcond
 
     ~Context();
 
     int id() const;
-    QString name() const;
-    QString simplifiedName() const;
-//    void setName(const QString &name);
+    QString identifier() const;
+    QString displayName() const;
     Storage *storage() const;
     Table *table() const;
 
     EntityType *baseEntityType() const;
     QList<EntityType *> entityTypes() const;
-    EntityType *addEntityType(const QString &name, EntityType *parentEntityType);
+    EntityType *addEntityType(const QString &identifier, EntityType *parentEntityType);
 
     Entity *entity(int id) const;
     QList<Entity *> entities() const;
@@ -50,11 +50,9 @@ public:
     bool setData(const QModelIndex &index, const QVariant &value, int role);
     Qt::ItemFlags flags(const QModelIndex &index) const;
 
-Q_SIGNALS:
-    void nameChanged(QString name);
 
 private Q_SLOTS:
-    void onEntityTypeNameChanged(QString name);
+    void onEntityTypeNameChanged(QString identifier);
     void onPropertyDisplayNameChanged(QString displayName, Context* context);
     void onPropertyValueDataChanged(QVariant data);
 
@@ -74,7 +72,7 @@ protected:
     void registerCalculatorClass();
 
 private:
-    void createBaseEntityType(const QString &name);
+    void createBaseEntityType(const QString &identifier);
     void addEntityType(EntityType *type);
     void addAttribute(Attribute *attribute);
     void addFunction(Function *function);
