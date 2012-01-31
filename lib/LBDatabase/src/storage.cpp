@@ -155,7 +155,7 @@ bool StoragePrivate::open()
 
     foreach(Row *row, database->table(EnumAttribute::EnumsTable)->rows()) {
         EnumAttribute *attribute = static_cast<EnumAttribute *>(attributes.value(row->data(EnumAttribute::AttributeColumn).toInt()));
-        attribute->addEnumValue(row->data(EnumAttribute::NameColumn).toString(),
+        attribute->addEnumValue(row->data(EnumAttribute::IdentifierColumn).toString(),
                                 row->data(EnumAttribute::ValueColumn).toInt());
     }
 
@@ -293,7 +293,7 @@ void Storage::convertSqlliteDatabaseToStorage(const QString &sqliteDatabaseFileN
     entityTypesTable->addColumn(EntityType::IdentifierColumn,QLatin1String("TEXT"));
     entityTypesTable->addColumn(EntityType::ParentEntityTypeColumn,QLatin1String("INTERGER"));
 
-    attributesTable->addColumn(Attribute::NameColumn,QLatin1String("TEXT"));
+    attributesTable->addColumn(Attribute::IdentifierColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::DisplayNameColumn,QLatin1String("TEXT"));
     attributesTable->addColumn(Attribute::EntityTypeIdColumn,QLatin1String("INTERGER"));
 

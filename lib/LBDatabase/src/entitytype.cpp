@@ -148,7 +148,7 @@ Attribute *EntityTypePrivate::addAttribute(const QString &name, Attribute::Type 
 
     Table *entitiesTable = storage->attributesTable();
     Row *row = entitiesTable->appendRow();
-    row->setData(Attribute::NameColumn, QVariant(name));
+    row->setData(Attribute::IdentifierColumn, QVariant(name));
     row->setData(Attribute::DisplayNameColumn, QVariant(name));
     row->setData(Attribute::EntityTypeIdColumn, QVariant(this->row->id()));
 

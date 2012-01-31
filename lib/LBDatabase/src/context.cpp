@@ -15,6 +15,8 @@
 #include <QHash>
 #include <QList>
 #include <QDebug>
+#include <QIcon>
+#include <QPixmap>
 
 namespace LBDatabase {
 
@@ -448,8 +450,25 @@ void Context::loadEntities()
   */
 QVariant Context::data(const QModelIndex &index, int role) const
 {
+    Q_D(const Context);
+    if(role == Qt::DecorationRole && index.column() > 1) {
+        //        Entity *entity = d->entities.at(index.row());
+        //        Property *property = d->properties.at(index.column() - 2);
+        //        if(property->propertyType() == Property::Attribute) {
+        //            Attribute *attribute = static_cast<Attribute *>(property);
+        //            if(attribute->type() == Attribute::Icon) {
+        //                QImage image(entity->data(attribute).toString());
+        //                qDebug() << image.isNull();
+        //                QPixmap pixmap(entity->data(attribute).toString());
+        //                qDebug() << pixmap.isNull();
+        //                return image;
+        //            }
+        //            else if(attribute->type() == Attribute::Pixmap) {
+        //                return QImage(entity->data(attribute).toString());
+        //            }
+        //        }
+    }
     if(role == Qt::DisplayRole || role == Qt::EditRole) {
-        Q_D(const Context);
         Entity *entity = d->entities.at(index.row());
         switch(index.column()) {
         case 0:
@@ -457,9 +476,12 @@ QVariant Context::data(const QModelIndex &index, int role) const
         case 1:
             return entity->entityType()->displayName();
         default:
-            return entity->data(d->properties.at(index.column() - 2));
+            Entity *entity = d->entities.at(index.row());
+            Property *property = d->properties.at(index.column() - 2);
+            return entity->data(property);
         }
     }
+
 
     return QVariant();
 }

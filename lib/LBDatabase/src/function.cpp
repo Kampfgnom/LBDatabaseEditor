@@ -151,6 +151,11 @@ int Function::id() const
     return d->row->id();
 }
 
+Property::Type Function::propertyType() const
+{
+    return Property::Function;
+}
+
 QString Function::displayName(const Context *context) const
 {
     Q_D(const Function);

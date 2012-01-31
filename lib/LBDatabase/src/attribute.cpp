@@ -21,7 +21,7 @@ namespace LBDatabase {
 void AttributePrivate::init()
 {
     Q_Q(Attribute);
-    name = row->data(Attribute::NameColumn).toString();
+    identifier = row->data(Attribute::IdentifierColumn).toString();
     displayName = row->data(Attribute::DisplayNameColumn).toString();
     calculated = row->data(Attribute::CalculatedColumn).toBool();
     cacheData = row->data(Attribute::CacheDataColumn).toBool();
@@ -35,9 +35,14 @@ void AttributePrivate::init()
         return;
     }
 
+    if(!calculated && !entityType->context()->table()->column(identifier)) {
+        qWarning() << "No such column:" << identifier << "in table" << entityType->context()->table()->name();
+        return;
+    }
+
     columnIndex = -1;
     if(!calculated)
-        columnIndex = entityType->context()->table()->column(name)->index();
+        columnIndex = entityType->context()->table()->column(identifier)->index();
     entityType->addAttribute(q);
     entityType->context()->addAttribute(q);
 }
@@ -93,7 +98,7 @@ void AttributePrivate::fetchValues()
 /*!
   The name of 'name' column.
   */
-const QString Attribute::NameColumn("name");
+const QString Attribute::IdentifierColumn("identifier");
 /*!
   The name of 'displayName' column.
   */
@@ -181,7 +186,7 @@ int Attribute::id() const
 QString Attribute::name() const
 {
     Q_D(const Attribute);
-    return d->name;
+    return d->identifier;
 }
 
 bool Attribute::isCalculated() const
@@ -200,6 +205,11 @@ bool Attribute::isEditable() const
 {
     Q_D(const Attribute);
     return d->editable;
+}
+
+Property::Type Attribute::propertyType() const
+{
+    return Property::Attribute;
 }
 
 /*!

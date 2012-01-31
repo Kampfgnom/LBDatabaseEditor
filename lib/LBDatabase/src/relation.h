@@ -51,6 +51,8 @@ public:
 
     Storage* storage() const;
 
+    Property::Type propertyType() const;
+
 protected:
     friend class StoragePrivate;
     friend class RelationValueRightPrivate;

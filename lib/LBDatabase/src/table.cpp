@@ -419,7 +419,7 @@ Column *Table::column(int column) const
 Column *Table::column(const QString &column) const
 {
     Q_D(const Table);
-    return d->columnsByName.value(column);
+    return d->columnsByName.value(column, 0);
 }
 
 /*!

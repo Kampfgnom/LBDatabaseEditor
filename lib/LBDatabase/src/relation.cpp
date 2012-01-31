@@ -280,6 +280,11 @@ QString Relation::displayNameRight() const
     return d->displayNameRight;
 }
 
+Property::Type Relation::propertyType() const
+{
+    return Property::Relation;
+}
+
 /*!
   Sets the display name in the given \a context.
 

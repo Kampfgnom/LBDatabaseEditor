@@ -47,7 +47,7 @@ Category *Category::parentCategory() const
 	//START
 QString Category::displayName() const
 {
-    return Entity::displayName();
+    return name();
 }
 	// END
 

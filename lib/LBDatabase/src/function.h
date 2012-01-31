@@ -40,6 +40,8 @@ public:
 
     QList<EntityType *> reimplementingEntityTypes() const;
 
+    Property::Type propertyType() const;
+
 private:
     friend class StoragePrivate;
     friend class FunctionValue;
