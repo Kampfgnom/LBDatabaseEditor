@@ -13,8 +13,12 @@ class FunctionPrivate;
 class Function : public Property
 {
 public:
-    static const QString NameColumn;
+    static const QString IdentifierColumn;
     static const QString DisplayNameColumn;
+    static const QString TableNameColumn;
+    static const QString EntityColumnNameColumn;
+    static const QString KeyEntityColumnNameColumn;
+    static const QString ValueColumnNameColumn;
     static const QString EntityTypeColumn;
     static const QString KeyEntityTypeRightColumn;
     static const QString CalculatedColumn;

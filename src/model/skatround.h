@@ -32,7 +32,8 @@ public:
 	Player *skatSoloPlayer() const;
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+	// END
 
 signals:
 	void skat_gameTypeChanged(QString skat_gameType);

@@ -35,7 +35,8 @@ public:
 	Drink *drink() const;
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+	// END
 
 signals:
 	void timeChanged(QDateTime time);

@@ -8,13 +8,7 @@
 #include "livegame.h"
 #include "livegamecalculator.h"
 #include "doppelkopflivegame.h"
-#include "prognoseofflinegame.h"
-#include "offlinegame.h"
-#include "doppelkopfofflinegame.h"
 #include "skatlivegame.h"
-#include "skatofflinegame.h"
-#include "heartsofflinegame.h"
-#include "pokerofflinegame.h"
 
 const QString GamesContext::Name("Games");
 const QString Game::Name("game");
@@ -120,13 +114,7 @@ GamesContext::GamesContext(LBDatabase::Row *row, LBDatabase::Storage *parent) :
 	registerCalculatorClass<LiveGame,LiveGameCalculator>();
 
 	registerEntityClass<DoppelkopfLiveGame>();
-	registerEntityClass<PrognoseOfflineGame>();
-	registerEntityClass<OfflineGame>();
-	registerEntityClass<DoppelkopfOfflineGame>();
 	registerEntityClass<SkatLiveGame>();
-	registerEntityClass<SkatOfflineGame>();
-	registerEntityClass<HeartsOfflineGame>();
-	registerEntityClass<PokerOfflineGame>();
 }
 
 Game *GamesContext::game(int id) const

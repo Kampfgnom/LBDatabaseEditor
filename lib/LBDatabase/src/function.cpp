@@ -19,7 +19,11 @@ namespace LBDatabase {
 /******************************************************************************
 ** FunctionPrivate
 */
-const QString Function::NameColumn("name");
+const QString Function::IdentifierColumn("identifier");
+const QString Function::TableNameColumn("tableName");
+const QString Function::EntityColumnNameColumn("entityColumnName");
+const QString Function::KeyEntityColumnNameColumn("keyEntityColumnName");
+const QString Function::ValueColumnNameColumn("valueColumnName");
 const QString Function::DisplayNameColumn("displayName");
 const QString Function::EntityTypeColumn("entityType");
 const QString Function::KeyEntityTypeRightColumn("keyEntityType");
@@ -51,8 +55,12 @@ class FunctionPrivate {
 
     bool calculated;
     bool cacheData;
-    QString name;
+    QString identifier;
     QString displayName;
+    QString tableName;
+    QString entityColumnName;
+    QString keyEntityColumnName;
+    QString valueColumnName;
 
     Table *functionTable;
 
@@ -65,7 +73,7 @@ class FunctionPrivate {
 void FunctionPrivate::init()
 {
     Q_Q(Function);
-    name = row->data(Function::NameColumn).toString();
+    identifier = row->data(Function::IdentifierColumn).toString();
     displayName = row->data(Function::DisplayNameColumn).toString();
     entityType = storage->entityType(row->data(Function::EntityTypeColumn).toInt());
     keyEntityType = storage->entityType(row->data(Function::KeyEntityTypeRightColumn).toInt());
@@ -73,11 +81,16 @@ void FunctionPrivate::init()
     cacheData = row->data(Function::CacheDataColumn).toBool();
     type = static_cast<Attribute::Type>(row->data(Function::TypeColumn).toInt());
 
+    tableName = row->data(Function::TableNameColumn).toString();
+    entityColumnName = row->data(Function::EntityColumnNameColumn).toString();
+    keyEntityColumnName = row->data(Function::KeyEntityColumnNameColumn).toString();
+    valueColumnName = row->data(Function::ValueColumnNameColumn).toString();
+
     if(!calculated) {
-        functionTable = storage->database()->table(name);
+        functionTable = storage->database()->table(tableName);
 
         if(!functionTable) {
-            qWarning() << "No such table:" << name << "for function" << row->id();
+            qWarning() << "No such table:" << identifier << "for function" << row->id();
         }
     }
 
@@ -103,23 +116,23 @@ void FunctionPrivate::fetchValues()
 {
     Q_Q(Function);
     if(!calculated) {
-//        if(!functionTable->column(entityType->identifier()))
-//            qWarning() << "No such column" <<
-//        int entityColumn = functionTable->column(entityType->identifier())->index();
-//        int keyEntityColumn = functionTable->column(keyEntityType->identifier())->index();
-//        int valueColumn = functionTable->column(name)->index();
-//        Entity *entity;
-//        Entity *keyEntity;
-//        QVariant value;
-//        FunctionValue *functionValue;
-//        foreach(Row *row, functionTable->rows()) {
-//            entity = entityType->context()->entity(row->data(entityColumn).toInt());
-//            keyEntity = keyEntityType->context()->entity(row->data(keyEntityColumn).toInt());
-//            value = row->data(valueColumn);
+        int entityColumn = functionTable->column(entityColumnName)->index();
+        int keyEntityColumn = functionTable->column(keyEntityColumnName)->index();
+        int valueColumn = functionTable->column(valueColumnName)->index();
+        Entity *entity;
+        Entity *keyEntity;
+        QVariant value;
+        FunctionValue *functionValue;
+        foreach(Row *row, functionTable->rows()) {
+            entity = entityType->context()->entity(row->data(entityColumn).toInt());
+            keyEntity = keyEntityType->context()->entity(row->data(keyEntityColumn).toInt());
+            value = row->data(valueColumn);
+            if(!entity || !keyEntity)
+                continue;
 
-//            functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
-//            functionValue->addValue(keyEntity, value);
-//        }
+            functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
+            functionValue->addValue(keyEntity, value);
+        }
     }
 }
 
@@ -178,7 +191,7 @@ void Function::setDisplayName(const QString &displayName)
 QString Function::identifier() const
 {
     Q_D(const Function);
-    return d->name;
+    return d->identifier;
 }
 
 EntityType *Function::keyEntityType() const

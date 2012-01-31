@@ -35,7 +35,8 @@ public:
 
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+	// END
 
 signals:
 	void skat_gameEndChanged(QString skat_gameEnd);

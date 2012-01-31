@@ -95,7 +95,8 @@ public:
 	QList<Drink *> drinks() const;
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+	// END
 
 signals:
 	void weightChanged(int weight);

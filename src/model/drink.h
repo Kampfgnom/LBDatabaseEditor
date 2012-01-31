@@ -49,7 +49,8 @@ public:
 	QList<Player *> players() const;
 
 	// Write anything you want to remain unchanged between these comments: 
-	//START	// END
+	//START
+	// END
 
 signals:
 	void nameChanged(QString name);

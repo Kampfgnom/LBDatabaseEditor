@@ -46,11 +46,11 @@ public:
 	QList<Player *> players() const;
 
 	// Write anything you want to remain unchanged between these comments: 
-    //START
+	//START
 
     virtual int points(const Player *player) const;
 
-    // END
+	// END
 
 signals:
 	void nameChanged(QString name);
