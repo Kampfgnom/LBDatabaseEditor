@@ -12,6 +12,9 @@
 #include "editentitytypesdialog.h"
 
 #include "model/projectstatsstorage.h"
+#include "model/livegame.h"
+#include "model/round.h"
+#include "model/player.h"
 
 #include <LBGui/LBGui.h>
 #include <LBDatabase/LBDatabase.h>
@@ -147,6 +150,11 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     storage->open();
     qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
+
+//    LiveGame *game = static_cast<LiveGame*>(storage->gamesContext()->game(250));
+//    Round *round = game->rounds().first();
+//    Player *player = storage->playersContext()->player(4);
+//    round->function(RoundProperties::PointsFunction)->setValue(player, QVariant(4));
 
     //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor->actions(),SLOT(updateActions()));
 //    connect(storage,SIGNAL(dirtyChanged(bool)),m_databaseEditor,SLOT(reflectCurrentDatabaseDirtyState()));

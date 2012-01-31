@@ -33,6 +33,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role) const;
     Qt::ItemFlags flags(const QModelIndex &index) const;
     bool setData(const QModelIndex &index, const QVariant &value, int role = Qt::EditRole);
+    bool setData(int row, int column, const QVariant &data);
 
     Row *row(int id) const;
     Row *rowAt(int index) const;

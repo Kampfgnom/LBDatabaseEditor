@@ -47,6 +47,8 @@ class FunctionPrivate {
     void addPropertyValue(Entity *entity);
     void fetchValues();
 
+    void setValue(Entity *key, const QVariant &value);
+
     Row *row;
     Storage *storage;
     EntityType *entityType;
@@ -131,7 +133,7 @@ void FunctionPrivate::fetchValues()
                 continue;
 
             functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
-            functionValue->addValue(keyEntity, value);
+            functionValue->addValue(keyEntity, value, row);
         }
     }
 }
@@ -169,6 +171,30 @@ int Function::id() const
 Property::Type Function::propertyType() const
 {
     return Property::Function;
+}
+
+Table *Function::functionTable() const
+{
+    Q_D(const Function);
+    return d->functionTable;
+}
+
+QString Function::entityColumnName() const
+{
+    Q_D(const Function);
+    return d->entityColumnName;
+}
+
+QString Function::keyEntityColumnName() const
+{
+    Q_D(const Function);
+    return d->keyEntityColumnName;
+}
+
+QString Function::valueColumnName() const
+{
+    Q_D(const Function);
+    return d->valueColumnName;
 }
 
 QString Function::displayName() const

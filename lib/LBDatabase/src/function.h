@@ -8,6 +8,7 @@ namespace LBDatabase {
 class EntityType;
 class Row;
 class Storage;
+class Table;
 
 class FunctionPrivate;
 class Function : public Property
@@ -57,6 +58,11 @@ private:
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
     void fetchValues();
+
+    Table *functionTable() const;
+    QString entityColumnName() const;
+    QString keyEntityColumnName() const;
+    QString valueColumnName() const;
 
     QScopedPointer<FunctionPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Function)
