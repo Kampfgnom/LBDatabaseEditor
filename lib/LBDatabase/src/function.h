@@ -8,6 +8,7 @@ namespace LBDatabase {
 class EntityType;
 class Row;
 class Storage;
+class Table;
 
 class FunctionPrivate;
 class Function : public Property
@@ -24,6 +25,8 @@ public:
     static const QString CalculatedColumn;
     static const QString CacheDataColumn;
     static const QString TypeColumn;
+    static const QString EditableColumn;
+
 
     static const QString FunctionReimplementationsTable;
     static const QString ReimplementedFunctionColumn;
@@ -41,6 +44,7 @@ public:
 
     bool isCalculated() const;
     bool cacheData() const;
+    bool isEditable() const;
 
     QList<EntityType *> reimplementingEntityTypes() const;
 
@@ -57,6 +61,11 @@ private:
     void addPropertyValueToEntities();
     void addPropertyValue(Entity *entity);
     void fetchValues();
+
+    Table *functionTable() const;
+    QString entityColumnName() const;
+    QString keyEntityColumnName() const;
+    QString valueColumnName() const;
 
     QScopedPointer<FunctionPrivate> d_ptr;
     Q_DECLARE_PRIVATE(Function)

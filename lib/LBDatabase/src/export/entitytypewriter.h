@@ -40,17 +40,18 @@ protected:
 
     void writeAttributeGetterDeclaration(Attribute *attribute, QString &header) const;
     void writeAttributeGetterImplementation(Attribute *attribute, QString &source) const;
-
     void writeAttributeSetterDeclaration(Attribute *attribute, QString &header) const;
     void writeAttributeSetterImplementation(Attribute *attribute, QString &source) const;
-
     void writeAttributeChangedSignal(Attribute *attribute, QString &header) const;
 
     void writeRelationDeclaration(Relation *relation, QString &header) const;
     void writeRelationImplementation(Relation *relation, QString &source) const;
 
-    void writeFunctionDeclaration(Function *function, QString &header) const;
-    void writeFunctionImplementation(Function *function, QString &source) const;
+    void writeFunctionGetterDeclaration(Function *function, QString &header) const;
+    void writeFunctionGetterImplementation(Function *function, QString &source) const;
+    void writeFunctionSetterDeclaration(Function *function, QString &header) const;
+    void writeFunctionSetterImplementation(Function *function, QString &source) const;
+    void writeFunctionChangedSignal(Function *function, QString &header) const;
 
     QString makeRelationName(Relation *relation) const;
     QString makeRelationType(Relation *relation) const;

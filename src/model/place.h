@@ -44,6 +44,7 @@ public:
 	void setComment(const QString &comment);
 
 
+
 	QList<Game *> games() const;
 	QList<Player *> players() const;
 

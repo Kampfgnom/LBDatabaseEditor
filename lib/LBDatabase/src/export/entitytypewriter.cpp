@@ -188,7 +188,15 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
     header.append(QLatin1String("\n"));
 
     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
-        writeFunctionDeclaration(function, header);
+        writeFunctionGetterDeclaration(function, header);
+    }
+
+    header.append(QLatin1String("\n"));
+
+    foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+        if(function->isEditable()) {
+            writeFunctionSetterDeclaration(function, header);
+        }
     }
 
     header.append(QLatin1String("\n"));
@@ -210,6 +218,11 @@ void EntityTypeWriter::writeDeclaration(QString &header) const
     foreach(Attribute *attribute, m_entityType->nonInhertitedAttributes()) {
         if(attribute->isEditable()) {
            writeAttributeChangedSignal(attribute, header);
+        }
+    }
+    foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+        if(function->isEditable()) {
+           writeFunctionChangedSignal(function, header);
         }
     }
 
@@ -260,7 +273,13 @@ void EntityTypeWriter::writeImplementation(QString &source) const
      }
 
      foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
-         writeFunctionImplementation(function, source);
+         writeFunctionGetterImplementation(function, source);
+     }
+
+     foreach(Function *function, m_entityType->nonInhertitedFunctions()) {
+         if(function->isEditable()) {
+             writeFunctionSetterImplementation(function, source);
+         }
      }
 
      writeExtraContent(extraContent, source);
@@ -423,14 +442,14 @@ void EntityTypeWriter::writeRelationImplementation(Relation *relation, QString &
     }
 }
 
-void EntityTypeWriter::writeFunctionDeclaration(Function *function, QString &header) const
+void EntityTypeWriter::writeFunctionGetterDeclaration(Function *function, QString &header) const
 {
     header.append(QLatin1String("\t") + function->qtTypeName() + QLatin1String(" ") +
                   makeMethodName(function->identifier()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->identifier())+
                   QLatin1String(" *")+makeMethodName(function->keyEntityType()->identifier())+QLatin1String(") const;\n"));
 }
 
-void EntityTypeWriter::writeFunctionImplementation(Function *function, QString &source) const
+void EntityTypeWriter::writeFunctionGetterImplementation(Function *function, QString &source) const
 {
     source.append(function->qtTypeName() + QLatin1String(" ") +m_classname+QLatin1String("::")+
                   makeMethodName(function->identifier()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->identifier())+
@@ -440,7 +459,56 @@ void EntityTypeWriter::writeFunctionImplementation(Function *function, QString &
                   QLatin1String("Properties::")+makeClassname(function->identifier()) + QLatin1String("Function)->value(")+
                   makeMethodName(function->keyEntityType()->identifier())+QLatin1String(").value<") +
                   function->qtTypeName()+QLatin1String(">();\n"
+                                                       "}\n\n"));
+}
+
+void EntityTypeWriter::writeFunctionSetterDeclaration(Function *function, QString &header) const
+{
+    QString constString;
+    QString ampString;
+    if(function->qtTypeName().startsWith("Q")) {
+        constString = QLatin1String("const ");
+        ampString = QLatin1String("&");
+    }
+
+    header.append(QLatin1String("\tvoid set") +
+                  makeClassname(function->identifier()) + QLatin1String("(const ")+makeClassname(function->keyEntityType()->identifier())+
+                  QLatin1String(" *")+makeMethodName(function->keyEntityType()->identifier())+QLatin1String(", ")+constString+function->qtTypeName()+
+                  QLatin1String(" ")+ampString+makeMethodName(function->identifier())+QLatin1String(");\n"));
+}
+
+void EntityTypeWriter::writeFunctionSetterImplementation(Function *function, QString &source) const
+{
+    QString constString;
+    QString ampString;
+    if(function->qtTypeName().startsWith("Q")) {
+        constString = QLatin1String("const ");
+        ampString = QLatin1String("&");
+    }
+
+    source.append(QLatin1String("void ")+m_classname+QLatin1String("::set")+makeClassname(function->identifier()) +
+                  QLatin1String("(const ")+makeClassname(function->keyEntityType()->identifier())+QLatin1String(" *")+makeMethodName(function->keyEntityType()->identifier())+QLatin1String(", ")+constString+function->qtTypeName()+QLatin1String(" ")+ampString+makeMethodName(function->identifier())+QLatin1String(")\n"
+                                "{\n"
+                                                                                                                                                                                                                                                                                                                 "\tif(")+makeMethodName(function->identifier())+QLatin1String(" == this->")+makeMethodName(function->identifier())+QLatin1String("(")+makeMethodName(function->keyEntityType()->identifier())+QLatin1String("))\n"
+                                "\t\treturn;\n"));
+
+
+    source.append(QLatin1String("\tfunction(")+m_classname+QLatin1String("Properties::")+makeClassname(function->identifier())+QLatin1String("Function)"));
+    source.append(QLatin1String("->setValue(") + makeMethodName(function->keyEntityType()->identifier()) + QLatin1String(", QVariant::fromValue<")+function->qtTypeName());
+    source.append(QLatin1String(">(")+makeMethodName(function->identifier())+QLatin1String("));\n"));
+
+    source.append(QLatin1String("\temit ")+makeMethodName(function->identifier())+QLatin1String("Changed(")+
+                 makeMethodName(function->keyEntityType()->identifier())+QLatin1String(",") + makeMethodName(function->identifier()) + QLatin1String(");\n"
                                               "}\n\n"));
+}
+
+void EntityTypeWriter::writeFunctionChangedSignal(Function *function, QString &header) const
+{
+    header.append(QLatin1String("\tvoid ") +
+                  makeMethodName(function->identifier()) + QLatin1String("Changed(const ")+
+                  makeClassname(function->keyEntityType()->identifier())+QLatin1String(" *")+
+                  makeMethodName(function->keyEntityType()->identifier())+QLatin1String(",") + function->qtTypeName() + QLatin1String(" ")
+                  + makeMethodName(function->identifier()) + QLatin1String(");\n"));
 }
 
 void EntityTypeWriter::exportHeader() const

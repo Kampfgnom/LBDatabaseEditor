@@ -5,6 +5,8 @@
 #include "entity.h"
 #include "entitytype.h"
 #include "function.h"
+#include "row.h"
+#include "table.h"
 
 #include <QDebug>
 
@@ -29,6 +31,7 @@ class FunctionValuePrivate {
     mutable bool cached;
 
     mutable QHash<const Entity *, QVariant> values;
+    mutable QHash<const Entity *, Row *> valueRows;
 
     FunctionValue * q_ptr;
     Q_DECLARE_PUBLIC(FunctionValue)
@@ -90,10 +93,11 @@ void FunctionValue::calculate()
 {
 }
 
-void FunctionValue::addValue(Entity *key, const QVariant &value)
+void FunctionValue::addValue(Entity *key, const QVariant &value, Row *row)
 {
     Q_D(FunctionValue);
     d->values.insert(key, value);
+    d->valueRows.insert(key, row);
 }
 
 FunctionValue::~FunctionValue()
@@ -166,6 +170,29 @@ QVariant FunctionValue::data(int role) const
 bool FunctionValue::setData(const QVariant &data)
 {
     return false;
+}
+
+void FunctionValue::setValue(const Entity *key, const QVariant &value)
+{
+    Q_D(const FunctionValue);
+    if(d->function->isCalculated())
+        return;
+
+    if(d->values.value(key) == value)
+        return;
+
+    if(d->valueRows.contains(key)) {
+        d->valueRows.value(key)->setData(d->function->valueColumnName(), value);
+    }
+    else {
+        Row *row = d->function->functionTable()->appendRow();
+        row->setData(d->function->entityColumnName(), d->entity->row()->id());
+        row->setData(d->function->keyEntityColumnName(), key->row()->id());
+        row->setData(d->function->valueColumnName(), value);
+        d->valueRows.insert(key, row);
+    }
+    d->values.insert(key, value);
+    emit valueChanged(key, value);
 }
 
 bool FunctionValue::isEditable() const

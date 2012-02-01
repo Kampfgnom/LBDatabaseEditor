@@ -132,7 +132,7 @@ QVariant Row::data(const QString &column) const
 void Row::setData(int column, const QVariant &data)
 {
     Q_D(Row);
-    if(d->table->setData(d->table->index(d->index, column),data))
+    if(d->table->setData(d->index, column,data))
         d->table->database()->setDirty(true);
 }
 

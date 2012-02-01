@@ -6,6 +6,7 @@
 namespace LBDatabase {
 
 class Function;
+class Row;
 
 class FunctionValuePrivate;
 class FunctionValue : public PropertyValue
@@ -20,7 +21,12 @@ public:
     QVariant data(int role = Qt::DisplayRole) const;
     bool setData(const QVariant &data);
 
+    void setValue(const Entity *key, const QVariant &value);
+
     bool isEditable() const;
+
+Q_SIGNALS:
+    void valueChanged(const Entity *key, QVariant value);
 
 private:
     friend class FunctionPrivate;
@@ -30,7 +36,7 @@ private:
     void fetchValue();
     void calculate();
 
-    void addValue(Entity *key, const QVariant &value);
+    void addValue(Entity *key, const QVariant &value, Row *row);
 
     QScopedPointer<FunctionValuePrivate> d_ptr;
     Q_DECLARE_PRIVATE(FunctionValue)

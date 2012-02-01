@@ -29,6 +29,7 @@ public:
 	void setSkat_trumpfColor(const QString &skat_trumpfColor);
 
 
+
 	Player *skatSoloPlayer() const;
 
 	// Write anything you want to remain unchanged between these comments: 

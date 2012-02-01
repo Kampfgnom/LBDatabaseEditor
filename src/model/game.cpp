@@ -80,14 +80,22 @@ QList<Player *> Game::players() const
 	return relation<Player>(GameProperties::PlayersRelation)->entities();
 }
 
-int Game::positions(const Player *player) const
+int Game::position(const Player *player) const
 {
-	return function(GameProperties::PositionsFunction)->value(player).value<int>();
+	return function(GameProperties::PositionFunction)->value(player).value<int>();
 }
 
 int Game::placement(const Player *player) const
 {
 	return function(GameProperties::PlacementFunction)->value(player).value<int>();
+}
+
+void Game::setPosition(const Player *player, int position)
+{
+	if(position == this->position(player))
+		return;
+	function(GameProperties::PositionFunction)->setValue(player, QVariant::fromValue<int>(position));
+	emit positionChanged(player,position);
 }
 
 

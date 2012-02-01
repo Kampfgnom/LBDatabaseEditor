@@ -30,6 +30,7 @@ const QString Function::KeyEntityTypeRightColumn("keyEntityType");
 const QString Function::CalculatedColumn("calculated");
 const QString Function::CacheDataColumn("cacheData");
 const QString Function::TypeColumn("type");
+const QString Function::EditableColumn("editable");
 
 const QString Function::FunctionReimplementationsTable("lbmeta_functionreimplementations");
 const QString Function::ReimplementedFunctionColumn("function");
@@ -47,6 +48,8 @@ class FunctionPrivate {
     void addPropertyValue(Entity *entity);
     void fetchValues();
 
+    void setValue(Entity *key, const QVariant &value);
+
     Row *row;
     Storage *storage;
     EntityType *entityType;
@@ -55,6 +58,7 @@ class FunctionPrivate {
 
     bool calculated;
     bool cacheData;
+    bool editable;
     QString identifier;
     QString displayName;
     QString tableName;
@@ -79,6 +83,7 @@ void FunctionPrivate::init()
     keyEntityType = storage->entityType(row->data(Function::KeyEntityTypeRightColumn).toInt());
     calculated = row->data(Function::CalculatedColumn).toBool();
     cacheData = row->data(Function::CacheDataColumn).toBool();
+    editable = row->data(Function::EditableColumn).toBool();
     type = static_cast<Attribute::Type>(row->data(Function::TypeColumn).toInt());
 
     tableName = row->data(Function::TableNameColumn).toString();
@@ -131,7 +136,7 @@ void FunctionPrivate::fetchValues()
                 continue;
 
             functionValue = static_cast<FunctionValue *>(entity->propertyValue(q));
-            functionValue->addValue(keyEntity, value);
+            functionValue->addValue(keyEntity, value, row);
         }
     }
 }
@@ -169,6 +174,30 @@ int Function::id() const
 Property::Type Function::propertyType() const
 {
     return Property::Function;
+}
+
+Table *Function::functionTable() const
+{
+    Q_D(const Function);
+    return d->functionTable;
+}
+
+QString Function::entityColumnName() const
+{
+    Q_D(const Function);
+    return d->entityColumnName;
+}
+
+QString Function::keyEntityColumnName() const
+{
+    Q_D(const Function);
+    return d->keyEntityColumnName;
+}
+
+QString Function::valueColumnName() const
+{
+    Q_D(const Function);
+    return d->valueColumnName;
 }
 
 QString Function::displayName() const
@@ -216,6 +245,12 @@ bool Function::cacheData() const
 {
     Q_D(const Function);
     return d->cacheData;
+}
+
+bool Function::isEditable() const
+{
+    Q_D(const Function);
+    return d->editable;
 }
 
 QList<EntityType *> Function::reimplementingEntityTypes() const

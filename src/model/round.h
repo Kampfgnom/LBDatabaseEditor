@@ -52,6 +52,8 @@ public:
 
 	int points(const Player *player) const;
 
+	void setPoints(const Player *player, int points);
+
 	QList<LiveDrink *> liveDrinks() const;
 	QList<Schmeisserei *> schmeissereienPerRound() const;
 	LiveGame *game() const;
@@ -66,6 +68,7 @@ signals:
 	void startTimeChanged(QDateTime startTime);
 	void lengthChanged(QTime length);
 	void stateChanged(State state);
+	void pointsChanged(const Player *player,int points);
 };
 
 class RoundsContext : public LBDatabase::Context

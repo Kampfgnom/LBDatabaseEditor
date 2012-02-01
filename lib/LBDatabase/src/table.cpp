@@ -396,8 +396,24 @@ Qt::ItemFlags Table::flags(const QModelIndex &index) const
 bool Table::setData(const QModelIndex &index, const QVariant &value, int role)
 {
     bool ret = QSqlTableModel::setData(index,value, role);
+
     if(ret)
         database()->setDirty(true);
+    else if(lastError().isValid())
+        qWarning() << lastError();
+
+    return ret;
+}
+
+bool Table::setData(int row, int column, const QVariant &data)
+{
+    QSqlRecord r = record(row);
+    r.setValue(column, data);
+
+    bool ret = setRecord(row, r);
+
+    if(!ret && lastError().isValid())
+        qWarning() << lastError();
 
     return ret;
 }
