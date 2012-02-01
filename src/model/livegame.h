@@ -36,6 +36,7 @@ public:
 	int points(const Player *player) const;
 	int placement(const Player *player) const;
 
+
 	QList<Round *> rounds() const;
 
 	// Write anything you want to remain unchanged between these comments: 

@@ -14,7 +14,7 @@ const QString SizeAttribute("size");
 const QString GenderAttribute("gender");
 const QString NameAttribute("name");
 const QString ColorAttribute("color");
-const QString AvatarPathAttribute("avatarPath");
+const QString AvatarAttribute("avatar");
 const QString GameCountAttribute("gameCount");
 const QString PointsAttribute("points");
 const QString GamePointsAttribute("gamePoints");
@@ -62,7 +62,7 @@ public:
 	QString gender() const;
 	QString name() const;
 	QColor color() const;
-	QPixmap avatarPath() const;
+	QPixmap avatar() const;
 	int gameCount() const;
 	int points() const;
 	int gamePoints() const;
@@ -79,6 +79,7 @@ public:
 	void setSize(int size);
 	void setGender(const QString &gender);
 	void setName(const QString &name);
+
 
 
 	QList<Schmeisserei *> schmeissereien() const;

@@ -34,6 +34,7 @@ public:
 	void setDoko_soloType(const QString &doko_soloType);
 
 
+
 	Player *hochzeitPlayer() const;
 	Player *rePlayer1() const;
 	Player *rePlayer2() const;

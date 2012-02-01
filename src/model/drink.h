@@ -45,6 +45,7 @@ public:
 
 	int countPerPlayer(const Player *player) const;
 
+
 	QList<LiveDrink *> liveDrinks() const;
 	QList<Player *> players() const;
 

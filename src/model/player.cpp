@@ -44,9 +44,9 @@ QColor Player::color() const
 	return value(PlayerProperties::ColorAttribute).value<QColor>();
 }
 
-QPixmap Player::avatarPath() const
+QPixmap Player::avatar() const
 {
-	return value(PlayerProperties::AvatarPathAttribute).value<QPixmap>();
+	return value(PlayerProperties::AvatarAttribute).value<QPixmap>();
 }
 
 int Player::gameCount() const

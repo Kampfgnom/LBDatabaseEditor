@@ -30,6 +30,7 @@ public:
 	void setTime(const QDateTime &time);
 
 
+
 	Round *round() const;
 	Player *player() const;
 	Drink *drink() const;

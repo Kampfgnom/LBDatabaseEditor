@@ -27,6 +27,7 @@ public:
 	void setType(const QString &type);
 
 
+
 	Player *player() const;
 	Round *round() const;
 

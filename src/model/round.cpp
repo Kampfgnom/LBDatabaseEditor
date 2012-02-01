@@ -102,6 +102,14 @@ int Round::points(const Player *player) const
 	return function(RoundProperties::PointsFunction)->value(player).value<int>();
 }
 
+void Round::setPoints(const Player *player, int points)
+{
+	if(points == this->points(player))
+		return;
+	function(RoundProperties::PointsFunction)->setValue(player, QVariant::fromValue<int>(points));
+	emit pointsChanged(player,points);
+}
+
 
 	// Write anything you want to remain unchanged between these comments: 
 	//START

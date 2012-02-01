@@ -172,7 +172,7 @@ bool FunctionValue::setData(const QVariant &data)
     return false;
 }
 
-void FunctionValue::setValue(Entity *key, const QVariant &value)
+void FunctionValue::setValue(const Entity *key, const QVariant &value)
 {
     Q_D(const FunctionValue);
     if(d->function->isCalculated())

@@ -39,6 +39,7 @@ public:
 	void setOrderIndicator(int orderIndicator);
 
 
+
 	Category *parentCategory() const;
 	QList<Category *> childCategories() const;
 

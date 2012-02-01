@@ -25,6 +25,8 @@ public:
     static const QString CalculatedColumn;
     static const QString CacheDataColumn;
     static const QString TypeColumn;
+    static const QString EditableColumn;
+
 
     static const QString FunctionReimplementationsTable;
     static const QString ReimplementedFunctionColumn;
@@ -42,6 +44,7 @@ public:
 
     bool isCalculated() const;
     bool cacheData() const;
+    bool isEditable() const;
 
     QList<EntityType *> reimplementingEntityTypes() const;
 

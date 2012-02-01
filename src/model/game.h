@@ -13,7 +13,7 @@ const QString LengthAttribute("length");
 const QString CommentAttribute("comment");
 const QString SiteRelation("site");
 const QString PlayersRelation("players");
-const QString PositionsFunction("positions");
+const QString PositionFunction("position");
 const QString PlacementFunction("placement");
 } // namespace GameProperties
 
@@ -39,8 +39,10 @@ public:
 	void setLength(const QTime &length);
 	void setComment(const QString &comment);
 
-	int positions(const Player *player) const;
+	int position(const Player *player) const;
 	int placement(const Player *player) const;
+
+	void setPosition(const Player *player, int position);
 
 	Place *site() const;
 	QList<Player *> players() const;
@@ -57,6 +59,7 @@ signals:
 	void dateChanged(QDateTime date);
 	void lengthChanged(QTime length);
 	void commentChanged(QString comment);
+	void positionChanged(const Player *player,int position);
 };
 
 class GamesContext : public LBDatabase::Context

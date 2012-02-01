@@ -21,12 +21,12 @@ public:
     QVariant data(int role = Qt::DisplayRole) const;
     bool setData(const QVariant &data);
 
-    void setValue(Entity *key, const QVariant &value);
+    void setValue(const Entity *key, const QVariant &value);
 
     bool isEditable() const;
 
 Q_SIGNALS:
-    void valueChanged(Entity *key, QVariant value);
+    void valueChanged(const Entity *key, QVariant value);
 
 private:
     friend class FunctionPrivate;
