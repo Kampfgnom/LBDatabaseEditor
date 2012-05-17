@@ -172,6 +172,13 @@ bool FunctionValue::setData(const QVariant &data)
     return false;
 }
 
+QHash<const Entity *, QVariant> FunctionValue::values() const
+{
+    Q_D(const FunctionValue);
+
+    return d->values;
+}
+
 void FunctionValue::setValue(const Entity *key, const QVariant &value)
 {
     Q_D(const FunctionValue);

@@ -34,6 +34,8 @@ public:
     QString fileName() const;
     QString sourcePath() const;
 
+    Context *context(const QString name) const;
+
     QList<Context *> contexts() const;
     QList<EntityType *> entityTypes() const;
 
@@ -49,7 +51,6 @@ protected:
     void registerContextType();
 
     Context *context(int id) const;
-    Context *context(const QString name) const;
     EntityType *entityType(int id) const;
     Attribute *attribute(int id) const;
 

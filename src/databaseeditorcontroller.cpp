@@ -151,6 +151,9 @@ void DatabaseEditorController::openEntityStorage(const QString &fileName)
     qDebug() << "Opening the storage" << fileName << "took "+QString::number(timer.elapsed())+"ms.";
     openDatabase(fileName);
 
+    LBDatabase::RestServer *server = new LBDatabase::RestServer(storage);
+    server->start();
+
 //    LiveGame *game = static_cast<LiveGame*>(storage->gamesContext()->game(250));
 //    Round *round = game->rounds().first();
 //    Player *player = storage->playersContext()->player(4);

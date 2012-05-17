@@ -20,6 +20,7 @@ public:
     QVariant value(const Entity *entity) const;
     QVariant data(int role = Qt::DisplayRole) const;
     bool setData(const QVariant &data);
+    QHash<const Entity *, QVariant> values() const;
 
     void setValue(const Entity *key, const QVariant &value);
 

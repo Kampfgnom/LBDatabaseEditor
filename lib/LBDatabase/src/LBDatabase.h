@@ -20,4 +20,6 @@
 #include <LBDatabase/export/graphvizexporter.h>
 #include <LBDatabase/export/cppexporter.h>
 
+#include <LBDatabase/server/restserver.h>
+
 #endif // LBDATABASE_H

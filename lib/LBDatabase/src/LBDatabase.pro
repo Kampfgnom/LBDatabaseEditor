@@ -1,10 +1,25 @@
 TARGET = lbdatabase
 TEMPLATE = lib
-CONFIG += staticlib
-QT += sql
+
+QT += sql network
 DEFINES *= QT_USE_QSTRINGBUILDER
 INCLUDEPATH += $$PWD/include
 DESTDIR = $$PWD/../lib
+
+macx {
+ QMAKE_LFLAGS += -F$$PWD/../frameworks/
+LIBS += -framework QxtCore \
+-framework QxtNetwork \
+-framework QxtWeb
+
+INCLUDEPATH += $$PWD/../include/QxtCore \
+$$PWD/../include/QxtWeb \
+ $$PWD/../include/QxtNetwork \
+$$PWD/../frameworks/QxtCore.framework/Headers \
+$$PWD/../frameworks/QxtWeb.framework/Headers \
+$$PWD/../frameworks/QxtNetwork.framework/Headers
+
+}
 
 HEADERS += \
     LBDatabase.h \
@@ -35,7 +50,8 @@ HEADERS += \
     export/entitytypewriter.h \
     export/calculatorwriter.h \
     enumattribute.h \
-    attribute_p.h
+    attribute_p.h \
+    server/restserver.h
 
 SOURCES += \
     column.cpp \
@@ -62,7 +78,8 @@ SOURCES += \
     export/contextwriter.cpp \
     export/entitytypewriter.cpp \
     export/calculatorwriter.cpp \
-    enumattribute.cpp
+    enumattribute.cpp \
+    server/restserver.cpp
 
 OTHER_FILES +=
 
