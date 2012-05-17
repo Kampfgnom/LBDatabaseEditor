@@ -2,7 +2,53 @@ QT       += core gui sql
 
 TARGET = LBDatabaseTest
 TEMPLATE = app
-DESTDIR     = $PWD/../
+
+DESTDIR = $$OUT_PWD/../
+OBJECTS_DIR = $$OUT_PWD/../build/
+
+INCLUDEPATH += $$PWD/../lib/LBDatabase/include
+INCLUDEPATH += $$PWD/../lib/LBGui/include
+
+# add a build command
+defineReplace( nc  ) {
+    return( $$escape_expand(\\n\\t)$$1    )
+}
+# add a silent build command
+defineReplace( snc ) {
+    return( $$escape_expand(\\n\\t)"@"$$1 )
+}
+# add end of line
+defineReplace( nl  ) {
+    return( $$escape_expand(\\n)         )
+}
+
+macx {
+    LIBS += -L$$OUT_PWD/../lib/LBDatabase/
+    LIBS += -llbdatabase
+
+    LIBS += -L$$OUT_PWD/../lib/LBGui/
+    LIBS += -llbgui
+
+    copyFrameworks.target = frameworks
+    copyFrameworks.commands += rm -Rf $$DESTDIR/LBDatabaseTest.app/Contents/Frameworks/
+    copyFrameworks.commands += $$snc( mkdir -p $$DESTDIR/LBDatabaseTest.app/Contents/Frameworks/ )
+    copyFrameworks.commands += $$snc( cp -R $$PWD/../lib/LBDatabase/frameworks/* $$DESTDIR/LBDatabaseTest.app/Contents/Frameworks/ )
+
+    copyDylibs.target = dylibs
+    copyDylibs.commands += mkdir -p $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/
+    copyDylibs.commands += $$snc(   cp $$DESTDIR/lib/LBDatabase/liblbdatabase.1.0.0.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/ )
+    copyDylibs.commands += $$snc(   cp $$DESTDIR/lib/LBDatabase/liblbdatabase.1.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/ )
+    copyDylibs.commands += $$snc(   cp $$DESTDIR/lib/LBGui/liblbgui.1.0.0.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/ )
+    copyDylibs.commands += $$snc(   cp $$DESTDIR/lib/LBGui/liblbgui.1.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/ )
+
+    QMAKE_POST_LINK = install_name_tool -id @executable_path/liblbdatabase.1.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/liblbdatabase.1.dylib &&
+    QMAKE_POST_LINK += install_name_tool -id @executable_path/liblbgui.1.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/liblbgui.1.dylib &&
+    QMAKE_POST_LINK += install_name_tool -change liblbdatabase.1.dylib @executable_path/liblbdatabase.1.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/LBDatabaseTest &&
+    QMAKE_POST_LINK += install_name_tool -change liblbgui.1.dylib @executable_path/liblbgui.1.dylib $$DESTDIR/LBDatabaseTest.app/Contents/MacOS/LBDatabaseTest
+
+    QMAKE_EXTRA_TARGETS += copyFrameworks copyDylibs
+    PRE_TARGETDEPS += frameworks dylibs
+}
 
 SOURCES += main.cpp\
     tablewidget.cpp \
@@ -99,14 +145,6 @@ HEADERS  += \
     model/doppelkopfofflinegame.h \
     model/doppelkopflivegame.h \
     model/category.h
-
-LIBS += -L$$PWD/../lib/LBDatabase/lib/ -llbdatabase
-INCLUDEPATH += $$PWD/../lib/LBDatabase/include
-PRE_TARGETDEPS += $$PWD/../lib/LBDatabase/lib/liblbdatabase.a
-
-LIBS += -L$$PWD/../lib/LBGui/lib/ -llbgui
-INCLUDEPATH += $$PWD/../lib/LBGui/include
-PRE_TARGETDEPS += $$PWD/../lib/LBGui/lib/liblbgui.a
 
 FORMS += \
     createtabledialog.ui \

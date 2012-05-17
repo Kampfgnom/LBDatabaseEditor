@@ -3,22 +3,24 @@ TEMPLATE = lib
 
 QT += sql network
 DEFINES *= QT_USE_QSTRINGBUILDER
+
+OBJECTS_DIR = $$OUT_PWD/../build/
+DESTDIR = $$OUT_PWD/../
+
 INCLUDEPATH += $$PWD/include
-DESTDIR = $$PWD/../lib
 
 macx {
- QMAKE_LFLAGS += -F$$PWD/../frameworks/
-LIBS += -framework QxtCore \
--framework QxtNetwork \
--framework QxtWeb
+    QMAKE_LFLAGS += -F$$PWD/../frameworks/
+    LIBS += -framework QxtCore \
+            -framework QxtNetwork \
+            -framework QxtWeb
 
-INCLUDEPATH += $$PWD/../include/QxtCore \
-$$PWD/../include/QxtWeb \
- $$PWD/../include/QxtNetwork \
-$$PWD/../frameworks/QxtCore.framework/Headers \
-$$PWD/../frameworks/QxtWeb.framework/Headers \
-$$PWD/../frameworks/QxtNetwork.framework/Headers
-
+    INCLUDEPATH += $$PWD/../include/QxtCore \
+                    $$PWD/../include/QxtWeb \
+                    $$PWD/../include/QxtNetwork \
+                    $$PWD/../frameworks/QxtCore.framework/Headers \
+                    $$PWD/../frameworks/QxtWeb.framework/Headers \
+                    $$PWD/../frameworks/QxtNetwork.framework/Headers
 }
 
 HEADERS += \

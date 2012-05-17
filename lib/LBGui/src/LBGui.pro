@@ -1,14 +1,12 @@
 TARGET = lbgui
 TEMPLATE = lib
-CONFIG += staticlib
+
 QT += sql
 
+OBJECTS_DIR = $$OUT_PWD/../build/
+DESTDIR = $$OUT_PWD/../
 INCLUDEPATH += $$PWD/include
-DESTDIR = $$PWD/../lib
-
-LIBS += -L$$PWD/../../LBDatabase/lib/ -llbdatabase
 INCLUDEPATH += $$PWD/../../LBDatabase/include
-PRE_TARGETDEPS += $$PWD/../../LBDatabase/lib/liblbdatabase.a
 
 HEADERS += \
     LBGui.h \
