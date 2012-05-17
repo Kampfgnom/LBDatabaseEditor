@@ -59,6 +59,9 @@ void MyService::pageRequestedEvent(QxtWebRequestEvent *event)
         else if(path.length() == 3) {
             respondEntity(event);
         }
+        else {
+            postEvent(new QxtWebErrorEvent(event->sessionID, event->requestID, 400, QByteArray("Invalid URL.")));
+        }
     }
 }
 
@@ -134,7 +137,7 @@ void MyService::respondEntity(QxtWebRequestEvent *event)
     Entity *entity = context->entity(entityId);
 
     if(!entity) {
-        postEvent(new QxtWebErrorEvent (event->sessionID, event->requestID, 404, QString("No such entity in this storage: ").append(entityId).toUtf8()));
+        postEvent(new QxtWebErrorEvent (event->sessionID, event->requestID, 404, QString("No such entity in this context: ").append(QString::number(entityId)).toUtf8()));
         return;
     }
 
